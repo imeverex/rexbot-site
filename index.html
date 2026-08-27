@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rex Now Playing Widget</title>
+<meta name="description" content="A free now-playing overlay and Twitch song-request widget for OBS, by everex.">
+<link rel="icon" href="rex-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #00D2FF; --bg: #0a0b0e; --card: #14161b; --card-border: #24262e;
+    --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
+    background-image:
+      radial-gradient(circle at 15% -10%, rgba(0,210,255,0.09), transparent 42%),
+      radial-gradient(circle at 100% 10%, rgba(0,210,255,0.05), transparent 35%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-repeat: no-repeat, no-repeat, repeat;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 60px 24px 80px; }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  header img { width: 46px; height: 46px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .tagline { color: var(--muted); font-size: 15px; margin: 6px 0 0; }
+  .hero { margin-top: 40px; }
+  .hero h2 { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .hero p { color: var(--muted); font-size: 16px; max-width: 520px; }
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 26px;
+    background: var(--accent); color: #04141a; font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 16px; padding: 15px 26px; border-radius: 10px; text-decoration: none;
+    box-shadow: 0 8px 30px rgba(0,210,255,0.25); transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .download-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 36px rgba(0,210,255,0.35); }
+  .download-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; }
+  .smartscreen {
+    margin-top: 18px; padding: 14px 16px; background: rgba(0,210,255,0.06); border: 1px solid rgba(0,210,255,0.18);
+    border-radius: 10px; font-size: 13.5px; color: var(--muted); max-width: 560px;
+  }
+  .smartscreen b { color: var(--text); }
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 56px; }
+  @media (max-width: 560px) { .features { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 20px;
+  }
+  .feature h3 { font-family: 'Space Grotesk', sans-serif; font-size: 14.5px; margin: 0 0 6px; }
+  .feature p { color: var(--muted); font-size: 13.5px; margin: 0; }
+  footer {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    margin-top: 70px; opacity: 0.6; font-size: 12px; color: var(--muted);
+  }
+  footer img { height: 13px; }
+  footer a { color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="rex-mark.png" alt="">
+    <div>
+      <h1>Rex Now Playing Widget</h1>
+      <p class="tagline">A free now-playing overlay + Twitch song requests for OBS, by everex.</p>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h2>Show what's playing.<br>Let chat request songs.</h2>
+    <p>One small app that runs in your system tray: a clean now-playing overlay for any player
+      (Spotify, Tidal, Apple Music, browser tabs), plus <code>!sr</code> song requests from Twitch chat
+      that auto-play through YouTube. No account, no login, nothing to configure to get started.</p>
+
+    <a class="download-btn" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
+      ⬇ Download for Windows
+    </a>
+    <div class="download-meta">Free · Windows 10/11 · no install needed to run, or use the installer for a Start Menu shortcut</div>
+
+    <div class="smartscreen">
+      <b>Seeing a blue "Windows protected your PC" screen?</b> That's normal for any new app that isn't yet
+      widely downloaded — it's not a sign anything's wrong. Click <b>"More info"</b>, then <b>"Run anyway"</b>.
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <h3>Works with anything</h3>
+      <p>Spotify, Tidal, Apple Music, YouTube Music, browser tabs — anything Windows itself can show media
+        controls for.</p>
+    </div>
+    <div class="feature">
+      <h3>Fully customizable</h3>
+      <p>Colors, borders, text — match your stream's theme, defaults to a clean black &amp; white.</p>
+    </div>
+    <div class="feature">
+      <h3>Twitch song requests</h3>
+      <p>Viewers type <code>!sr &lt;song&gt;</code> and it auto-plays through YouTube — no setup required.</p>
+    </div>
+    <div class="feature">
+      <h3>Runs quietly</h3>
+      <p>Lives in your system tray. No console window, single-instance safe, optional auto-start with Windows.</p>
+    </div>
+  </div>
+
+  <footer>
+    <img src="everex-mark.png" alt=""> by <a href="https://everexmedia.ca" target="_blank">everex</a>
+  </footer>
+</main>
+</body>
+</html>
