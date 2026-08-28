@@ -8,7 +8,7 @@
 <link rel="icon" href="rex-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --accent: #00D2FF; --accent-dim: rgba(0,210,255,0.15); --bg: #08090c; --card: #14161b; --card-border: #24262e;
@@ -40,7 +40,7 @@
   nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 20px; }
   nav .brand { display: flex; align-items: center; gap: 13px; }
   nav .brand img { width: 42px; height: 42px; }
-  nav .brand span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; }
+  nav .brand span { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; }
   nav a.gh {
     display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; text-decoration: none;
     border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 8px; transition: border-color 0.15s ease, color 0.15s ease;
@@ -54,6 +54,16 @@
   nav a.discord-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
   nav a.discord-btn svg { width: 15px; height: 15px; flex: none; }
   @media (max-width: 640px) { nav a.discord-btn span.label { display: none; } }
+  @media (max-width: 480px) {
+    nav { flex-wrap: wrap; row-gap: 12px; }
+    nav .brand span { font-size: 17px; }
+    nav a.gh { display: none; }
+    .mock-chat { display: none; }
+    .mock-cam { width: 56px; height: 56px; }
+    .mock-widget { padding: 8px 12px; gap: 9px; }
+    .mock-art { width: 34px; height: 34px; }
+    .mock-meta .title { font-size: 12px; }
+  }
 
   .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; margin-top: 28px; }
   @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 44px; } }
@@ -64,7 +74,7 @@
     letter-spacing: 0.02em; margin-bottom: 18px;
   }
   h1.headline {
-    font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.12; margin: 0 0 16px;
+    font-family: 'Inter', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.12; margin: 0 0 16px;
     letter-spacing: -0.02em;
   }
   @media (max-width: 500px) { h1.headline { font-size: 32px; } }
@@ -76,7 +86,7 @@
 
   .download-btn {
     display: inline-flex; align-items: center; gap: 10px;
-    background: var(--accent); color: #04141a; font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    background: var(--accent); color: #04141a; font-family: 'Inter', sans-serif; font-weight: 700;
     font-size: 16px; padding: 15px 26px; border-radius: 10px; text-decoration: none;
     box-shadow: 0 8px 30px rgba(0,210,255,0.28); transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
@@ -87,6 +97,11 @@
     border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
   }
   .smartscreen b { color: var(--text); }
+  .beta-note {
+    margin-top: 12px; padding: 14px 16px; background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22);
+    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  }
+  .beta-note b { color: var(--text); }
 
   /* --- hero mockup: a mini "stream" scene with the widget live on it --- */
   .mock-frame {
@@ -129,7 +144,7 @@
   .mock-meta .label {
     font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px;
   }
-  .mock-meta .title { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 700; color: #fff; }
+  .mock-meta .title { font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; color: #fff; }
   .mock-meta .artist { font-size: 11.5px; color: #b3b3b3; margin-top: 1px; }
   .mock-chat {
     position: absolute; top: 14px; right: 14px; width: 150px; display: flex; flex-direction: column; gap: 6px;
@@ -144,7 +159,7 @@
 
   .howitworks { margin-top: 100px; }
   .section-head { text-align: center; margin-bottom: 40px; }
-  .section-head h2 { font-family: 'Space Grotesk', sans-serif; font-size: 26px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .section-head h2 { font-family: 'Inter', sans-serif; font-size: 26px; margin: 0 0 8px; letter-spacing: -0.01em; }
   .section-head p { color: var(--muted); font-size: 14.5px; margin: 0; }
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
@@ -152,9 +167,9 @@
   .step .num {
     width: 26px; height: 26px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700;
     font-size: 12.5px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
-  .step h3 { font-family: 'Space Grotesk', sans-serif; font-size: 14.5px; margin: 0 0 6px; }
+  .step h3 { font-family: 'Inter', sans-serif; font-size: 14.5px; margin: 0 0 6px; }
   .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
 
   .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 90px; }
@@ -169,7 +184,7 @@
     width: 30px; height: 30px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
     display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
   }
-  .feature h3 { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; margin: 0 0 5px; }
+  .feature h3 { font-family: 'Inter', sans-serif; font-size: 13.5px; margin: 0 0 5px; }
   .feature p { color: var(--muted); font-size: 12.5px; margin: 0; line-height: 1.5; }
 
   code { font-family: 'SF Mono', Consolas, monospace; font-size: 0.92em; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
@@ -224,6 +239,10 @@
       <div class="smartscreen">
         <b>Seeing a blue "Windows protected your PC" screen?</b> Normal for any new app that isn't yet
         widely downloaded. Click <b>"More info"</b>, then <b>"Run anyway"</b>.
+      </div>
+      <div class="beta-note">
+        <b>Heads up — this is still early / beta.</b> It's been tested but you might hit a rough edge here
+        and there. If something breaks, it's not you — let me know and I'll fix it. No hard feelings either way.
       </div>
     </div>
 
