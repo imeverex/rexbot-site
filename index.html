@@ -104,6 +104,11 @@
     border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
   }
   .beta-note b { color: var(--text); }
+  .sac-note {
+    margin-top: 12px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
+    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  }
+  .sac-note b { color: var(--text); }
 
   /* --- hero mockup: a mini "stream" scene with the widget live on it --- */
   .mock-frame {
@@ -242,6 +247,22 @@
       <div class="smartscreen">
         <b>Seeing a blue "Windows protected your PC" screen?</b> Normal for any new app that isn't yet
         widely downloaded. Click <b>"More info"</b>, then <b>"Run anyway"</b>.
+      </div>
+      <div class="sac-note">
+        <b>Or "Smart App Control blocked an app that may be unsafe"?</b>
+        That's a different, stricter check, and it has no "Run anyway" button. It isn't saying the app
+        is malware, only that it can't verify the publisher, because this isn't signed with a paid
+        code-signing certificate yet. It's on by default only on fresh Windows 11 installs, so most
+        people never see it.
+        <br><br>
+        Every release gets submitted to Microsoft for review, and once it clears, the installer runs
+        normally with nothing needed from you. If you hit this, the easiest fix is to wait a few days
+        and try again.
+        <br><br>
+        You <i>can</i> switch Smart App Control off under Windows Security, App &amp; browser control,
+        Smart App Control settings. Worth knowing first: <b>once it's off, Windows won't let you turn
+        it back on without reinstalling the OS.</b> That's Microsoft's design. Please don't drop a
+        security layer permanently just to run this, waiting is the better call.
       </div>
       <div class="beta-note">
         <b>Heads up: this is still early / beta.</b> It's been tested but you might hit a rough edge here
