@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Help &amp; Install Notes · Rex Now Playing Widget</title>
+<meta name="description" content="Install help and troubleshooting for the Rex Now Playing Widget: Windows SmartScreen, Smart App Control, and support.">
+<link rel="icon" href="rex-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #00D2FF; --accent-dim: rgba(0,210,255,0.15); --bg: #08090c; --card: #14161b; --card-border: #24262e;
+    --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
+  }
+  .noise {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .glow {
+    position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(90px); opacity: 0.5;
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+  .glow.a { width: 480px; height: 480px; background: #00D2FF; top: -180px; left: -140px; }
+  .glow.b { width: 420px; height: 420px; background: #CB753A; opacity: 0.22; top: 120px; right: -160px; animation-delay: -8s; }
+  .glow.c { width: 380px; height: 380px; background: #00D2FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, -24px) scale(1.08); }
+  }
+  main { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 40px 24px 90px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 20px; }
+  nav .brand { display: flex; align-items: center; gap: 13px; }
+  nav .brand img { width: 58px; height: 58px; }
+  nav .brand span { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; }
+  nav a.gh {
+    display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; text-decoration: none;
+    border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 8px; transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  nav a.gh:hover { color: var(--text); border-color: var(--muted); }
+  nav a.discord-btn {
+    display: flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; font-weight: 700;
+    text-decoration: none; background: #5865F2; padding: 8px 14px; border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(88,101,242,0.3); transition: filter 0.15s ease, transform 0.15s ease;
+  }
+  nav a.discord-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  nav a.discord-btn svg { width: 15px; height: 15px; flex: none; }
+  @media (max-width: 640px) { nav a.discord-btn span.label { display: none; } }
+  @media (max-width: 480px) {
+    nav { flex-wrap: wrap; row-gap: 12px; }
+    nav .brand img { width: 42px; height: 42px; }
+    nav .brand span { font-size: 17px; }
+    nav a.gh { display: none; }
+    main { padding-left: 18px; padding-right: 18px; }
+    .mock-chat { display: none; }
+    .mock-cam { width: 56px; height: 56px; }
+    .mock-widget { padding: 8px 12px; gap: 9px; }
+    .mock-art { width: 34px; height: 34px; }
+    .mock-meta .title { font-size: 12px; }
+  }
+
+  .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; margin-top: 28px; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 44px; } }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
+    background: var(--accent-dim); border: 1px solid rgba(0,210,255,0.3); padding: 5px 12px; border-radius: 999px;
+    letter-spacing: 0.02em; margin-bottom: 18px;
+  }
+  h1.headline {
+    font-family: 'Inter', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.12; margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 500px) { h1.headline { font-size: 32px; } }
+  h1.headline em {
+    font-style: normal; background: linear-gradient(90deg, var(--accent), #7dd8ff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { color: var(--muted); font-size: 16px; max-width: 460px; margin: 0 0 28px; }
+
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: #04141a; font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 16px; padding: 15px 26px; border-radius: 10px; text-decoration: none;
+    box-shadow: 0 8px 30px rgba(0,210,255,0.28); transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .download-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(0,210,255,0.4); }
+  .download-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; }
+  .smartscreen {
+    margin-top: 20px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
+    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  }
+  .smartscreen b { color: var(--text); }
+  .beta-note {
+    margin-top: 12px; padding: 14px 16px; background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22);
+    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  }
+  .beta-note b { color: var(--text); }
+  .sac-note {
+    margin-top: 12px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
+    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  }
+  .sac-note b { color: var(--text); }
+
+  /* --- hero mockup: a mini "stream" scene with the widget live on it --- */
+  .mock-frame {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border);
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02);
+    background: #0c0e12;
+  }
+  .mock-titlebar {
+    display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #111319; border-bottom: 1px solid var(--card-border);
+  }
+  .mock-titlebar span { width: 9px; height: 9px; border-radius: 50%; background: #333844; }
+  .mock-scene {
+    position: relative; aspect-ratio: 16/10; overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(8,9,12,0.15), rgba(8,9,12,0.55) 85%),
+      url("game-capture.jpg");
+    background-size: cover;
+    background-position: center 35%;
+  }
+  .mock-live {
+    position: absolute; top: 14px; left: 14px; display: flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
+  }
+  .mock-live .dot { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .mock-cam {
+    position: absolute; bottom: 14px; right: 14px; width: 78px; height: 78px; border-radius: 50%;
+    background: linear-gradient(160deg, #2a2f3a, #14161b); border: 2px solid rgba(255,255,255,0.08);
+  }
+  .mock-widget {
+    position: absolute; bottom: 16px; left: 16px; display: flex; align-items: center; gap: 12px;
+    padding: 10px 18px; background: #000; border: 1px solid #fff; border-radius: 10px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.5); animation: rise 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.3s;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .mock-art {
+    width: 42px; height: 42px; border-radius: 6px; flex-shrink: 0;
+    background: url("m83-art.jpg") center/cover;
+  }
+  .mock-meta .label {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px;
+  }
+  .mock-meta .title { font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; color: #fff; }
+  .mock-meta .artist { font-size: 11.5px; color: #b3b3b3; margin-top: 1px; }
+  .mock-chat {
+    position: absolute; top: 14px; right: 14px; width: 150px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .mock-chat .msg {
+    background: rgba(10,11,14,0.65); backdrop-filter: blur(3px); border-radius: 7px; padding: 5px 8px; font-size: 10px; color: #cbd2d8;
+    animation: rise 0.5s ease both;
+  }
+  .mock-chat .msg b { color: var(--accent); }
+  .mock-chat .msg:nth-child(1) { animation-delay: 0.6s; }
+  .mock-chat .msg:nth-child(2) { animation-delay: 0.9s; }
+
+  .howitworks { margin-top: 100px; }
+  .section-head { text-align: center; margin-bottom: 40px; }
+  .section-head h2 { font-family: 'Inter', sans-serif; font-size: 26px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .section-head p { color: var(--muted); font-size: 14.5px; margin: 0; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 22px; position: relative; }
+  .step .num {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700;
+    font-size: 12.5px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+    font-family: 'Inter', sans-serif;
+  }
+  .step h3 { font-family: 'Inter', sans-serif; font-size: 14.5px; margin: 0 0 6px; }
+  .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
+
+  .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 90px; }
+  @media (max-width: 860px) { .features { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .features { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 18px;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .feature:hover { transform: translateY(-3px); border-color: rgba(0,210,255,0.3); }
+  .feature .icon {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+  }
+  .feature h3 { font-family: 'Inter', sans-serif; font-size: 13.5px; margin: 0 0 5px; }
+  .feature p { color: var(--muted); font-size: 12.5px; margin: 0; line-height: 1.5; }
+
+  code { font-family: 'SF Mono', Consolas, monospace; font-size: 0.92em; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
+  a { color: var(--accent); }
+
+  footer {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    margin-top: 90px; opacity: 0.6; font-size: 12px; color: var(--muted);
+  }
+  footer img { height: 13px; }
+  footer a { color: var(--muted); }
+
+  /* --- help page --- */
+  .help-wrap { max-width: 760px; margin: 0 auto; padding: 70px 0 0; }
+  .help-wrap h1 { font-size: 34px; letter-spacing: -0.02em; margin: 0 0 10px; }
+  .help-lede { color: var(--muted); font-size: 15px; margin: 0 0 44px; }
+  .qa { border-top: 1px solid var(--card-border); padding: 26px 0; }
+  .qa h2 { font-size: 18px; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .qa p { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+  .qa p:last-child { margin-bottom: 0; }
+  .qa b { color: var(--text); }
+  .qa ol { color: var(--muted); font-size: 14px; margin: 0 0 12px; padding-left: 20px; }
+  .qa ol li { margin-bottom: 6px; }
+  .callout {
+    margin: 14px 0 0; padding: 13px 15px; border-radius: 10px; font-size: 13.5px;
+    background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22); color: var(--muted);
+  }
+  .callout b { color: var(--text); }
+  .back-link { display: inline-block; margin-top: 8px; font-size: 13.5px; text-decoration: none; }
+  @media (max-width: 720px) { .help-wrap { padding-top: 40px; } .help-wrap h1 { font-size: 27px; } }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="glow a"></div>
+<div class="glow b"></div>
+<div class="glow c"></div>
+
+<main>
+  <nav>
+    <div class="brand">
+      <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+        <img src="rex-mark.png" alt="">
+        <span>Rex Now Playing Widget</span>
+      </a>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <a class="gh" href="https://ko-fi.com/everex" target="_blank">Support the project ↗</a>
+      <a class="gh" href="https://github.com/imeverex/rexbot-site" target="_blank">View on GitHub ↗</a>
+    </div>
+  </nav>
+
+  <div class="help-wrap">
+    <h1>Help &amp; install notes</h1>
+    <p class="help-lede">Everything you might run into, and what to do about it.</p>
+
+    <div class="qa">
+      <h2>Windows showed a blue "Windows protected your PC" screen</h2>
+      <p>That is Windows SmartScreen, and it appears for any new app that has not been downloaded by
+        many people yet. It is about popularity, not safety.</p>
+      <ol>
+        <li>Click <b>More info</b>.</li>
+        <li>Click <b>Run anyway</b>.</li>
+      </ol>
+      <p>That is it. You will not see it again on that machine.</p>
+    </div>
+
+    <div class="qa">
+      <h2>It said "Smart App Control blocked an app that may be unsafe"</h2>
+      <p>This is a different, stricter check, and it has no Run anyway button. It is not saying the app
+        is malware. It means Windows cannot verify the publisher, because the installer is not signed
+        with a paid code-signing certificate yet.</p>
+      <p>Smart App Control is only on by default on fresh Windows 11 installs, so most people never see
+        this.</p>
+      <p>Every release is submitted to Microsoft for review. Once a build clears, the installer runs
+        normally with nothing needed from you, so <b>the simplest fix is to wait a few days and try
+        again</b>.</p>
+      <div class="callout">
+        <b>Please do not turn Smart App Control off just to run this.</b> You can switch it off under
+        Windows Security, App &amp; browser control, Smart App Control settings. But once it is off,
+        Windows will not let you turn it back on without reinstalling the OS. That is Microsoft's
+        design, not something I can change, and it is not worth losing permanently over one app.
+      </div>
+    </div>
+
+    <div class="qa">
+      <h2>Song requests are not working</h2>
+      <p>Chat-controlled song requests need <b>Spotify Premium</b>. Spotify does not allow apps to
+        control playback on free accounts, so this is a limit on their side rather than a setting you
+        can change.</p>
+      <p>You will also need to connect your Spotify account once, in the app's settings, and have
+        Spotify actually open and playing on the same machine.</p>
+    </div>
+
+    <div class="qa">
+      <h2>The overlay is not updating in OBS</h2>
+      <p>OBS caches the overlay page. After updating the app, right-click your Browser Source and
+        choose <b>Refresh cache of current page</b>, or restart OBS.</p>
+      <p>Worth doing the same after you change colors or layout in settings, otherwise OBS keeps
+        showing the old look.</p>
+    </div>
+
+    <div class="qa">
+      <h2>The overlay is cut off</h2>
+      <p>Your OBS Browser Source has its own width and height, separate from the overlay's. If the
+        source is narrower than the widget, the right-hand side gets cropped. Set the Browser Source
+        width to match, or a little wider than, the width you picked in settings.</p>
+    </div>
+
+    <div class="qa">
+      <h2>This is still early software</h2>
+      <p>It has been tested, but you might hit a rough edge here and there. If something breaks, it is
+        not you. Tell me and I will fix it.</p>
+      <p>The best place to reach me is <a href="https://twitch.tv/imeverex" target="_blank">Twitch</a>,
+        or by opening an issue on
+        <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">GitHub</a>.</p>
+    </div>
+
+    <div class="qa">
+      <h2>Can I support this?</h2>
+      <p>It is free and it will stay free. If you want to throw something in the tip jar anyway, there
+        is a <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>. Entirely optional and very
+        much appreciated.</p>
+    </div>
+
+    <a class="back-link" href="/">← Back to the app</a>
+  </div>
+
+  <footer>
+    <img src="everex-mark.png" alt=""> by <a href="https://everexmedia.ca" target="_blank">everex</a>
+    · <a href="https://builds.everexmedia.ca" target="_blank">Everex BF6 build board</a>
+    · <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
+  </footer>
+</main>
+</body>
+</html>

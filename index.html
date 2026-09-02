@@ -94,21 +94,13 @@
   }
   .download-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(0,210,255,0.4); }
   .download-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; }
-  .smartscreen {
-    margin-top: 20px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
-    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
+  /* One quiet line instead of a stack of warning boxes. The detail lives on
+     help.html so the hero stays about the app rather than about Windows. */
+  .install-note {
+    margin-top: 18px; font-size: 13px; color: var(--faint); max-width: 460px; line-height: 1.55;
   }
-  .smartscreen b { color: var(--text); }
-  .beta-note {
-    margin-top: 12px; padding: 14px 16px; background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22);
-    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
-  }
-  .beta-note b { color: var(--text); }
-  .sac-note {
-    margin-top: 12px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
-    border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
-  }
-  .sac-note b { color: var(--text); }
+  .install-note a { text-decoration: none; white-space: nowrap; }
+  .install-note a:hover { text-decoration: underline; }
 
   /* --- hero mockup: a mini "stream" scene with the widget live on it --- */
   .mock-frame {
@@ -225,6 +217,7 @@
         </svg>
         <span class="label">Discord Music Bot</span>
       </a>
+      <a class="gh" href="/help.html">Help</a>
       <a class="gh" href="https://github.com/imeverex/rexbot-site" target="_blank">
         View on GitHub ↗
       </a>
@@ -235,38 +228,17 @@
     <div>
       <div class="eyebrow">● Free · Windows · Made for OBS</div>
       <h1 class="headline">Show what's playing.<br>Let chat <em>request songs.</em></h1>
-      <p class="hero-sub">One small app in your system tray: a clean now-playing overlay that works
-        with any player and needs no setup, plus <code>!sr</code> Twitch song requests that queue
-        straight to your own Spotify. Spotify Premium required for chat-controlled song requests.</p>
+      <p class="hero-sub">A clean now-playing overlay for OBS that works with any player, plus
+        <code>!sr</code> song requests that queue straight to your Spotify.</p>
 
       <a class="download-btn" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
         ⬇ Download for Windows
       </a>
       <div class="download-meta">Windows 10/11 · installer includes a Start Menu shortcut &amp; uninstaller</div>
 
-      <div class="smartscreen">
-        <b>Seeing a blue "Windows protected your PC" screen?</b> Normal for any new app that isn't yet
-        widely downloaded. Click <b>"More info"</b>, then <b>"Run anyway"</b>.
-      </div>
-      <div class="sac-note">
-        <b>Or "Smart App Control blocked an app that may be unsafe"?</b>
-        That's a different, stricter check, and it has no "Run anyway" button. It isn't saying the app
-        is malware, only that it can't verify the publisher, because this isn't signed with a paid
-        code-signing certificate yet. It's on by default only on fresh Windows 11 installs, so most
-        people never see it.
-        <br><br>
-        Every release gets submitted to Microsoft for review, and once it clears, the installer runs
-        normally with nothing needed from you. If you hit this, the easiest fix is to wait a few days
-        and try again.
-        <br><br>
-        You <i>can</i> switch Smart App Control off under Windows Security, App &amp; browser control,
-        Smart App Control settings. Worth knowing first: <b>once it's off, Windows won't let you turn
-        it back on without reinstalling the OS.</b> That's Microsoft's design. Please don't drop a
-        security layer permanently just to run this, waiting is the better call.
-      </div>
-      <div class="beta-note">
-        <b>Heads up: this is still early / beta.</b> It's been tested but you might hit a rough edge here
-        and there. If something breaks, it's not you, just let me know and I'll fix it.
+      <div class="install-note">
+        New apps trip a Windows warning the first time. It takes two clicks to get past.
+        <a href="/help.html">What to do →</a>
       </div>
     </div>
 
@@ -321,44 +293,43 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </div>
       <h3>Works with anything</h3>
-      <p>Spotify, Tidal, Apple Music, YouTube Music, browser tabs: anything Windows itself shows media controls for.</p>
+      <p>Spotify, Tidal, Apple Music, YouTube Music, even a browser tab. If Windows shows media controls for it, this reads it.</p>
     </div>
     <div class="feature">
       <div class="icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.4-4.5-8-10-8z"/></svg>
       </div>
       <h3>Fully customizable</h3>
-      <p>Colors, borders, text all match your stream's theme. Defaults to a clean black &amp; white.</p>
+      <p>Colors, borders, fonts and size, to match your stream. Defaults to clean black &amp; white.</p>
     </div>
     <div class="feature">
       <div class="icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </div>
       <h3>Twitch song requests</h3>
-      <p>Viewers type <code>!sr &lt;song&gt;</code> and it lands in your Spotify queue. They can also
-        use <code>!queue</code> to see what's up next and <code>!nowplaying</code> for the current
-        track. Requires Spotify Premium.</p>
+      <p>Viewers type <code>!sr &lt;song&gt;</code> and it lands in your Spotify queue.
+        <code>!queue</code> shows what's next. Needs Spotify Premium.</p>
     </div>
     <div class="feature">
       <div class="icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
       <h3>Runs quietly</h3>
-      <p>Lives in your system tray. No console window, single-instance safe, optional auto-start with Windows.</p>
+      <p>Sits in your system tray with no console window. Can start with Windows if you want.</p>
     </div>
     <div class="feature">
       <div class="icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       </div>
       <h3>Never goes quiet</h3>
-      <p>When the requests run out, Spotify just carries on with whatever playlist you already had going. Nothing to set up.</p>
+      <p>When requests run out, Spotify carries on with whatever you already had playing.</p>
     </div>
     <div class="feature">
       <div class="icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 12.5h5"/></svg>
       </div>
       <h3>Chat announcements &amp; limits</h3>
-      <p>Optional bot posts "now playing" right in your Twitch chat, zero setup. Per-viewer cooldowns keep requests from getting spammed.</p>
+      <p>Optional bot posts the current track in chat. Per-viewer cooldowns keep requests from being spammed.</p>
     </div>
   </section>
 
