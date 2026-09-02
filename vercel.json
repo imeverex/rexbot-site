@@ -3,6 +3,7 @@
     { "source": "/twitch/:path*", "destination": "https://rextwitchbot-production.up.railway.app/twitch/:path*" },
     { "source": "/spotify/:path*", "destination": "https://rextwitchbot-production.up.railway.app/spotify/:path*" },
     { "source": "/dashboard", "destination": "https://rextwitchbot-production.up.railway.app/dashboard" },
+    { "source": "/overlay/:path*", "destination": "https://rextwitchbot-production.up.railway.app/overlay/:path*" },
     { "source": "/commands/:path*", "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*" },
     { "source": "/commands", "destination": "https://rextwitchbot-production.up.railway.app/commands" },
     { "source": "/timers/:path*", "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*" },
