@@ -3,267 +3,322 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rex Now Playing Widget</title>
-<meta name="description" content="A free now-playing overlay and Twitch song-request widget for OBS, by everex.">
+<title>Rex — everex</title>
+<meta name="description" content="Rex: a Twitch chat bot, a Discord music bot, and an OBS now-playing widget, by everex.">
 <link rel="icon" href="rex-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --accent: #00D2FF; --accent-dim: rgba(0,210,255,0.15); --bg: #08090c; --card: #14161b; --card-border: #24262e;
-    --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
-  }
-  * { box-sizing: border-box; }
-  html { background: var(--bg); scroll-behavior: smooth; }
-  body {
-    font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
-    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
-  }
-  .noise {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 1;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  }
-  .glow {
-    position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(90px); opacity: 0.5;
-    animation: drift 22s ease-in-out infinite alternate;
-  }
-  .glow.a { width: 480px; height: 480px; background: #00D2FF; top: -180px; left: -140px; }
-  .glow.b { width: 420px; height: 420px; background: #CB753A; opacity: 0.22; top: 120px; right: -160px; animation-delay: -8s; }
-  .glow.c { width: 380px; height: 380px; background: #00D2FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
-  @keyframes drift {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(30px, -24px) scale(1.08); }
-  }
-  main { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 40px 24px 90px; }
+:root {
+  --accent: #9146FF; --accent-dim: rgba(145,70,255,0.15); --accent-glow: rgba(145,70,255,0.35);
+  --bg: #08090c; --card: #14161b; --card-border: #24262e;
+  --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
+  --twitch: #9146FF; --discord: #5865F2; --widget: #00D2FF;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
+  margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
+  display: flex; min-height: 100vh; transition: background 0.2s ease;
+}
+body[data-active="twitch"]   { --accent: var(--twitch);  --accent-dim: rgba(145,70,255,0.15); --accent-glow: rgba(145,70,255,0.35); }
+body[data-active="discord"]  { --accent: var(--discord); --accent-dim: rgba(88,101,242,0.15); --accent-glow: rgba(88,101,242,0.35); }
+body[data-active="widget"]   { --accent: var(--widget);  --accent-dim: rgba(0,210,255,0.15);  --accent-glow: rgba(0,210,255,0.35); }
 
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 20px; }
-  nav .brand { display: flex; align-items: center; gap: 13px; }
-  nav .brand img { width: 58px; height: 58px; }
-  nav .brand span { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; }
-  nav a.gh {
-    display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; text-decoration: none;
-    border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 8px; transition: border-color 0.15s ease, color 0.15s ease;
-  }
-  nav a.gh:hover { color: var(--text); border-color: var(--muted); }
-  nav a.discord-btn {
-    display: flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; font-weight: 700;
-    text-decoration: none; background: #5865F2; padding: 8px 14px; border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(88,101,242,0.3); transition: filter 0.15s ease, transform 0.15s ease;
-  }
-  nav a.discord-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  nav a.discord-btn svg { width: 15px; height: 15px; flex: none; }
-  @media (max-width: 640px) { nav a.discord-btn span.label { display: none; } }
-  @media (max-width: 480px) {
-    nav { flex-wrap: wrap; row-gap: 12px; }
-    nav .brand img { width: 42px; height: 42px; }
-    nav .brand span { font-size: 17px; }
-    nav a.gh { display: none; }
-    main { padding-left: 18px; padding-right: 18px; }
-    .mock-chat { display: none; }
-    .mock-cam { width: 56px; height: 56px; }
-    .mock-widget { padding: 8px 12px; gap: 9px; }
-    .mock-art { width: 34px; height: 34px; }
-    .mock-meta .title { font-size: 12px; }
-  }
+.noise {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.glow { position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(100px); opacity: 0.4;
+  animation: drift 24s ease-in-out infinite alternate; transition: background 0.3s ease; }
+.glow.a { width: 460px; height: 460px; background: var(--accent); top: -200px; left: 220px; }
+.glow.b { width: 420px; height: 420px; background: #CB753A; opacity: 0.16; bottom: -180px; right: 8%; animation-delay: -10s; }
+@keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(26px,-20px) scale(1.06); } }
 
-  .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; margin-top: 28px; }
-  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 44px; } }
+aside.sidebar {
+  position: relative; z-index: 1; width: 220px; flex-shrink: 0; min-height: 100vh;
+  background: rgba(20,22,27,0.5); border-right: 1px solid var(--card-border);
+  display: flex; flex-direction: column; padding: 24px 15px;
+}
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; margin-bottom: 30px; }
+.brand img { width: 32px; height: 32px; }
+.brand span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; }
+nav.sidenav { display: flex; flex-direction: column; gap: 3px; }
+nav.sidenav .nav-btn {
+  display: flex; align-items: center; gap: 11px; background: none; border: none; text-align: left; width: 100%;
+  color: var(--muted); font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 600;
+  padding: 11px 12px; border-radius: 9px; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+}
+nav.sidenav .nav-btn svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
+nav.sidenav .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+nav.sidenav .nav-btn.active { color: var(--accent); background: var(--accent-dim); }
+.nav-divider { height: 1px; background: var(--card-border); margin: 14px 4px; }
+.sidebar-links { display: flex; flex-direction: column; gap: 2px; }
+.sidebar-links a {
+  display: flex; align-items: center; gap: 11px; color: var(--faint); font-size: 12.5px; font-weight: 500;
+  padding: 9px 12px; border-radius: 9px; text-decoration: none; transition: color 0.15s ease, background 0.15s ease;
+}
+.sidebar-links a:hover { color: var(--muted); background: rgba(255,255,255,0.03); }
+.sidebar-links a svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.8; }
+.sidebar-footer {
+  margin-top: auto; display: flex; align-items: center; gap: 7px; padding: 14px 8px 2px; opacity: 0.55; font-size: 11px; color: var(--muted);
+}
+.sidebar-footer img { height: 11px; }
 
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
-    background: var(--accent-dim); border: 1px solid rgba(0,210,255,0.3); padding: 5px 12px; border-radius: 999px;
-    letter-spacing: 0.02em; margin-bottom: 18px;
-  }
-  h1.headline {
-    font-family: 'Inter', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.12; margin: 0 0 16px;
-    letter-spacing: -0.02em;
-  }
-  @media (max-width: 500px) { h1.headline { font-size: 32px; } }
-  h1.headline em {
-    font-style: normal; background: linear-gradient(90deg, var(--accent), #7dd8ff);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero-sub { color: var(--muted); font-size: 16px; max-width: 460px; margin: 0 0 28px; }
+.content { position: relative; z-index: 1; flex: 1; min-width: 0; }
+main { max-width: 900px; margin: 0 auto; padding: 48px 28px 90px; }
 
-  .download-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--accent); color: #04141a; font-family: 'Inter', sans-serif; font-weight: 700;
-    font-size: 16px; padding: 15px 26px; border-radius: 10px; text-decoration: none;
-    box-shadow: 0 8px 30px rgba(0,210,255,0.28); transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-  .download-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(0,210,255,0.4); }
-  .download-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; }
-  /* One quiet line instead of a stack of warning boxes. The detail lives on
-     help.html so the hero stays about the app rather than about Windows. */
-  .install-note {
-    margin-top: 18px; font-size: 13px; color: var(--faint); max-width: 460px; line-height: 1.55;
-  }
-  .install-note a { text-decoration: none; white-space: nowrap; }
-  .install-note a:hover { text-decoration: underline; }
+@media (max-width: 780px) {
+  body { flex-direction: column; }
+  aside.sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid var(--card-border); padding: 16px; }
+  .brand { margin-bottom: 14px; }
+  nav.sidenav { flex-direction: row; flex-wrap: wrap; gap: 5px; }
+  nav.sidenav .nav-btn { flex: 1 1 auto; justify-content: center; padding: 10px 8px; font-size: 12px; white-space: nowrap; }
+  .nav-divider, .sidebar-links, .sidebar-footer { display: none; }
+  main { padding: 32px 18px 60px; }
+}
 
-  /* --- hero mockup: a mini "stream" scene with the widget live on it --- */
-  .mock-frame {
-    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border);
-    box-shadow: 0 30px 70px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02);
-    background: #0c0e12;
-  }
-  .mock-titlebar {
-    display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #111319; border-bottom: 1px solid var(--card-border);
-  }
-  .mock-titlebar span { width: 9px; height: 9px; border-radius: 50%; background: #333844; }
-  .mock-scene {
-    position: relative; aspect-ratio: 16/10; overflow: hidden;
-    background:
-      linear-gradient(180deg, rgba(8,9,12,0.15), rgba(8,9,12,0.55) 85%),
-      url("game-capture.jpg");
-    background-size: cover;
-    background-position: center 35%;
-  }
-  .mock-live {
-    position: absolute; top: 14px; left: 14px; display: flex; align-items: center; gap: 6px;
-    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 999px;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
-  }
-  .mock-live .dot { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-  .mock-cam {
-    position: absolute; bottom: 14px; right: 14px; width: 78px; height: 78px; border-radius: 50%;
-    background: linear-gradient(160deg, #2a2f3a, #14161b); border: 2px solid rgba(255,255,255,0.08);
-  }
-  .mock-widget {
-    position: absolute; bottom: 16px; left: 16px; display: flex; align-items: center; gap: 12px;
-    padding: 10px 18px; background: #000; border: 1px solid #fff; border-radius: 10px;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.5); animation: rise 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.3s;
-  }
-  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .mock-art {
-    width: 42px; height: 42px; border-radius: 6px; flex-shrink: 0;
-    background: url("m83-art.jpg") center/cover;
-  }
-  .mock-meta .label {
-    font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px;
-  }
-  .mock-meta .title { font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; color: #fff; }
-  .mock-meta .artist { font-size: 11.5px; color: #b3b3b3; margin-top: 1px; }
-  .mock-chat {
-    position: absolute; top: 14px; right: 14px; width: 150px; display: flex; flex-direction: column; gap: 6px;
-  }
-  .mock-chat .msg {
-    background: rgba(10,11,14,0.65); backdrop-filter: blur(3px); border-radius: 7px; padding: 5px 8px; font-size: 10px; color: #cbd2d8;
-    animation: rise 0.5s ease both;
-  }
-  .mock-chat .msg b { color: var(--accent); }
-  .mock-chat .msg:nth-child(1) { animation-delay: 0.6s; }
-  .mock-chat .msg:nth-child(2) { animation-delay: 0.9s; }
+.panel[hidden] { display: none; }
+.panel { animation: panel-in 0.3s cubic-bezier(0.16,1,0.3,1); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-  .howitworks { margin-top: 100px; }
-  .section-head { text-align: center; margin-bottom: 40px; }
-  .section-head h2 { font-family: 'Inter', sans-serif; font-size: 26px; margin: 0 0 8px; letter-spacing: -0.01em; }
-  .section-head p { color: var(--muted); font-size: 14.5px; margin: 0; }
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
-  .step { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 22px; position: relative; }
-  .step .num {
-    width: 26px; height: 26px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700;
-    font-size: 12.5px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-    font-family: 'Inter', sans-serif;
-  }
-  .step h3 { font-family: 'Inter', sans-serif; font-size: 14.5px; margin: 0 0 6px; }
-  .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
+  background: var(--accent-dim); border: 1px solid var(--accent-glow); padding: 5px 12px; border-radius: 999px;
+  letter-spacing: 0.02em; margin-bottom: 18px; transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+h1.headline {
+  font-family: 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 700; line-height: 1.14; margin: 0 0 16px;
+  letter-spacing: -0.02em; max-width: 620px;
+}
+@media (max-width: 500px) { h1.headline { font-size: 29px; } }
+h1.headline em {
+  font-style: normal; background: linear-gradient(90deg, var(--accent), #fff);
+  -webkit-background-clip: text; background-clip: text; color: transparent; transition: background 0.2s ease;
+}
+.hero-sub { color: var(--muted); font-size: 15.5px; max-width: 480px; margin: 0 0 30px; }
 
-  .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 90px; }
-  @media (max-width: 860px) { .features { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 500px) { .features { grid-template-columns: 1fr; } }
-  .feature {
-    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 18px;
-    transition: transform 0.18s ease, border-color 0.18s ease;
-  }
-  .feature:hover { transform: translateY(-3px); border-color: rgba(0,210,255,0.3); }
-  .feature .icon {
-    width: 30px; height: 30px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
-    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
-  }
-  .feature h3 { font-family: 'Inter', sans-serif; font-size: 13.5px; margin: 0 0 5px; }
-  .feature p { color: var(--muted); font-size: 12.5px; margin: 0; line-height: 1.5; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--accent); color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 15.5px; padding: 14px 26px; border-radius: 10px; text-decoration: none;
+  box-shadow: 0 8px 30px var(--accent-glow); transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+.cta-btn:hover { transform: translateY(-1px); }
+.cta-btn svg { width: 18px; height: 18px; flex: none; }
+.cta-meta { margin-top: 13px; color: var(--faint); font-size: 12.5px; max-width: 460px; }
+.cta-meta a { color: var(--accent); text-decoration: none; }
+.cta-meta a:hover { text-decoration: underline; }
 
-  code { font-family: 'SF Mono', Consolas, monospace; font-size: 0.92em; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
-  a { color: var(--accent); }
+.section-head { margin: 64px 0 24px; }
+.section-head h2 { font-family: 'Space Grotesk', sans-serif; font-size: 21px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.section-head p { color: var(--muted); font-size: 14px; margin: 0; }
 
-  footer {
-    display: flex; align-items: center; gap: 8px; justify-content: center;
-    margin-top: 90px; opacity: 0.6; font-size: 12px; color: var(--muted);
-  }
-  footer img { height: 13px; }
-  footer a { color: var(--muted); }
+.cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .cmd-list { grid-template-columns: 1fr; } }
+.cmd {
+  display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 15px 17px;
+}
+.cmd code {
+  font-family: 'SF Mono', Consolas, monospace; font-size: 12.5px; font-weight: 600; color: var(--accent);
+  background: var(--accent-dim); padding: 4px 9px; border-radius: 6px; white-space: nowrap; transition: color 0.2s ease, background 0.2s ease;
+}
+.cmd span { color: var(--muted); font-size: 13px; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 680px) { .steps { grid-template-columns: 1fr; } }
+.step { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; }
+.step .num {
+  width: 25px; height: 25px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700;
+  font-size: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 13px;
+  font-family: 'Space Grotesk', sans-serif; transition: color 0.2s ease, background 0.2s ease;
+}
+.step h3 { font-family: 'Space Grotesk', sans-serif; font-size: 14px; margin: 0 0 6px; }
+.step p { color: var(--muted); font-size: 13px; margin: 0; }
+
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 680px) { .features { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 460px) { .features { grid-template-columns: 1fr; } }
+.feature {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 17px;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+.feature:hover { transform: translateY(-2px); border-color: var(--accent-glow); }
+.feature .icon {
+  width: 29px; height: 29px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 11px; transition: color 0.2s ease, background 0.2s ease;
+}
+.feature h3 { font-family: 'Space Grotesk', sans-serif; font-size: 13px; margin: 0 0 5px; }
+.feature p { color: var(--muted); font-size: 12px; margin: 0; line-height: 1.5; }
+
+code { font-family: 'SF Mono', Consolas, monospace; font-size: 0.92em; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
+a { color: var(--accent); }
+
+footer {
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+  margin-top: 80px; opacity: 0.6; font-size: 12px; color: var(--muted);
+}
+footer img { height: 13px; }
+footer a { color: var(--muted); }
 </style>
 </head>
-<body>
+<body data-active="twitch">
 <div class="noise"></div>
 <div class="glow a"></div>
 <div class="glow b"></div>
-<div class="glow c"></div>
 
-<main>
-  <nav>
-    <div class="brand">
-      <img src="rex-mark.png" alt="">
-      <span>Rex Now Playing Widget</span>
-    </div>
-    <div style="display:flex; align-items:center; gap:10px;">
-      <a class="discord-btn" href="/music-bot.html">
-        <svg viewBox="0 0 127.14 96.36" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-        </svg>
-        <span class="label">Discord Music Bot</span>
-      </a>
-      <a class="gh" href="/help.html">Help</a>
-      <a class="gh" href="https://github.com/imeverex/rexbot-site" target="_blank">
-        View on GitHub ↗
-      </a>
-    </div>
+<aside class="sidebar">
+  <div class="brand">
+    <img src="rex-mark.png" alt="">
+    <span>Rex</span>
+  </div>
+  <nav class="sidenav">
+    <button class="nav-btn active" data-panel="twitch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Twitch Chatbot
+    </button>
+    <button class="nav-btn" data-panel="discord">
+      <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Discord Bot
+    </button>
+    <button class="nav-btn" data-panel="widget">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      Now Playing Widget
+    </button>
   </nav>
+  <div class="nav-divider"></div>
+  <div class="sidebar-links">
+    <a href="/help.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"/><circle cx="12" cy="17.5" r=".6" fill="currentColor"/></svg>
+      Install help
+    </a>
+    <a href="https://github.com/imeverex/rexbot-site" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+      Source on GitHub
+    </a>
+  </div>
+  <div class="sidebar-footer"><img src="everex-mark.png" alt=""> by everex</div>
+</aside>
 
-  <section class="hero">
-    <div>
-      <div class="eyebrow">● Free · Windows · Made for OBS</div>
-      <h1 class="headline">Show what's playing.<br>Let chat <em>request songs.</em></h1>
-      <p class="hero-sub">A clean now-playing overlay for OBS that works with any player, plus
-        <code>!sr</code> song requests that queue straight to your Spotify.</p>
+<div class="content">
+<main>
 
-      <a class="download-btn" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
-        ⬇ Download for Windows
-      </a>
-      <div class="download-meta">Windows 10/11 · installer includes a Start Menu shortcut &amp; uninstaller</div>
+  <!-- ============ TWITCH ============ -->
+  <section class="panel" data-panel="twitch">
+    <div class="eyebrow">● Free · Twitch · always-on cloud bot</div>
+    <h1 class="headline">Custom commands, timers, and song requests —<br><em>running whether you're live or not.</em></h1>
+    <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
+      Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
 
-      <div class="install-note">
-        New apps trip a Windows warning the first time. It takes two clicks to get past.
-        <a href="/help.html">What to do →</a>
-      </div>
+    <a class="cta-btn" href="/twitch/login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Connect Twitch
+    </a>
+    <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
+
+    <div class="section-head">
+      <h2>What it does</h2>
+      <p>Everything below is managed from your dashboard once you connect — no config files.</p>
     </div>
-
-    <div class="mock-frame">
-      <div class="mock-titlebar"><span></span><span></span><span></span></div>
-      <div class="mock-scene">
-        <div class="mock-live"><span class="dot"></span>LIVE</div>
-        <div class="mock-chat">
-          <div class="msg"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
-          <div class="msg"><b>modbot:</b> queued ✓</div>
-        </div>
-        <div class="mock-cam"></div>
-        <div class="mock-widget">
-          <div class="mock-art"></div>
-          <div class="mock-meta">
-            <div class="label">Now Playing</div>
-            <div class="title">Midnight City</div>
-            <div class="artist">M83</div>
-          </div>
-        </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 12.5h5"/></svg></div>
+        <h3>Custom commands</h3>
+        <p>Add <code>!discord</code>, <code>!socials</code>, whatever you want. Cooldowns and permission levels built in.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Timers &amp; auto-messages</h3>
+        <p>Auto-post reminders on a repeating interval. Set it once, forget about it.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6z"/></svg></div>
+        <h3>Moderation</h3>
+        <p>Banned-word and link filtering with automatic timeouts, once the bot's a mod in your channel.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h3>Song requests</h3>
+        <p><code>!sr &lt;song&gt;</code> queues straight to your Spotify. Needs Spotify Premium, same as any request bot.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Runs in the cloud</h3>
+        <p>Not tied to your PC — no install, no Smart App Control warnings, nothing to keep open while you stream.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.4-4.5-8-10-8z"/></svg></div>
+        <h3>One dashboard</h3>
+        <p>Commands, timers, moderation, and Spotify — all in one place, no config files to edit.</p>
       </div>
     </div>
   </section>
 
-  <section class="howitworks">
+  <!-- ============ DISCORD ============ -->
+  <section class="panel" data-panel="discord" hidden>
+    <div class="eyebrow">● Free · Discord bot</div>
+    <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
+    <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
+
+    <a class="cta-btn" href="https://discord.com/oauth2/authorize?client_id=1523128406819082370&permissions=36718592&integration_type=0&scope=bot+applications.commands">
+      <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Add to Discord
+    </a>
+    <div class="cta-meta">You'll pick which server to add it to on Discord's own page. Needs "Manage Server" permission there.</div>
+
+    <div class="section-head">
+      <h2>Commands</h2>
+      <p>Slash commands: type <code>/</code> in any channel it's in.</p>
+    </div>
+    <div class="cmd-list">
+      <div class="cmd"><code>/play</code><span>Search + play a song, or queue it if something's playing</span></div>
+      <div class="cmd"><code>/skip</code><span>Skip the current song</span></div>
+      <div class="cmd"><code>/pause</code><span>Pause playback</span></div>
+      <div class="cmd"><code>/resume</code><span>Resume playback</span></div>
+      <div class="cmd"><code>/queue</code><span>See what's playing and what's next</span></div>
+      <div class="cmd"><code>/leave</code><span>Disconnect and clear the queue</span></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Why it's simple</h2>
+      <p></p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Free, no catches</h3>
+        <p>No premium tier, no paywalled commands, just <code>/play</code> and go.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h3>Just search &amp; go</h3>
+        <p>Type a song, artist, or paste a link. No accounts or playlists to set up first.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Leaves you alone</h3>
+        <p>Auto-disconnects after 5 idle minutes with nothing queued, so it doesn't linger in your voice channel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOW PLAYING WIDGET ============ -->
+  <section class="panel" data-panel="widget" hidden>
+    <div class="eyebrow">● Free · Windows · made for OBS</div>
+    <h1 class="headline">Show what's playing.<br><em>Let chat request songs.</em></h1>
+    <p class="hero-sub">A clean now-playing overlay for OBS that works with any player, plus
+      <code>!sr</code> song requests that queue straight to your Spotify.</p>
+
+    <a class="cta-btn" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Download for Windows
+    </a>
+    <div class="cta-meta">Windows 10/11 · installer includes a Start Menu shortcut &amp; uninstaller. New apps trip a
+      Windows warning the first time — <a href="/help.html">what to do →</a></div>
+
     <div class="section-head">
       <h2>Three steps. That's it.</h2>
       <p>No accounts, no config files, no API keys to hunt down.</p>
@@ -285,59 +340,57 @@
         <p>Turn on song requests if you want chat to DJ. Everything else just keeps running quietly.</p>
       </div>
     </div>
-  </section>
 
-  <section class="features">
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      </div>
-      <h3>Works with anything</h3>
-      <p>Spotify, Tidal, Apple Music, YouTube Music, even a browser tab. If Windows shows media controls for it, this reads it.</p>
+    <div class="section-head">
+      <h2>Prefer nothing installed at all?</h2>
+      <p>The Twitch Chatbot's Spotify overlay does the same job entirely from the cloud.</p>
     </div>
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.4-4.5-8-10-8z"/></svg>
+    <div class="features">
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h3>Works with anything</h3>
+        <p>Spotify, Tidal, Apple Music, YouTube Music, even a browser tab. If Windows shows media controls for it, this reads it.</p>
       </div>
-      <h3>Fully customizable</h3>
-      <p>Colors, borders, fonts and size, to match your stream. Defaults to clean black &amp; white.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.4-4.5-8-10-8z"/></svg></div>
+        <h3>Fully customizable</h3>
+        <p>Colors, borders, fonts and size, to match your stream. Defaults to clean black &amp; white.</p>
       </div>
-      <h3>Twitch song requests</h3>
-      <p>Viewers type <code>!sr &lt;song&gt;</code> and it lands in your Spotify queue.
-        <code>!queue</code> shows what's next. Needs Spotify Premium.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <div class="feature">
+        <div class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Runs quietly</h3>
+        <p>Sits in your system tray with no console window. Can start with Windows if you want.</p>
       </div>
-      <h3>Runs quietly</h3>
-      <p>Sits in your system tray with no console window. Can start with Windows if you want.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <h3>Never goes quiet</h3>
-      <p>When requests run out, Spotify carries on with whatever you already had playing.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 12.5h5"/></svg>
-      </div>
-      <h3>Chat announcements &amp; limits</h3>
-      <p>Optional bot posts the current track in chat. Per-viewer cooldowns keep requests from being spammed.</p>
     </div>
   </section>
 
   <footer>
     <img src="everex-mark.png" alt=""> by <a href="https://everexmedia.ca" target="_blank">everex</a>
-    · <a href="https://builds.everexmedia.ca" target="_blank">Everex BF6 build board</a>
     · <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
   </footer>
 </main>
+</div>
+
+<script>
+const PANELS = ["twitch", "discord", "widget"];
+const TITLES = {
+  twitch: "Rex — Twitch Chatbot",
+  discord: "Rex — Discord Bot",
+  widget: "Rex — Now Playing Widget",
+};
+function showPanel(name) {
+  if (!PANELS.includes(name)) name = "twitch";
+  document.querySelectorAll(".panel").forEach(p => { p.hidden = p.dataset.panel !== name; });
+  document.querySelectorAll(".nav-btn").forEach(b => { b.classList.toggle("active", b.dataset.panel === name); });
+  document.body.setAttribute("data-active", name);
+  document.title = TITLES[name];
+  const url = name === "twitch" ? "/" : "/#" + name;
+  history.replaceState(null, "", url);
+}
+document.querySelectorAll(".nav-btn").forEach(b => {
+  b.addEventListener("click", () => showPanel(b.dataset.panel));
+});
+showPanel((location.hash || "").replace("#", "") || "twitch");
+</script>
 </body>
 </html>
