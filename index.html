@@ -15,6 +15,7 @@
   --bg: #09090b; --surface: #141416; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
   --text: #f0f0f2; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
   --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
+  --twitch-soft: #caa4ff; --discord-soft: #aab2ff; --widget-soft: #7fe8a5;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
   --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -154,39 +155,31 @@ main { width: 100%; margin: 0; padding: 0 56px 90px; }
   opacity: 0.55;
 }
 
-/* --- editorial band: a huge faint outlined index numeral bleeding off the
-   right edge, a small colored kicker (icon + label), a plain confident
-   title, and a one-line tagline -- left-aligned like a magazine spread
-   instead of a centered card, so each of the three reads distinctly. --- */
-.st-index {
-  position: absolute; z-index: 0; right: 3%; top: 50%; transform: translateY(-50%);
-  font-size: 22vw; font-weight: 800; line-height: 1; color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255,255,255,0.09); pointer-events: none; user-select: none;
+/* --- band content: the product's own name/tagline on the left, and the
+   actual interface it lives in on the right (Twitch chat scrolling by,
+   a Discord voice channel, a player transport) instead of one shared
+   graphic -- sitting on the same glowing gradient as before. --- */
+.tb-row {
+  position: relative; z-index: 1; display: flex; align-items: center; gap: 44px;
+  width: 100%; max-width: 1020px; margin: 0 auto; padding: 0 56px;
 }
-@media (max-width: 900px) { .st-index { display: none; } }
+@media (max-width: 900px) { .tb-row { flex-direction: column; align-items: flex-start; gap: 30px; } }
+@media (max-width: 780px) { .tb-row { padding: 0 18px; } }
 
-.st-content { display: block; position: relative; z-index: 1; max-width: 640px; width: 100%; padding: 0 56px; text-align: left; }
-@media (max-width: 780px) { .st-content { padding: 0 18px; } }
-
-.st-kicker { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 20px; }
-.st-kicker .dot-icon {
-  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+.tb-text { flex: 1 1 360px; min-width: 260px; text-align: left; }
+.tb-kicker { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+.tb-kicker .dot-icon {
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.st-kicker .dot-icon svg { width: 15px; height: 15px; display: block; }
-.st-kicker .label {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6);
-}
+.tb-kicker .dot-icon svg { width: 15px; height: 15px; display: block; }
+.tb-kicker .label { font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
 
-.st-title {
-  display: block; font-size: 50px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; color: #fff;
-  margin: 0 0 14px; text-align: left;
-}
-@media (max-width: 700px) { .st-title { font-size: 32px; } }
-.st-tagline { display: block; font-size: 15.5px; color: rgba(255,255,255,0.55); max-width: 420px; margin: 0; line-height: 1.5; }
+.tb-title { display: block; font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 12px; color: #fff; text-wrap: balance; }
+@media (max-width: 700px) { .tb-title { font-size: 27px; } }
+.tb-sub { display: block; font-size: 14.5px; color: rgba(255,255,255,0.58); max-width: 380px; margin: 0 0 22px; line-height: 1.55; }
 
-.st-explore {
-  position: relative; z-index: 1; display: flex; align-items: center; gap: 7px; margin-top: 26px;
+.tb-explore {
+  display: flex; align-items: center; gap: 7px;
   font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45);
 }
 .section-toggle .chevron {
@@ -196,29 +189,80 @@ main { width: 100%; margin: 0; padding: 0 56px 90px; }
 }
 .product-section.expanded .section-toggle .chevron { transform: rotate(180deg); animation: none; }
 
+.tb-card {
+  flex: 0 0 320px; width: 320px; border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14); background: rgba(10,8,14,0.55); backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px -26px rgba(0,0,0,0.65);
+}
+@media (max-width: 900px) { .tb-card { width: 100%; max-width: 380px; flex: 0 0 auto; } }
+
+/* -- twitch: live chat -- */
+.chat-head { display: flex; align-items: center; gap: 7px; padding: 9px 13px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); }
+.chat-head .live { display: flex; align-items: center; gap: 5px; font-family: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; color: #ff6b6b; }
+.chat-head .live .dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4d4d; }
+.chat-head .name { margin-left: auto; font-size: 10.5px; color: rgba(255,255,255,0.45); }
+.chat-msgs { padding: 12px 13px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+.chat-msgs .m b { color: #fff; }
+.chat-msgs .m.bot { background: rgba(145,70,255,0.16); border-radius: 6px; padding: 6px 9px; margin: 0 -4px; }
+.chat-msgs .m.bot b { color: var(--twitch-soft); }
+.chat-input { display: flex; align-items: center; gap: 8px; padding: 9px 13px; border-top: 1px solid rgba(255,255,255,0.1); }
+.chat-input .box { flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px; padding: 6px 10px; font-size: 11px; color: rgba(255,255,255,0.4); }
+.chat-input .send { font-size: 10.5px; color: var(--twitch-soft); font-weight: 700; }
+
+/* -- discord: voice channel -- */
+.voice-head { padding: 9px 13px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10.5px; color: rgba(255,255,255,0.45); }
+.voice-members { padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+.voice-member { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; }
+.voice-member .avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--discord);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.voice-member.speaking .avatar { box-shadow: 0 0 0 2px var(--discord-soft); }
+.voice-member .avatar svg { width: 14px; height: 14px; }
+.voice-member .who { display: flex; flex-direction: column; min-width: 0; }
+.voice-member .name { font-size: 12px; color: #fff; display: flex; align-items: center; gap: 6px; }
+.voice-member .name .tag { font-size: 8.5px; background: var(--discord); color: #fff; padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+.voice-member .now { font-size: 10.5px; color: var(--discord-soft); }
+.voice-member .mic { margin-left: auto; opacity: 0.5; flex-shrink: 0; }
+.voice-member .mic svg { width: 13px; height: 13px; }
+
+/* -- widget: player transport -- */
+.player-card { padding: 18px; }
+.player-track { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.player-art { width: 46px; height: 46px; border-radius: 7px; flex-shrink: 0; background: linear-gradient(135deg, var(--widget-soft), var(--widget)); }
+.player-meta .title { font-size: 13px; font-weight: 700; color: #fff; }
+.player-meta .artist { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.player-progress { height: 3px; background: rgba(255,255,255,0.12); border-radius: 999px; margin-bottom: 6px; overflow: hidden; }
+.player-progress .fill { width: 38%; height: 100%; background: var(--widget); }
+.player-times { display: flex; justify-content: space-between; font-size: 9.5px; color: rgba(255,255,255,0.35); margin-bottom: 18px; }
+.player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.player-controls svg { width: 17px; height: 17px; color: rgba(255,255,255,0.6); }
+.player-controls .play {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--widget); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 22px -6px rgba(29,185,84,0.6);
+}
+.player-controls .play svg { width: 15px; height: 15px; color: #06120a; }
+
 .section-toggle.c-twitch::before {
   background: radial-gradient(circle at 12% 50%, rgba(145,70,255,0.32), rgba(6,4,10,0.97) 62%), #08050d;
 }
-.section-toggle.c-twitch .st-index { -webkit-text-stroke-color: rgba(145,70,255,0.16); }
-.section-toggle.c-twitch .st-kicker .dot-icon { background: rgba(145,70,255,0.22); color: #caa4ff; }
-.section-toggle.c-twitch .st-kicker .label { color: #caa4ff; }
-.section-toggle.c-twitch .st-explore { color: rgba(202,164,255,0.75); }
+.section-toggle.c-twitch .tb-kicker .dot-icon { background: rgba(145,70,255,0.22); color: var(--twitch-soft); }
+.section-toggle.c-twitch .tb-kicker .label { color: var(--twitch-soft); }
+.section-toggle.c-twitch .tb-explore { color: rgba(202,164,255,0.75); }
 
 .section-toggle.c-discord::before {
   background: radial-gradient(circle at 12% 50%, rgba(88,101,242,0.32), rgba(5,6,12,0.97) 62%), #06070f;
 }
-.section-toggle.c-discord .st-index { -webkit-text-stroke-color: rgba(88,101,242,0.16); }
-.section-toggle.c-discord .st-kicker .dot-icon { background: rgba(88,101,242,0.22); color: #aab2ff; }
-.section-toggle.c-discord .st-kicker .label { color: #aab2ff; }
-.section-toggle.c-discord .st-explore { color: rgba(170,178,255,0.75); }
+.section-toggle.c-discord .tb-kicker .dot-icon { background: rgba(88,101,242,0.22); color: var(--discord-soft); }
+.section-toggle.c-discord .tb-kicker .label { color: var(--discord-soft); }
+.section-toggle.c-discord .tb-explore { color: rgba(170,178,255,0.75); }
 
 .section-toggle.c-widget::before {
   background: radial-gradient(circle at 12% 50%, rgba(29,185,84,0.28), rgba(4,9,6,0.97) 62%), #050a06;
 }
-.section-toggle.c-widget .st-index { -webkit-text-stroke-color: rgba(29,185,84,0.16); }
-.section-toggle.c-widget .st-kicker .dot-icon { background: rgba(29,185,84,0.2); color: #7fe8a5; }
-.section-toggle.c-widget .st-kicker .label { color: #7fe8a5; }
-.section-toggle.c-widget .st-explore { color: rgba(127,232,165,0.75); }
+.section-toggle.c-widget .tb-kicker .dot-icon { background: rgba(29,185,84,0.2); color: var(--widget-soft); }
+.section-toggle.c-widget .tb-kicker .label { color: var(--widget-soft); }
+.section-toggle.c-widget .tb-explore { color: rgba(127,232,165,0.75); }
 
 .section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); background: var(--bg); }
 .product-section.expanded .section-body { grid-template-rows: 1fr; }
@@ -445,16 +489,27 @@ footer a { color: var(--faint); }
   <!-- ============ TWITCH ============ -->
   <section class="panel product-section" id="twitch" data-panel="twitch">
     <button class="section-toggle c-twitch" data-panel="twitch" aria-expanded="false">
-      <span class="st-index">01</span>
-      <span class="st-content">
-        <span class="st-kicker">
-          <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-          <span class="label">Twitch Chatbot</span>
-        </span>
-        <span class="st-title">Chat commands, timers &amp; song requests.</span>
-        <span class="st-tagline">An always-on bot for your Twitch channel &mdash; running whether you're live or not.</span>
-        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </span>
+      <div class="tb-row">
+        <div class="tb-text">
+          <span class="tb-kicker">
+            <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <span class="label">Twitch Chatbot</span>
+          </span>
+          <span class="tb-title">Chat commands, timers &amp; song requests.</span>
+          <span class="tb-sub">Viewers type <code>!sr</code> and it lands straight in your Spotify queue.</span>
+          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="tb-card">
+          <div class="chat-head"><span class="live"><span class="dot"></span>LIVE</span><span class="name">#your_channel</span></div>
+          <div class="chat-msgs">
+            <div class="m"><b>mod_kate:</b> anyone else loving this playlist</div>
+            <div class="m"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
+            <div class="m bot"><b>RexBot:</b> queued ✓ — Never Gonna Give You Up</div>
+            <div class="m"><b>viewer_92:</b> lol nice</div>
+          </div>
+          <div class="chat-input"><span class="box">Send a message</span><span class="send">Chat</span></div>
+        </div>
+      </div>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
@@ -525,16 +580,35 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="discord" data-panel="discord">
     <button class="section-toggle c-discord" data-panel="discord" aria-expanded="false">
-      <span class="st-index">02</span>
-      <span class="st-content">
-        <span class="st-kicker">
-          <span class="dot-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
-          <span class="label">Discord Bot</span>
-        </span>
-        <span class="st-title">Music in your voice channel, on request.</span>
-        <span class="st-tagline">One command, <code>/play</code>, and it joins your voice channel and starts playing.</span>
-        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </span>
+      <div class="tb-row">
+        <div class="tb-text">
+          <span class="tb-kicker">
+            <span class="dot-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
+            <span class="label">Discord Bot</span>
+          </span>
+          <span class="tb-title">Music in your voice channel, on request.</span>
+          <span class="tb-sub">One command, <code>/play</code>, and it joins your voice channel and starts playing.</span>
+          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="tb-card">
+          <div class="voice-head">🔊 general</div>
+          <div class="voice-members">
+            <div class="voice-member speaking">
+              <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+              <div class="who"><span class="name">yourname</span></div>
+            </div>
+            <div class="voice-member">
+              <div class="avatar" style="background:#2b2d31;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+              <div class="who"><span class="name">RexMusicBot<span class="tag">BOT</span></span><span class="now">🎵 Never Gonna Give You Up</span></div>
+            </div>
+            <div class="voice-member">
+              <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+              <div class="who"><span class="name">mod_sam</span></div>
+              <div class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2M12 19v3"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
@@ -616,16 +690,30 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="widget" data-panel="widget">
     <button class="section-toggle c-widget" data-panel="widget" aria-expanded="false">
-      <span class="st-index">03</span>
-      <span class="st-content">
-        <span class="st-kicker">
-          <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-          <span class="label">Now Playing Widget</span>
-        </span>
-        <span class="st-title">Show what's playing, live from the cloud.</span>
-        <span class="st-tagline">A clean OBS overlay that reads your Spotify account directly &mdash; nothing to install.</span>
-        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </span>
+      <div class="tb-row">
+        <div class="tb-text">
+          <span class="tb-kicker">
+            <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+            <span class="label">Now Playing Widget</span>
+          </span>
+          <span class="tb-title">Show what's playing, live from the cloud.</span>
+          <span class="tb-sub">A clean OBS overlay that reads your Spotify account directly &mdash; nothing to install.</span>
+          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="tb-card player-card">
+          <div class="player-track">
+            <div class="player-art"></div>
+            <div class="player-meta"><div class="title">Midnight City</div><div class="artist">M83</div></div>
+          </div>
+          <div class="player-progress"><div class="fill"></div></div>
+          <div class="player-times"><span>1:24</span><span>-2:36</span></div>
+          <div class="player-controls">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+            <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg>
+          </div>
+        </div>
+      </div>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
