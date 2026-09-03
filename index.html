@@ -107,19 +107,44 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 .jump-chip.c-discord svg { color: var(--discord); }
 .jump-chip.c-widget svg { color: var(--widget); }
 
-.product-section { padding-top: 64px; scroll-margin-top: 40px; }
-.product-section:first-of-type { padding-top: 76px; border-top: 1px solid var(--border-soft); }
+.product-section { padding-top: 28px; scroll-margin-top: 40px; }
+.product-section:first-of-type { padding-top: 40px; border-top: 1px solid var(--border-soft); }
 .product-divider { border: none; border-top: 1px solid var(--border-soft); margin: 0; }
-.product-label {
-  display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 650; color: var(--faint);
-  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+
+/* --- collapsible section bars: a colored rectangle with the title, opens
+   into the full detail as it scrolls into view (or on click) so the page
+   reads as three tidy strips instead of one long wall. --- */
+.section-toggle {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  border: none; cursor: pointer; padding: 15px 20px; border-radius: 10px;
+  font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.03em;
+  color: #fff; box-shadow: var(--shadow-sm); transition: filter 0.15s var(--ease);
+  text-transform: uppercase;
 }
-.product-label svg { width: 14px; height: 14px; opacity: 0.8; }
+.section-toggle:hover { filter: brightness(1.08); }
+.section-toggle .st-icon svg { width: 15px; height: 15px; opacity: 0.9; flex-shrink: 0; display: block; }
+.section-toggle .chevron { margin-left: auto; width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.3s var(--ease); }
+.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); }
+.section-toggle.c-twitch { background: var(--twitch); }
+.section-toggle.c-discord { background: var(--discord); }
+.section-toggle.c-widget { background: var(--widget); }
+
+.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); }
+.product-section.expanded .section-body { grid-template-rows: 1fr; }
+.section-body-inner { overflow: hidden; min-height: 0; padding-top: 26px; }
+
+.hero-row { display: flex; gap: 36px; align-items: flex-start; }
+.hero-text { flex: 1 1 380px; min-width: 260px; }
+.hero-visual { flex: 0 1 360px; max-width: 360px; width: 100%; }
+@media (max-width: 860px) {
+  .hero-row { flex-direction: column; }
+  .hero-visual { max-width: 460px; }
+}
 
 /* --- mockups: real visual proof instead of another wall of text --- */
 .mock-frame {
   position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
-  box-shadow: var(--shadow-md); background: #0c0c0e; margin: 26px 0 8px;
+  box-shadow: var(--shadow-md); background: #0c0c0e; margin: 0;
 }
 .mock-titlebar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #151517; border-bottom: 1px solid var(--border-soft); }
 .mock-titlebar span { width: 8px; height: 8px; border-radius: 50%; background: #2c2c30; }
@@ -166,10 +191,10 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 }
 .mock-dembed .mock-art { width: 34px; height: 34px; }
 
-.widget-hero { display: flex; align-items: center; justify-content: center; padding: 50px 20px; margin: 26px 0 8px;
+.widget-hero { display: flex; align-items: center; justify-content: center; padding: 40px 16px; margin: 0;
   background: #0c0c0e; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-md);
   background-image: radial-gradient(circle at 30% 20%, rgba(29,185,84,0.08), transparent 55%); }
-.widget-hero .mock-widget { position: static; transform: scale(1.35); }
+.widget-hero .mock-widget { position: static; transform: scale(1.1); }
 
 .eyebrow {
   font-size: 12px; font-weight: 600; color: var(--muted);
@@ -321,37 +346,45 @@ footer a { color: var(--faint); }
 
   <!-- ============ TWITCH ============ -->
   <section class="panel product-section" id="twitch" data-panel="twitch">
-    <div class="product-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <button class="section-toggle c-twitch" data-panel="twitch" aria-expanded="false">
+      <span class="st-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
       01 · Twitch Chatbot
-    </div>
-    <h1 class="headline">Custom commands, timers, and song requests — <em>running whether you're live or not.</em></h1>
-    <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
-      Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="section-body"><div class="section-body-inner">
 
-    <a class="cta-btn" href="/twitch/login">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Connect Twitch
-    </a>
-    <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1 class="headline">Custom commands, timers, and song requests — <em>running whether you're live or not.</em></h1>
+        <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
+          Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
 
-    <div class="mock-frame">
-      <div class="mock-titlebar"><span></span><span></span><span></span>
-        <div class="src-name"><img src="rex-mark.png" alt="">Rex Overlay — Browser Source</div>
+        <a class="cta-btn" href="/twitch/login">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Connect Twitch
+        </a>
+        <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
       </div>
-      <div class="mock-scene">
-        <div class="mock-live"><span class="dot"></span>LIVE</div>
-        <div class="mock-chat">
-          <div class="msg"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
-          <div class="msg reply"><b>RexBot:</b> queued ✓</div>
-        </div>
-        <div class="mock-widget">
-          <img class="mock-mark" src="rex-mark.png" alt="">
-          <div class="mock-art"></div>
-          <div class="mock-meta">
-            <div class="label">Now Playing</div>
-            <div class="title">Midnight City</div>
-            <div class="artist">M83</div>
+      <div class="hero-visual">
+        <div class="mock-frame">
+          <div class="mock-titlebar"><span></span><span></span><span></span>
+            <div class="src-name"><img src="rex-mark.png" alt="">Rex Overlay — Browser Source</div>
+          </div>
+          <div class="mock-scene">
+            <div class="mock-live"><span class="dot"></span>LIVE</div>
+            <div class="mock-chat">
+              <div class="msg"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
+              <div class="msg reply"><b>RexBot:</b> queued ✓</div>
+            </div>
+            <div class="mock-widget">
+              <img class="mock-mark" src="rex-mark.png" alt="">
+              <div class="mock-art"></div>
+              <div class="mock-meta">
+                <div class="label">Now Playing</div>
+                <div class="title">Midnight City</div>
+                <div class="artist">M83</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -379,44 +412,54 @@ footer a { color: var(--faint); }
         <p><code>!sr &lt;song&gt;</code> queues straight to your Spotify. Needs Spotify Premium, same as any request bot.</p>
       </div>
     </div>
+
+    </div></div>
   </section>
 
   <!-- ============ DISCORD ============ -->
   <hr class="product-divider">
   <section class="panel product-section" id="discord" data-panel="discord">
-    <div class="product-label">
-      <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+    <button class="section-toggle c-discord" data-panel="discord" aria-expanded="false">
+      <span class="st-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
       02 · Discord Bot
-    </div>
-    <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
-    <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="section-body"><div class="section-body-inner">
 
-    <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Sign in to add it
-    </a>
-    <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) &mdash; the "Add to Discord" button lives on your dashboard.</div>
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
+        <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
 
-    <div class="mock-frame">
-      <div class="mock-titlebar"><span></span><span></span><span></span>
-        <div class="src-name"><img src="rex-mark.png" alt="">#music-requests</div>
+        <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Sign in to add it
+        </a>
+        <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) &mdash; the "Add to Discord" button lives on your dashboard.</div>
       </div>
-      <div class="mock-discord">
-        <div class="mock-dmsg">
-          <div class="mock-davatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
-          <div class="mock-dbody">
-            <div class="dname">yourname</div>
-            <div class="dtext">/play never gonna give you up</div>
+      <div class="hero-visual">
+        <div class="mock-frame">
+          <div class="mock-titlebar"><span></span><span></span><span></span>
+            <div class="src-name"><img src="rex-mark.png" alt="">#music-requests</div>
           </div>
-        </div>
-        <div class="mock-dmsg">
-          <div class="mock-davatar bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-          <div class="mock-dbody">
-            <div class="dname">RexMusicBot <span class="tag">BOT</span></div>
-            <div class="dtext">▶ Now playing <b>Never Gonna Give You Up</b> — requested by yourname</div>
-            <div class="mock-dembed">
-              <div class="mock-art"></div>
-              <div class="mock-meta"><div class="title" style="font-size:11.5px;">Never Gonna Give You Up</div><div class="artist">Rick Astley</div></div>
+          <div class="mock-discord">
+            <div class="mock-dmsg">
+              <div class="mock-davatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+              <div class="mock-dbody">
+                <div class="dname">yourname</div>
+                <div class="dtext">/play never gonna give you up</div>
+              </div>
+            </div>
+            <div class="mock-dmsg">
+              <div class="mock-davatar bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+              <div class="mock-dbody">
+                <div class="dname">RexMusicBot <span class="tag">BOT</span></div>
+                <div class="dtext">▶ Now playing <b>Never Gonna Give You Up</b> — requested by yourname</div>
+                <div class="mock-dembed">
+                  <div class="mock-art"></div>
+                  <div class="mock-meta"><div class="title" style="font-size:11.5px;">Never Gonna Give You Up</div><div class="artist">Rick Astley</div></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -453,34 +496,44 @@ footer a { color: var(--faint); }
         <p>Auto-disconnects after 5 idle minutes with nothing queued, so it doesn't linger in your voice channel.</p>
       </div>
     </div>
+
+    </div></div>
   </section>
 
   <!-- ============ NOW PLAYING WIDGET ============ -->
   <hr class="product-divider">
   <section class="panel product-section" id="widget" data-panel="widget">
-    <div class="product-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <button class="section-toggle c-widget" data-panel="widget" aria-expanded="false">
+      <span class="st-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
       03 · Now Playing Widget
-    </div>
-    <h1 class="headline">Show what's playing. <em>Zero install, ever.</em></h1>
-    <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
-      cloud — no app to run, nothing to keep open while you stream.</p>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="section-body"><div class="section-body-inner">
 
-    <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Sign in to get your overlay
-    </a>
-    <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) — your overlay URL
-      lives on your dashboard, ready to drop into OBS.</div>
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1 class="headline">Show what's playing. <em>Zero install, ever.</em></h1>
+        <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
+          cloud — no app to run, nothing to keep open while you stream.</p>
 
-    <div class="widget-hero">
-      <div class="mock-widget">
-        <img class="mock-mark" src="rex-mark.png" alt="">
-        <div class="mock-art"></div>
-        <div class="mock-meta">
-          <div class="label">Now Playing</div>
-          <div class="title">Midnight City</div>
-          <div class="artist">M83</div>
+        <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Sign in to get your overlay
+        </a>
+        <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) — your overlay URL
+          lives on your dashboard, ready to drop into OBS.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="widget-hero">
+          <div class="mock-widget">
+            <img class="mock-mark" src="rex-mark.png" alt="">
+            <div class="mock-art"></div>
+            <div class="mock-meta">
+              <div class="label">Now Playing</div>
+              <div class="title">Midnight City</div>
+              <div class="artist">M83</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -533,6 +586,8 @@ footer a { color: var(--faint); }
     </div>
     <p style="margin-top:10px;">Windows 10/11 · new apps trip a Windows warning the first time —
       <a href="/help.html">what to do →</a></p>
+
+    </div></div>
   </section>
 
   <footer>
@@ -573,10 +628,33 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: [0.25, 0.5, 0.75], rootMargin: "-80px 0px -40% 0px" });
 sections.forEach(s => observer.observe(s));
 
+// Each product section is collapsed to just its colored title bar by default
+// and opens into the full detail as it scrolls through the viewport, closing
+// again once it's scrolled past -- keeps the page tidy instead of one long
+// wall, while still reading top to bottom as you scroll.
+function setExpanded(section, on) {
+  section.classList.toggle("expanded", on);
+  const btn = section.querySelector(".section-toggle");
+  if (btn) btn.setAttribute("aria-expanded", String(on));
+}
+const expandObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => setExpanded(e.target, e.isIntersecting));
+}, { threshold: 0.001, rootMargin: "-10% 0px -10% 0px" });
+sections.forEach(s => expandObserver.observe(s));
+
+document.querySelectorAll(".section-toggle").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const section = btn.closest(".product-section");
+    const willOpen = !section.classList.contains("expanded");
+    setExpanded(section, willOpen);
+    if (willOpen) section.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
 // Deep link on load (e.g. /#discord) without fighting the scrollspy.
 if (location.hash) {
   const target = document.getElementById(location.hash.slice(1));
-  if (target) { setActive(target.id); target.scrollIntoView(); }
+  if (target) { setActive(target.id); setExpanded(target, true); target.scrollIntoView(); }
 }
 </script>
 </body>
