@@ -135,19 +135,17 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
   50% { transform: translateY(4px); opacity: 0.95; }
 }
 .section-toggle {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
-  width: calc(100% + 112px); margin: 0 -56px; min-height: 34vh; border: none; cursor: pointer;
-  position: relative; overflow: hidden; font-family: inherit;
-  transition: filter 0.35s var(--ease), transform 0.35s var(--ease);
+  display: flex; align-items: center; width: calc(100% + 112px); margin: 0 -56px; min-height: 40vh;
+  border: none; cursor: pointer; position: relative; overflow: hidden; font-family: inherit;
+  transition: filter 0.35s var(--ease);
 }
-@media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 26vh; } }
+@media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 34vh; } }
 .section-toggle::before {
   content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.9;
   transition: opacity 0.4s var(--ease);
 }
 .section-toggle:hover::before { opacity: 1; }
-.section-toggle:hover { filter: brightness(1.1); }
-.section-toggle:active { transform: scale(0.997); }
+.section-toggle:hover { filter: brightness(1.06); }
 /* soft fade at the top/bottom seam so bands bleed into each other instead
    of cutting hard at the edge. */
 .section-toggle::after {
@@ -155,74 +153,72 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
   background: linear-gradient(180deg, var(--bg), transparent 14%, transparent 86%, var(--bg));
   opacity: 0.55;
 }
-/* --- badge: bordered card holding the brand mark + title, sitting inside
-   the glow band. Each brand gets its own icon-chip color and a small
-   typographic quirk (italic/skew for Twitch, tight for Discord, wide caps
-   for the widget) instead of one identical treatment three times. --- */
-.section-toggle .st-badge {
-  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 18px;
-  padding: 22px 42px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.16);
-  background: rgba(4,4,8,0.42); backdrop-filter: blur(8px);
-  box-shadow: 0 24px 70px -24px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06);
-  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+
+/* --- editorial band: a huge faint outlined index numeral bleeding off the
+   right edge, a small colored kicker (icon + label), a plain confident
+   title, and a one-line tagline -- left-aligned like a magazine spread
+   instead of a centered card, so each of the three reads distinctly. --- */
+.st-index {
+  position: absolute; z-index: 0; right: 3%; top: 50%; transform: translateY(-50%);
+  font-size: 22vw; font-weight: 800; line-height: 1; color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.09); pointer-events: none; user-select: none;
 }
-.section-toggle:hover .st-badge { transform: translateY(-3px); }
-.section-toggle .st-icon-box {
-  width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15);
+@media (max-width: 900px) { .st-index { display: none; } }
+
+.st-content { display: block; position: relative; z-index: 1; max-width: 640px; width: 100%; padding: 0 56px; }
+@media (max-width: 780px) { .st-content { padding: 0 18px; } }
+
+.st-kicker { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 20px; }
+.st-kicker .dot-icon {
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
-.section-toggle .st-icon-box svg { width: 28px; height: 28px; display: block; }
-.section-toggle .st-title {
-  position: relative; font-weight: 900; line-height: 1; text-align: left;
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  transition: text-shadow 0.4s var(--ease);
+.st-kicker .dot-icon svg { width: 15px; height: 15px; display: block; }
+.st-kicker .label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6);
 }
-@media (max-width: 700px) {
-  .section-toggle .st-badge { padding: 16px 24px; gap: 12px; border-radius: 16px; }
-  .section-toggle .st-icon-box { width: 38px; height: 38px; border-radius: 10px; }
-  .section-toggle .st-icon-box svg { width: 19px; height: 19px; }
+
+.st-title {
+  display: block; font-size: 50px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; color: #fff;
+  margin: 0 0 14px; text-align: left;
+}
+@media (max-width: 700px) { .st-title { font-size: 32px; } }
+.st-tagline { display: block; font-size: 15.5px; color: rgba(255,255,255,0.55); max-width: 420px; margin: 0; line-height: 1.5; }
+
+.st-explore {
+  position: relative; z-index: 1; display: flex; align-items: center; gap: 7px; margin-top: 26px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45);
 }
 .section-toggle .chevron {
-  position: relative; z-index: 1; width: 20px; height: 20px; color: rgba(255,255,255,0.7);
-  transition: transform 0.4s var(--ease); margin-top: 6px;
+  width: 15px; height: 15px; color: inherit;
+  transition: transform 0.4s var(--ease);
   animation: bob 2.2s ease-in-out infinite;
 }
-.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); animation: none; opacity: 0.55; }
+.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); animation: none; }
+
 .section-toggle.c-twitch::before {
-  background: radial-gradient(circle at 50% 55%, rgba(145,70,255,0.45), rgba(6,4,10,0.97) 72%), #08050d;
+  background: radial-gradient(circle at 12% 50%, rgba(145,70,255,0.32), rgba(6,4,10,0.97) 62%), #08050d;
 }
-.section-toggle.c-twitch .st-badge { border-color: rgba(145,70,255,0.4); }
-.section-toggle.c-twitch .st-icon-box { background: rgba(145,70,255,0.2); }
-.section-toggle.c-twitch .st-icon-box svg { color: #caa4ff; }
-.section-toggle.c-twitch .st-title {
-  font-size: 52px; font-style: italic; letter-spacing: -0.01em; transform: skewX(-4deg);
-  background-image: linear-gradient(180deg, #caa4ff, var(--twitch));
-  text-shadow: 0 0 60px rgba(145,70,255,0.7);
-}
-@media (max-width: 700px) { .section-toggle.c-twitch .st-title { font-size: 28px; } }
+.section-toggle.c-twitch .st-index { -webkit-text-stroke-color: rgba(145,70,255,0.16); }
+.section-toggle.c-twitch .st-kicker .dot-icon { background: rgba(145,70,255,0.22); color: #caa4ff; }
+.section-toggle.c-twitch .st-kicker .label { color: #caa4ff; }
+.section-toggle.c-twitch .st-explore { color: rgba(202,164,255,0.75); }
+
 .section-toggle.c-discord::before {
-  background: radial-gradient(circle at 50% 55%, rgba(88,101,242,0.45), rgba(5,6,12,0.97) 72%), #06070f;
+  background: radial-gradient(circle at 12% 50%, rgba(88,101,242,0.32), rgba(5,6,12,0.97) 62%), #06070f;
 }
-.section-toggle.c-discord .st-badge { border-color: rgba(88,101,242,0.4); }
-.section-toggle.c-discord .st-icon-box { background: rgba(88,101,242,0.2); }
-.section-toggle.c-discord .st-icon-box svg { color: #aab2ff; }
-.section-toggle.c-discord .st-title {
-  font-size: 50px; letter-spacing: -0.035em;
-  background-image: linear-gradient(180deg, #aab2ff, var(--discord));
-  text-shadow: 0 0 60px rgba(88,101,242,0.7);
-}
-@media (max-width: 700px) { .section-toggle.c-discord .st-title { font-size: 27px; } }
+.section-toggle.c-discord .st-index { -webkit-text-stroke-color: rgba(88,101,242,0.16); }
+.section-toggle.c-discord .st-kicker .dot-icon { background: rgba(88,101,242,0.22); color: #aab2ff; }
+.section-toggle.c-discord .st-kicker .label { color: #aab2ff; }
+.section-toggle.c-discord .st-explore { color: rgba(170,178,255,0.75); }
+
 .section-toggle.c-widget::before {
-  background: radial-gradient(circle at 50% 55%, rgba(29,185,84,0.4), rgba(4,9,6,0.97) 72%), #050a06;
+  background: radial-gradient(circle at 12% 50%, rgba(29,185,84,0.28), rgba(4,9,6,0.97) 62%), #050a06;
 }
-.section-toggle.c-widget .st-badge { border-color: rgba(29,185,84,0.4); }
-.section-toggle.c-widget .st-icon-box { background: rgba(29,185,84,0.18); }
-.section-toggle.c-widget .st-icon-box svg { color: #7fe8a5; }
-.section-toggle.c-widget .st-title {
-  font-size: 38px; text-transform: uppercase; letter-spacing: 0.05em;
-  background-image: linear-gradient(180deg, #7fe8a5, var(--widget));
-  text-shadow: 0 0 60px rgba(29,185,84,0.65);
-}
+.section-toggle.c-widget .st-index { -webkit-text-stroke-color: rgba(29,185,84,0.16); }
+.section-toggle.c-widget .st-kicker .dot-icon { background: rgba(29,185,84,0.2); color: #7fe8a5; }
+.section-toggle.c-widget .st-kicker .label { color: #7fe8a5; }
+.section-toggle.c-widget .st-explore { color: rgba(127,232,165,0.75); }
 
 .section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); background: var(--bg); }
 .product-section.expanded .section-body { grid-template-rows: 1fr; }
@@ -449,11 +445,16 @@ footer a { color: var(--faint); }
   <!-- ============ TWITCH ============ -->
   <section class="panel product-section" id="twitch" data-panel="twitch">
     <button class="section-toggle c-twitch" data-panel="twitch" aria-expanded="false">
-      <span class="st-badge">
-        <span class="st-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-        <span class="st-title">Twitch Chat Bot</span>
+      <span class="st-index">01</span>
+      <span class="st-content">
+        <span class="st-kicker">
+          <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          <span class="label">Twitch Chatbot</span>
+        </span>
+        <span class="st-title">Chat commands, timers &amp; song requests.</span>
+        <span class="st-tagline">An always-on bot for your Twitch channel &mdash; running whether you're live or not.</span>
+        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
       </span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
@@ -524,11 +525,16 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="discord" data-panel="discord">
     <button class="section-toggle c-discord" data-panel="discord" aria-expanded="false">
-      <span class="st-badge">
-        <span class="st-icon-box"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
-        <span class="st-title">Discord Bot</span>
+      <span class="st-index">02</span>
+      <span class="st-content">
+        <span class="st-kicker">
+          <span class="dot-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
+          <span class="label">Discord Bot</span>
+        </span>
+        <span class="st-title">Music in your voice channel, on request.</span>
+        <span class="st-tagline">One command, <code>/play</code>, and it joins your voice channel and starts playing.</span>
+        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
       </span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
@@ -610,11 +616,16 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="widget" data-panel="widget">
     <button class="section-toggle c-widget" data-panel="widget" aria-expanded="false">
-      <span class="st-badge">
-        <span class="st-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-        <span class="st-title">Now Playing Widget</span>
+      <span class="st-index">03</span>
+      <span class="st-content">
+        <span class="st-kicker">
+          <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+          <span class="label">Now Playing Widget</span>
+        </span>
+        <span class="st-title">Show what's playing, live from the cloud.</span>
+        <span class="st-tagline">A clean OBS overlay that reads your Spotify account directly &mdash; nothing to install.</span>
+        <span class="st-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
       </span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
