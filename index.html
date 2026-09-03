@@ -8,46 +8,51 @@
 <link rel="icon" href="rex-mark.png">
 <style>
 :root {
-  --accent: #9146FF; --accent-soft: rgba(145,70,255,0.14);
-  --bg: #0a0a0c; --surface: #121214; --surface-2: #0e0e11; --border: #232327;
-  --text: #e7e7ea; --muted: #9a9aa1; --faint: #5c5c62;
+  --accent: #9146FF; --accent-hover: #a366ff; --accent-soft: rgba(145,70,255,0.13);
+  --bg: #09090b; --surface: #141416; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
+  --text: #f0f0f2; --muted: #9d9da4; --faint: #5c5c63;
   --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
 }
 * { box-sizing: border-box; }
-html { background: var(--bg); }
+html { background: var(--bg); scroll-behavior: smooth; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 14px;
+  margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 14px;
   display: flex; min-height: 100vh; -webkit-font-smoothing: antialiased;
 }
-body[data-active="twitch"]  { --accent: var(--twitch);  --accent-soft: rgba(145,70,255,0.14); }
-body[data-active="discord"] { --accent: var(--discord); --accent-soft: rgba(88,101,242,0.14); }
-body[data-active="widget"]  { --accent: var(--widget);  --accent-soft: rgba(29,185,84,0.14); }
+body[data-active="twitch"]  { --accent: var(--twitch);  --accent-hover: #a366ff; --accent-soft: rgba(145,70,255,0.13); }
+body[data-active="discord"] { --accent: var(--discord); --accent-hover: #707dff; --accent-soft: rgba(88,101,242,0.13); }
+body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065; --accent-soft: rgba(29,185,84,0.13); }
 
 aside.sidebar {
-  width: 208px; flex-shrink: 0; min-height: 100vh;
-  background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; padding: 18px 10px;
+  width: 216px; flex-shrink: 0; min-height: 100vh;
+  background: linear-gradient(180deg, #131315, #0e0e10); border-right: 1px solid var(--border-soft);
+  display: flex; flex-direction: column; padding: 20px 12px;
 }
-.brand { display: flex; align-items: center; gap: 8px; padding: 2px 8px 18px; }
-.brand img { width: 22px; height: 22px; border-radius: 5px; }
-.brand span { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
-nav.sidenav { display: flex; flex-direction: column; gap: 1px; }
+.brand { display: flex; align-items: center; gap: 9px; padding: 2px 8px 20px; }
+.brand img { width: 22px; height: 22px; border-radius: 6px; box-shadow: var(--shadow-sm); }
+.brand span { font-weight: 650; font-size: 14px; letter-spacing: -0.01em; }
+nav.sidenav { display: flex; flex-direction: column; gap: 2px; }
 nav.sidenav .nav-btn {
-  display: flex; align-items: center; gap: 9px; background: none; border: none; border-left: 2px solid transparent;
+  display: flex; align-items: center; gap: 9px; background: none; border: none; text-decoration: none;
   text-align: left; width: 100%; color: var(--muted); font-size: 13px; font-weight: 500;
-  padding: 8px 9px; border-radius: 0 4px 4px 0; cursor: pointer; transition: background 0.1s ease, color 0.1s ease;
+  padding: 8px 10px; border-radius: 7px; cursor: pointer; transition: background 0.15s var(--ease), color 0.15s var(--ease);
 }
-nav.sidenav .nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.75; }
-nav.sidenav .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-nav.sidenav .nav-btn.active { color: var(--text); background: var(--accent-soft); border-left-color: var(--accent); }
-.nav-divider { height: 1px; background: var(--border); margin: 12px 4px; }
+nav.sidenav .nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.15s var(--ease); }
+nav.sidenav .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+nav.sidenav .nav-btn:hover svg { opacity: 0.9; }
+nav.sidenav .nav-btn.active { color: #fff; background: var(--accent); box-shadow: var(--shadow-sm); }
+nav.sidenav .nav-btn.active svg { opacity: 1; }
+.nav-divider { height: 1px; background: var(--border-soft); margin: 11px 4px; }
 .sidebar-links { display: flex; flex-direction: column; gap: 1px; }
 .sidebar-links a {
   display: flex; align-items: center; gap: 9px; color: var(--faint); font-size: 12.5px; font-weight: 500;
-  padding: 7px 9px; border-radius: 4px; text-decoration: none; transition: color 0.1s ease, background 0.1s ease;
+  padding: 7px 9px; border-radius: 6px; text-decoration: none; transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
-.sidebar-links a:hover { color: var(--muted); background: rgba(255,255,255,0.03); }
+.sidebar-links a:hover { color: var(--muted); background: rgba(255,255,255,0.04); }
 .sidebar-links a svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.75; }
 .sidebar-footer {
   margin-top: auto; display: flex; align-items: center; gap: 6px; padding: 12px 9px 2px; font-size: 11px; color: var(--faint);
@@ -55,87 +60,121 @@ nav.sidenav .nav-btn.active { color: var(--text); background: var(--accent-soft)
 .sidebar-footer img { height: 10px; opacity: 0.7; }
 
 .content { flex: 1; min-width: 0; }
-main { max-width: 760px; margin: 0 auto; padding: 56px 32px 90px; }
+main { max-width: 760px; margin: 0 auto; padding: 60px 32px 90px; }
 
 @media (max-width: 780px) {
   body { flex-direction: column; }
-  aside.sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 12px; }
+  aside.sidebar { width: 100%; min-height: auto; border-right: none; border-bottom: 1px solid var(--border-soft); padding: 12px; background: #131315; }
   .brand { margin-bottom: 8px; }
-  nav.sidenav { flex-direction: row; flex-wrap: wrap; gap: 2px; }
-  nav.sidenav .nav-btn { flex: 1 1 auto; justify-content: center; padding: 9px 8px; font-size: 12px; white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; }
-  nav.sidenav .nav-btn.active { border-left: none; border-bottom-color: var(--accent); }
+  nav.sidenav { flex-direction: row; flex-wrap: wrap; gap: 3px; }
+  nav.sidenav .nav-btn { flex: 1 1 auto; justify-content: center; padding: 9px 8px; font-size: 12px; white-space: nowrap; }
   .nav-divider, .sidebar-links, .sidebar-footer { display: none; }
   main { padding: 32px 18px 60px; }
 }
 
-.panel[hidden] { display: none; }
+.intro { margin-bottom: 8px; scroll-margin-top: 40px; }
+.intro .eyebrow { color: var(--muted); }
+.intro .eyebrow .dot { color: var(--twitch); }
+.intro h1 {
+  font-size: 38px; font-weight: 650; line-height: 1.14; margin: 0 0 16px;
+  letter-spacing: -0.02em; max-width: 600px; color: var(--text);
+}
+@media (max-width: 500px) { .intro h1 { font-size: 28px; } }
+.intro .lead { color: var(--muted); font-size: 15.5px; max-width: 520px; margin: 0; }
+.intro .lead b { color: var(--text); font-weight: 600; }
+.jump-row { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+.jump-chip {
+  display: inline-flex; align-items: center; gap: 7px; background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 7px 13px; border-radius: 999px;
+  text-decoration: none; transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.jump-chip:hover { color: var(--text); border-color: var(--faint); }
+.jump-chip svg { width: 13px; height: 13px; }
+.jump-chip.c-twitch svg { color: var(--twitch); }
+.jump-chip.c-discord svg { color: var(--discord); }
+.jump-chip.c-widget svg { color: var(--widget); }
+
+.product-section { padding-top: 64px; scroll-margin-top: 40px; }
+.product-section:first-of-type { padding-top: 76px; border-top: 1px solid var(--border-soft); }
+.product-divider { border: none; border-top: 1px solid var(--border-soft); margin: 0; }
+.product-label {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 650; color: var(--faint);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+}
+.product-label svg { width: 14px; height: 14px; opacity: 0.8; }
 
 .eyebrow {
   font-size: 12px; font-weight: 600; color: var(--muted);
-  letter-spacing: 0.02em; margin-bottom: 14px;
+  letter-spacing: 0.02em; margin-bottom: 16px;
 }
 .eyebrow .dot { color: var(--accent); }
 h1.headline {
-  font-size: 30px; font-weight: 600; line-height: 1.22; margin: 0 0 14px;
-  letter-spacing: -0.015em; max-width: 560px; color: var(--text);
+  font-size: 32px; font-weight: 650; line-height: 1.2; margin: 0 0 15px;
+  letter-spacing: -0.02em; max-width: 560px; color: var(--text);
 }
-@media (max-width: 500px) { h1.headline { font-size: 24px; } }
+@media (max-width: 500px) { h1.headline { font-size: 25px; } }
 h1.headline em { font-style: normal; color: var(--accent); }
-.hero-sub { color: var(--muted); font-size: 14.5px; max-width: 460px; margin: 0 0 26px; }
+.hero-sub { color: var(--muted); font-size: 14.5px; max-width: 460px; margin: 0 0 28px; }
 
 .cta-btn {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--accent); color: #fff; font-weight: 600;
-  font-size: 14px; padding: 9px 18px; border-radius: 6px; text-decoration: none;
-  transition: background 0.1s ease;
+  font-size: 14px; padding: 10px 20px; border-radius: 8px; text-decoration: none;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.14);
+  transition: background 0.15s var(--ease), transform 0.15s var(--ease);
 }
-.cta-btn:hover { filter: brightness(1.08); }
+.cta-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.cta-btn:active { transform: translateY(0); }
 .cta-btn svg { width: 15px; height: 15px; flex: none; }
-.cta-meta { margin-top: 11px; color: var(--faint); font-size: 12.5px; max-width: 440px; }
+.cta-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; max-width: 440px; }
 .cta-meta a { color: var(--muted); text-decoration: underline; }
 
-.section-head { margin: 44px 0 16px; }
-.section-head h2 { font-size: 15px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+.section-head { margin: 48px 0 18px; }
+.section-head h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
 .section-head p { color: var(--muted); font-size: 13px; margin: 0; }
 
-.cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 @media (max-width: 560px) { .cmd-list { grid-template-columns: 1fr; } }
 .cmd {
   display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 6px; padding: 11px 13px;
+  border-radius: 8px; padding: 12px 14px; box-shadow: var(--shadow-sm); transition: border-color 0.15s var(--ease);
 }
+.cmd:hover { border-color: var(--accent-soft); }
 .cmd code {
   font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; font-weight: 600; color: var(--accent);
-  background: var(--surface-2); padding: 3px 7px; border-radius: 4px; white-space: nowrap;
+  background: var(--surface-2); padding: 3px 8px; border-radius: 5px; white-space: nowrap;
 }
 .cmd span { color: var(--muted); font-size: 12.5px; }
 
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
 @media (max-width: 680px) { .steps { grid-template-columns: 1fr; } }
-.step { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+.step { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow-sm); }
 .step .num {
   display: inline-block; color: var(--accent); font-weight: 700;
-  font-size: 12px; margin-bottom: 8px; font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 12px; margin-bottom: 9px; font-family: ui-monospace, "SF Mono", Consolas, monospace;
 }
 .step .num::before { content: "0"; opacity: 0.5; }
-.step h3 { font-size: 13px; font-weight: 600; margin: 0 0 4px; }
+.step h3 { font-size: 13px; font-weight: 650; margin: 0 0 4px; }
 .step p { color: var(--muted); font-size: 12.5px; margin: 0; }
 
-.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
 @media (max-width: 680px) { .features { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 460px) { .features { grid-template-columns: 1fr; } }
 .feature {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 15px;
+  box-shadow: var(--shadow-sm); transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
 }
-.feature h3 { font-size: 12.5px; font-weight: 600; margin: 0 0 4px; color: var(--text); }
+.feature:hover { border-color: var(--accent-soft); transform: translateY(-1px); }
+.feature h3 { font-size: 12.5px; font-weight: 650; margin: 0 0 4px; color: var(--text); }
 .feature p { color: var(--muted); font-size: 12px; margin: 0; line-height: 1.5; }
 
-code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 0.9em; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px; }
-a { color: var(--accent); }
+code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 0.9em; background: rgba(255,255,255,0.07); padding: 1.5px 6px; border-radius: 4px; }
+a { color: var(--accent); transition: color 0.12s var(--ease); }
+a:hover { color: var(--accent-hover); }
 
 footer {
   display: flex; align-items: center; gap: 7px; justify-content: center;
-  margin-top: 64px; font-size: 12px; color: var(--faint);
+  margin-top: 68px; font-size: 12px; color: var(--faint);
 }
 footer img { height: 12px; opacity: 0.7; }
 footer a { color: var(--faint); }
@@ -149,18 +188,18 @@ footer a { color: var(--faint); }
     <span>Rex</span>
   </div>
   <nav class="sidenav">
-    <button class="nav-btn active" data-panel="twitch">
+    <a class="nav-btn active" href="#twitch" data-panel="twitch">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       Twitch Chatbot
-    </button>
-    <button class="nav-btn" data-panel="discord">
+    </a>
+    <a class="nav-btn" href="#discord" data-panel="discord">
       <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
       Discord Bot
-    </button>
-    <button class="nav-btn" data-panel="widget">
+    </a>
+    <a class="nav-btn" href="#widget" data-panel="widget">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       Now Playing Widget
-    </button>
+    </a>
   </nav>
   <div class="nav-divider"></div>
   <div class="sidebar-links">
@@ -179,9 +218,35 @@ footer a { color: var(--faint); }
 <div class="content">
 <main>
 
+  <!-- ============ INTRO ============ -->
+  <section class="intro" id="top">
+    <div class="eyebrow"><span class="dot">●</span> Free · by everex</div>
+    <h1>One bot. <span style="color:var(--twitch);">Everything</span> your stream needs, in one place.</h1>
+    <p class="lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
+      for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and an OBS
+      <b>now-playing widget</b> — three tools, one project, all free. Scroll down to see each one, or jump straight in.</p>
+    <div class="jump-row">
+      <a class="jump-chip c-twitch" href="#twitch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Twitch Chatbot
+      </a>
+      <a class="jump-chip c-discord" href="#discord">
+        <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Discord Bot
+      </a>
+      <a class="jump-chip c-widget" href="#widget">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Now Playing Widget
+      </a>
+    </div>
+  </section>
+
   <!-- ============ TWITCH ============ -->
-  <section class="panel" data-panel="twitch">
-    <div class="eyebrow"><span class="dot">●</span> Free · Twitch · always-on cloud bot</div>
+  <section class="panel product-section" id="twitch" data-panel="twitch">
+    <div class="product-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      01 · Twitch Chatbot
+    </div>
     <h1 class="headline">Custom commands, timers, and song requests — <em>running whether you're live or not.</em></h1>
     <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
       Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
@@ -225,8 +290,12 @@ footer a { color: var(--faint); }
   </section>
 
   <!-- ============ DISCORD ============ -->
-  <section class="panel" data-panel="discord" hidden>
-    <div class="eyebrow"><span class="dot">●</span> Free · Discord bot</div>
+  <hr class="product-divider">
+  <section class="panel product-section" id="discord" data-panel="discord">
+    <div class="product-label">
+      <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      02 · Discord Bot
+    </div>
     <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
     <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
 
@@ -269,8 +338,12 @@ footer a { color: var(--faint); }
   </section>
 
   <!-- ============ NOW PLAYING WIDGET ============ -->
-  <section class="panel" data-panel="widget" hidden>
-    <div class="eyebrow"><span class="dot">●</span> Free · Windows · made for OBS</div>
+  <hr class="product-divider">
+  <section class="panel product-section" id="widget" data-panel="widget">
+    <div class="product-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      03 · Now Playing Widget
+    </div>
     <h1 class="headline">Show what's playing. <em>Let chat request songs.</em></h1>
     <p class="hero-sub">A clean now-playing overlay for OBS that works with any player, plus
       <code>!sr</code> song requests that queue straight to your Spotify.</p>
@@ -332,25 +405,41 @@ footer a { color: var(--faint); }
 </div>
 
 <script>
-const PANELS = ["twitch", "discord", "widget"];
+// Scrollspy: highlight the sidebar item and shift the accent color as each
+// product section scrolls into view, instead of click-to-swap panels --
+// the whole page is one continuous scroll now.
 const TITLES = {
   twitch: "Rex — Twitch Chatbot",
   discord: "Rex — Discord Bot",
   widget: "Rex — Now Playing Widget",
 };
-function showPanel(name) {
-  if (!PANELS.includes(name)) name = "twitch";
-  document.querySelectorAll(".panel").forEach(p => { p.hidden = p.dataset.panel !== name; });
+let current = "twitch";
+function setActive(name) {
+  if (name === current) return;
+  current = name;
   document.querySelectorAll(".nav-btn").forEach(b => { b.classList.toggle("active", b.dataset.panel === name); });
   document.body.setAttribute("data-active", name);
-  document.title = TITLES[name];
-  const url = name === "twitch" ? "/" : "/#" + name;
-  history.replaceState(null, "", url);
+  document.title = TITLES[name] || "Rex — everex";
+  history.replaceState(null, "", name === "twitch" ? "#twitch" : "#" + name);
 }
-document.querySelectorAll(".nav-btn").forEach(b => {
-  b.addEventListener("click", () => showPanel(b.dataset.panel));
-});
-showPanel((location.hash || "").replace("#", "") || "twitch");
+const sections = document.querySelectorAll(".product-section");
+const observer = new IntersectionObserver((entries) => {
+  // Pick whichever observed section has the most of itself in the viewport
+  // right now, so the nav follows naturally rather than flickering between
+  // adjacent sections at the boundary.
+  let best = null, bestRatio = 0;
+  for (const e of entries) {
+    if (e.intersectionRatio > bestRatio) { bestRatio = e.intersectionRatio; best = e.target; }
+  }
+  if (best) setActive(best.id);
+}, { threshold: [0.25, 0.5, 0.75], rootMargin: "-80px 0px -40% 0px" });
+sections.forEach(s => observer.observe(s));
+
+// Deep link on load (e.g. /#discord) without fighting the scrollspy.
+if (location.hash) {
+  const target = document.getElementById(location.hash.slice(1));
+  if (target) { setActive(target.id); target.scrollIntoView(); }
+}
 </script>
 </body>
 </html>
