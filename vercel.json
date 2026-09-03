@@ -1,15 +1,15 @@
 {
   "rewrites": [
-    { "source": "/twitch/:path*", "destination": "https://rextwitchbot-production.up.railway.app/twitch/:path*" },
-    { "source": "/spotify/:path*", "destination": "https://rextwitchbot-production.up.railway.app/spotify/:path*" },
     { "source": "/dashboard", "destination": "https://rextwitchbot-production.up.railway.app/dashboard" },
-    { "source": "/overlay/:path*", "destination": "https://rextwitchbot-production.up.railway.app/overlay/:path*" },
-    { "source": "/commands/:path*", "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*" },
     { "source": "/commands", "destination": "https://rextwitchbot-production.up.railway.app/commands" },
-    { "source": "/timers/:path*", "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*" },
     { "source": "/timers", "destination": "https://rextwitchbot-production.up.railway.app/timers" },
     { "source": "/settings", "destination": "https://rextwitchbot-production.up.railway.app/settings" },
     { "source": "/requests.json", "destination": "https://rextwitchbot-production.up.railway.app/requests.json" },
-    { "source": "/bot-healthz", "destination": "https://rextwitchbot-production.up.railway.app/healthz" }
+    { "source": "/bot-healthz", "destination": "https://rextwitchbot-production.up.railway.app/healthz" },
+    { "source": "/twitch/:path*", "destination": "https://rextwitchbot-production.up.railway.app/twitch/:path*" },
+    { "source": "/spotify/:path*", "destination": "https://rextwitchbot-production.up.railway.app/spotify/:path*" },
+    { "source": "/overlay/:path*", "destination": "https://rextwitchbot-production.up.railway.app/overlay/:path*" },
+    { "source": "/commands/:path*", "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*" },
+    { "source": "/timers/:path*", "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*" }
   ]
 }
