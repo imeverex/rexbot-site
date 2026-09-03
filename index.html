@@ -85,9 +85,13 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
   main { padding: 32px 18px 60px; }
 }
 
-.intro { margin-bottom: 8px; scroll-margin-top: 40px; }
+.intro {
+  scroll-margin-top: 40px; width: calc(100% + 112px); margin: 0 -56px 0; padding: 64px 56px 56px;
+  background: radial-gradient(circle at 50% 30%, rgba(0,198,255,0.22), rgba(6,10,12,0.97) 72%), #04080a;
+}
+@media (max-width: 780px) { .intro { width: calc(100% + 36px); margin: 0 -18px 0; padding: 40px 18px 34px; } }
 .intro .eyebrow { color: var(--muted); }
-.intro .eyebrow .dot { color: var(--twitch); }
+.intro .eyebrow .dot { color: var(--rex-blue); }
 .intro h1 {
   font-size: 38px; font-weight: 650; line-height: 1.14; margin: 0 0 16px;
   letter-spacing: -0.02em; max-width: 600px; color: var(--text);
@@ -107,31 +111,46 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 .jump-chip.c-discord svg { color: var(--discord); }
 .jump-chip.c-widget svg { color: var(--widget); }
 
-.product-section { padding-top: 28px; scroll-margin-top: 40px; }
-.product-section:first-of-type { padding-top: 40px; border-top: 1px solid var(--border-soft); }
-.product-divider { border: none; border-top: 1px solid var(--border-soft); margin: 0; }
+.product-section { scroll-margin-top: 0; }
+.product-divider { display: none; }
 
-/* --- collapsible section bars: a colored rectangle with the title, opens
-   into the full detail as it scrolls into view (or on click) so the page
-   reads as three tidy strips instead of one long wall. --- */
+/* --- collapsible section bands: a full-width glowing block with just the
+   product name, that opens into the full detail as it scrolls into view
+   (or on click) -- reads as three big statements first, detail second. --- */
 .section-toggle {
-  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
-  border: none; cursor: pointer; padding: 15px 20px; border-radius: 10px;
-  font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.03em;
-  color: #fff; box-shadow: var(--shadow-sm); transition: filter 0.15s var(--ease);
-  text-transform: uppercase;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  width: calc(100% + 112px); margin: 0 -56px; min-height: 34vh; border: none; cursor: pointer;
+  position: relative; overflow: hidden; font-family: inherit; transition: filter 0.15s var(--ease);
 }
-.section-toggle:hover { filter: brightness(1.08); }
-.section-toggle .st-icon svg { width: 15px; height: 15px; opacity: 0.9; flex-shrink: 0; display: block; }
-.section-toggle .chevron { margin-left: auto; width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.3s var(--ease); }
+@media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 26vh; } }
+.section-toggle:hover { filter: brightness(1.12); }
+.section-toggle .st-title {
+  position: relative; z-index: 1; color: #fff; font-weight: 800; letter-spacing: -0.02em;
+  font-size: 54px; line-height: 1.05; text-align: center;
+}
+@media (max-width: 700px) { .section-toggle .st-title { font-size: 34px; } }
+.section-toggle .st-icon { position: relative; z-index: 1; opacity: 0.85; }
+.section-toggle .st-icon svg { width: 22px; height: 22px; display: block; color: #fff; }
+.section-toggle .chevron {
+  position: relative; z-index: 1; width: 20px; height: 20px; color: rgba(255,255,255,0.55);
+  transition: transform 0.3s var(--ease);
+}
 .product-section.expanded .section-toggle .chevron { transform: rotate(180deg); }
-.section-toggle.c-twitch { background: var(--twitch); }
-.section-toggle.c-discord { background: var(--discord); }
-.section-toggle.c-widget { background: var(--widget); }
+.section-toggle.c-twitch {
+  background: radial-gradient(circle at 50% 55%, rgba(145,70,255,0.4), rgba(6,4,10,0.97) 72%), #08050d;
+}
+.section-toggle.c-discord {
+  background: radial-gradient(circle at 50% 55%, rgba(88,101,242,0.4), rgba(5,6,12,0.97) 72%), #06070f;
+}
+.section-toggle.c-widget {
+  background: radial-gradient(circle at 50% 55%, rgba(29,185,84,0.35), rgba(4,9,6,0.97) 72%), #050a06;
+}
 
-.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); }
+.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); background: var(--bg); }
 .product-section.expanded .section-body { grid-template-rows: 1fr; }
-.section-body-inner { overflow: hidden; min-height: 0; padding-top: 26px; }
+.section-body-inner { overflow: hidden; min-height: 0; padding: 0 56px; }
+.product-section.expanded .section-body-inner { padding-top: 48px; padding-bottom: 12px; }
+@media (max-width: 780px) { .section-body-inner { padding-left: 18px; padding-right: 18px; } }
 
 .hero-row { display: flex; gap: 36px; align-items: flex-start; }
 .hero-text { flex: 1 1 380px; min-width: 260px; }
@@ -324,7 +343,7 @@ footer a { color: var(--faint); }
   <!-- ============ INTRO ============ -->
   <section class="intro" id="top">
     <div class="eyebrow"><span class="dot">●</span> Free · by everex</div>
-    <h1>One bot. <span style="color:var(--twitch);">Everything</span> your stream needs, in one place.</h1>
+    <h1>One bot. <span style="color:var(--rex-blue);">Everything</span> your stream needs, in one place.</h1>
     <p class="lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
       for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and an OBS
       <b>now-playing widget</b> — three tools, one project, all free. Scroll down to see each one, or jump straight in.</p>
@@ -347,8 +366,7 @@ footer a { color: var(--faint); }
   <!-- ============ TWITCH ============ -->
   <section class="panel product-section" id="twitch" data-panel="twitch">
     <button class="section-toggle c-twitch" data-panel="twitch" aria-expanded="false">
-      <span class="st-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      01 · Twitch Chatbot
+      <span class="st-title">Twitch Chat Bot</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner">
@@ -420,8 +438,7 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="discord" data-panel="discord">
     <button class="section-toggle c-discord" data-panel="discord" aria-expanded="false">
-      <span class="st-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
-      02 · Discord Bot
+      <span class="st-title">Discord Bot</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner">
@@ -504,8 +521,7 @@ footer a { color: var(--faint); }
   <hr class="product-divider">
   <section class="panel product-section" id="widget" data-panel="widget">
     <button class="section-toggle c-widget" data-panel="widget" aria-expanded="false">
-      <span class="st-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-      03 · Now Playing Widget
+      <span class="st-title">Now Playing Widget</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="section-body"><div class="section-body-inner">
