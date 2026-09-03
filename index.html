@@ -103,6 +103,58 @@ main { max-width: 760px; margin: 0 auto; padding: 60px 32px 90px; }
 }
 .product-label svg { width: 14px; height: 14px; opacity: 0.8; }
 
+/* --- mockups: real visual proof instead of another wall of text --- */
+.mock-frame {
+  position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+  box-shadow: var(--shadow-md); background: #0c0c0e; margin: 26px 0 8px;
+}
+.mock-titlebar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #151517; border-bottom: 1px solid var(--border-soft); }
+.mock-titlebar span { width: 8px; height: 8px; border-radius: 50%; background: #2c2c30; }
+.mock-scene {
+  position: relative; aspect-ratio: 16/9; overflow: hidden;
+  background: linear-gradient(180deg, rgba(9,9,11,0.1), rgba(9,9,11,0.6) 85%), url("game-capture.jpg");
+  background-size: cover; background-position: center 35%;
+}
+.mock-live {
+  position: absolute; top: 12px; left: 12px; display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 9px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
+}
+.mock-live .dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+.mock-chat { position: absolute; top: 12px; right: 12px; width: 168px; display: flex; flex-direction: column; gap: 5px; }
+.mock-chat .msg { background: rgba(10,11,14,0.7); backdrop-filter: blur(3px); border-radius: 6px; padding: 5px 8px; font-size: 10.5px; color: #cbd2d8; }
+.mock-chat .msg b { color: #fff; }
+.mock-chat .msg.reply b { color: var(--accent); }
+.mock-widget {
+  position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 11px;
+  padding: 9px 16px; background: #000; border: 1px solid #fff; border-radius: 9px; box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+}
+.mock-art { width: 38px; height: 38px; border-radius: 5px; flex-shrink: 0; background: url("m83-art.jpg") center/cover; }
+.mock-meta .label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px; }
+.mock-meta .title { font-size: 12.5px; font-weight: 650; color: #fff; }
+.mock-meta .artist { font-size: 10.5px; color: #b3b3b3; margin-top: 1px; }
+
+.mock-discord { padding: 16px 18px; background: #0c0c0e; }
+.mock-dmsg { display: flex; gap: 11px; margin-top: 14px; }
+.mock-dmsg:first-child { margin-top: 0; }
+.mock-davatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--discord); display: flex; align-items: center; justify-content: center; }
+.mock-davatar.bot { background: #2b2d31; border: 1px solid var(--border); }
+.mock-davatar svg { width: 16px; height: 16px; color: #fff; }
+.mock-dbody .dname { font-size: 12.5px; font-weight: 650; color: var(--text); }
+.mock-dbody .dname .tag { font-size: 9px; background: var(--discord); color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 6px; font-weight: 700; vertical-align: 1px; }
+.mock-dbody .dtext { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.mock-dembed {
+  margin-top: 6px; border-left: 3px solid var(--discord); background: #101012; border-radius: 0 6px 6px 0;
+  padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+}
+.mock-dembed .mock-art { width: 34px; height: 34px; }
+
+.widget-hero { display: flex; align-items: center; justify-content: center; padding: 50px 20px; margin: 26px 0 8px;
+  background: #0c0c0e; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-md);
+  background-image: radial-gradient(circle at 30% 20%, rgba(29,185,84,0.08), transparent 55%); }
+.widget-hero .mock-widget { position: static; transform: scale(1.35); }
+
 .eyebrow {
   font-size: 12px; font-weight: 600; color: var(--muted);
   letter-spacing: 0.02em; margin-bottom: 16px;
@@ -157,7 +209,7 @@ h1.headline em { font-style: normal; color: var(--accent); }
 .step h3 { font-size: 13px; font-weight: 650; margin: 0 0 4px; }
 .step p { color: var(--muted); font-size: 12.5px; margin: 0; }
 
-.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
 @media (max-width: 680px) { .features { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 460px) { .features { grid-template-columns: 1fr; } }
 .feature {
@@ -257,6 +309,25 @@ footer a { color: var(--faint); }
     </a>
     <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
 
+    <div class="mock-frame">
+      <div class="mock-titlebar"><span></span><span></span><span></span></div>
+      <div class="mock-scene">
+        <div class="mock-live"><span class="dot"></span>LIVE</div>
+        <div class="mock-chat">
+          <div class="msg"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
+          <div class="msg reply"><b>RexBot:</b> queued ✓</div>
+        </div>
+        <div class="mock-widget">
+          <div class="mock-art"></div>
+          <div class="mock-meta">
+            <div class="label">Now Playing</div>
+            <div class="title">Midnight City</div>
+            <div class="artist">M83</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="section-head">
       <h2>What it does</h2>
       <p>Everything below is managed from your dashboard once you connect — no config files.</p>
@@ -278,14 +349,6 @@ footer a { color: var(--faint); }
         <h3>Song requests</h3>
         <p><code>!sr &lt;song&gt;</code> queues straight to your Spotify. Needs Spotify Premium, same as any request bot.</p>
       </div>
-      <div class="feature">
-        <h3>Runs in the cloud</h3>
-        <p>Not tied to your PC — no install, no Smart App Control warnings, nothing to keep open while you stream.</p>
-      </div>
-      <div class="feature">
-        <h3>One dashboard</h3>
-        <p>Commands, timers, moderation, and Spotify — all in one place, no config files to edit.</p>
-      </div>
     </div>
   </section>
 
@@ -304,6 +367,30 @@ footer a { color: var(--faint); }
       Sign in to add it
     </a>
     <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) &mdash; the "Add to Discord" button lives on your dashboard.</div>
+
+    <div class="mock-frame">
+      <div class="mock-titlebar"><span></span><span></span><span></span></div>
+      <div class="mock-discord">
+        <div class="mock-dmsg">
+          <div class="mock-davatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+          <div class="mock-dbody">
+            <div class="dname">yourname</div>
+            <div class="dtext">/play never gonna give you up</div>
+          </div>
+        </div>
+        <div class="mock-dmsg">
+          <div class="mock-davatar bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <div class="mock-dbody">
+            <div class="dname">RexMusicBot <span class="tag">BOT</span></div>
+            <div class="dtext">▶ Now playing <b>Never Gonna Give You Up</b> — requested by yourname</div>
+            <div class="mock-dembed">
+              <div class="mock-art"></div>
+              <div class="mock-meta"><div class="title" style="font-size:11.5px;">Never Gonna Give You Up</div><div class="artist">Rick Astley</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="section-head">
       <h2>Commands</h2>
@@ -354,6 +441,17 @@ footer a { color: var(--faint); }
     </a>
     <div class="cta-meta">Windows 10/11 · installer includes a Start Menu shortcut &amp; uninstaller. New apps trip a
       Windows warning the first time — <a href="/help.html">what to do →</a></div>
+
+    <div class="widget-hero">
+      <div class="mock-widget">
+        <div class="mock-art"></div>
+        <div class="mock-meta">
+          <div class="label">Now Playing</div>
+          <div class="title">Midnight City</div>
+          <div class="artist">M83</div>
+        </div>
+      </div>
+    </div>
 
     <div class="section-head">
       <h2>Three steps. That's it.</h2>
