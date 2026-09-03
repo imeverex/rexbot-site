@@ -34,10 +34,23 @@ body[data-active="discord"] { --accent: var(--discord); --accent-hover: #707dff;
 body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065; --accent-soft: rgba(29,185,84,0.13); }
 .glow {
   position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(110px); opacity: 0.16;
-  transition: background 0.4s var(--ease);
+  transition: background 0.6s var(--ease);
 }
-.glow.a { width: 520px; height: 520px; background: var(--accent); top: -160px; left: 120px; }
-.glow.b { width: 460px; height: 460px; background: var(--accent); opacity: 0.1; bottom: 10%; right: -120px; }
+.glow.a { width: 520px; height: 520px; background: var(--accent); top: -160px; left: 120px; animation: drift-a 22s ease-in-out infinite; }
+.glow.b { width: 460px; height: 460px; background: var(--accent); opacity: 0.1; bottom: 10%; right: -120px; animation: drift-b 26s ease-in-out infinite; }
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, 30px) scale(1.12); }
+  66% { transform: translate(-20px, 50px) scale(0.92); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(-50px, -30px) scale(1.15); }
+  75% { transform: translate(20px, 20px) scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow.a, .glow.b, .section-toggle::before, .section-toggle .chevron { animation: none; }
+}
 
 aside.sidebar {
   width: 216px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; align-self: flex-start; z-index: 1;
@@ -57,7 +70,7 @@ nav.sidenav .nav-btn {
 nav.sidenav .nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.15s var(--ease); }
 nav.sidenav .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
 nav.sidenav .nav-btn:hover svg { opacity: 0.9; }
-nav.sidenav .nav-btn.active { color: #fff; background: var(--accent); box-shadow: var(--shadow-sm); }
+nav.sidenav .nav-btn.active { color: #fff; background: var(--rex-blue); box-shadow: var(--shadow-sm); }
 nav.sidenav .nav-btn.active svg { opacity: 1; }
 .nav-divider { height: 1px; background: var(--border-soft); margin: 11px 4px; }
 .sidebar-links { display: flex; flex-direction: column; gap: 1px; }
@@ -117,40 +130,73 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 /* --- collapsible section bands: a full-width glowing block with just the
    product name, that opens into the full detail as it scrolls into view
    (or on click) -- reads as three big statements first, detail second. --- */
+@keyframes breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.82; transform: scale(1.06); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(4px); opacity: 0.95; }
+}
 .section-toggle {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   width: calc(100% + 112px); margin: 0 -56px; min-height: 34vh; border: none; cursor: pointer;
-  position: relative; overflow: hidden; font-family: inherit; transition: filter 0.15s var(--ease);
+  position: relative; overflow: hidden; font-family: inherit;
+  transition: filter 0.35s var(--ease), transform 0.35s var(--ease);
 }
 @media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 26vh; } }
-.section-toggle:hover { filter: brightness(1.12); }
+.section-toggle::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.9;
+  animation: breathe 7s ease-in-out infinite; transition: opacity 0.4s var(--ease);
+}
+.section-toggle:hover::before { opacity: 1; }
+.section-toggle:hover { filter: brightness(1.1); }
+.section-toggle:active { transform: scale(0.997); }
+/* soft fade at the top/bottom seam so bands bleed into each other instead
+   of cutting hard at the edge. */
+.section-toggle::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, var(--bg), transparent 14%, transparent 86%, var(--bg));
+  opacity: 0.55;
+}
 .section-toggle .st-title {
-  position: relative; z-index: 1; color: #fff; font-weight: 800; letter-spacing: -0.02em;
-  font-size: 54px; line-height: 1.05; text-align: center;
+  position: relative; z-index: 1; font-weight: 800; letter-spacing: -0.02em;
+  font-size: 58px; line-height: 1.05; text-align: center; transition: text-shadow 0.4s var(--ease);
+  background: linear-gradient(180deg, #fff 20%, rgba(255,255,255,0.72));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 @media (max-width: 700px) { .section-toggle .st-title { font-size: 34px; } }
 .section-toggle .st-icon { position: relative; z-index: 1; opacity: 0.85; }
 .section-toggle .st-icon svg { width: 22px; height: 22px; display: block; color: #fff; }
 .section-toggle .chevron {
-  position: relative; z-index: 1; width: 20px; height: 20px; color: rgba(255,255,255,0.55);
-  transition: transform 0.3s var(--ease);
+  position: relative; z-index: 1; width: 20px; height: 20px; color: rgba(255,255,255,0.7);
+  transition: transform 0.4s var(--ease);
+  animation: bob 2.2s ease-in-out infinite;
 }
-.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); }
-.section-toggle.c-twitch {
-  background: radial-gradient(circle at 50% 55%, rgba(145,70,255,0.4), rgba(6,4,10,0.97) 72%), #08050d;
+.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); animation: none; opacity: 0.55; }
+.section-toggle.c-twitch::before {
+  background: radial-gradient(circle at 50% 55%, rgba(145,70,255,0.45), rgba(6,4,10,0.97) 72%), #08050d;
 }
-.section-toggle.c-discord {
-  background: radial-gradient(circle at 50% 55%, rgba(88,101,242,0.4), rgba(5,6,12,0.97) 72%), #06070f;
+.section-toggle.c-twitch .st-title { text-shadow: 0 0 46px rgba(145,70,255,0.55); }
+.section-toggle.c-discord::before {
+  background: radial-gradient(circle at 50% 55%, rgba(88,101,242,0.45), rgba(5,6,12,0.97) 72%), #06070f;
 }
-.section-toggle.c-widget {
-  background: radial-gradient(circle at 50% 55%, rgba(29,185,84,0.35), rgba(4,9,6,0.97) 72%), #050a06;
+.section-toggle.c-discord .st-title { text-shadow: 0 0 46px rgba(88,101,242,0.55); }
+.section-toggle.c-widget::before {
+  background: radial-gradient(circle at 50% 55%, rgba(29,185,84,0.4), rgba(4,9,6,0.97) 72%), #050a06;
 }
+.section-toggle.c-widget .st-title { text-shadow: 0 0 46px rgba(29,185,84,0.5); }
 
-.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); background: var(--bg); }
+.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); background: var(--bg); }
 .product-section.expanded .section-body { grid-template-rows: 1fr; }
 .section-body-inner { overflow: hidden; min-height: 0; padding: 0 56px; }
 .product-section.expanded .section-body-inner { padding-top: 48px; padding-bottom: 12px; }
 @media (max-width: 780px) { .section-body-inner { padding-left: 18px; padding-right: 18px; } }
+.section-body-content {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.5s var(--ease) 0.05s, transform 0.5s var(--ease) 0.05s;
+}
+.product-section.expanded .section-body-content { opacity: 1; transform: translateY(0); }
 
 .hero-row { display: flex; gap: 36px; align-items: flex-start; }
 .hero-text { flex: 1 1 380px; min-width: 260px; }
@@ -369,7 +415,7 @@ footer a { color: var(--faint); }
       <span class="st-title">Twitch Chat Bot</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
-    <div class="section-body"><div class="section-body-inner">
+    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
     <div class="hero-row">
       <div class="hero-text">
@@ -431,7 +477,7 @@ footer a { color: var(--faint); }
       </div>
     </div>
 
-    </div></div>
+    </div></div></div>
   </section>
 
   <!-- ============ DISCORD ============ -->
@@ -441,7 +487,7 @@ footer a { color: var(--faint); }
       <span class="st-title">Discord Bot</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
-    <div class="section-body"><div class="section-body-inner">
+    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
     <div class="hero-row">
       <div class="hero-text">
@@ -514,7 +560,7 @@ footer a { color: var(--faint); }
       </div>
     </div>
 
-    </div></div>
+    </div></div></div>
   </section>
 
   <!-- ============ NOW PLAYING WIDGET ============ -->
@@ -524,11 +570,11 @@ footer a { color: var(--faint); }
       <span class="st-title">Now Playing Widget</span>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </button>
-    <div class="section-body"><div class="section-body-inner">
+    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
 
     <div class="hero-row">
       <div class="hero-text">
-        <h1 class="headline">Show what's playing. <em>Zero install, ever.</em></h1>
+        <h1 class="headline">Show what's playing. <em>Straight from the cloud.</em></h1>
         <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
           cloud — no app to run, nothing to keep open while you stream.</p>
 
@@ -603,7 +649,7 @@ footer a { color: var(--faint); }
     <p style="margin-top:10px;">Windows 10/11 · new apps trip a Windows warning the first time —
       <a href="/help.html">what to do →</a></p>
 
-    </div></div>
+    </div></div></div>
   </section>
 
   <footer>
