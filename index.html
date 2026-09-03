@@ -130,10 +130,6 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 /* --- collapsible section bands: a full-width glowing block with just the
    product name, that opens into the full detail as it scrolls into view
    (or on click) -- reads as three big statements first, detail second. --- */
-@keyframes breathe {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.82; transform: scale(1.06); }
-}
 @keyframes bob {
   0%, 100% { transform: translateY(0); opacity: 0.55; }
   50% { transform: translateY(4px); opacity: 0.95; }
@@ -147,7 +143,7 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 @media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 26vh; } }
 .section-toggle::before {
   content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.9;
-  animation: breathe 7s ease-in-out infinite; transition: opacity 0.4s var(--ease);
+  transition: opacity 0.4s var(--ease);
 }
 .section-toggle:hover::before { opacity: 1; }
 .section-toggle:hover { filter: brightness(1.1); }
@@ -160,9 +156,8 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
   opacity: 0.55;
 }
 .section-toggle .st-title {
-  position: relative; z-index: 1; font-weight: 800; letter-spacing: -0.02em;
-  font-size: 58px; line-height: 1.05; text-align: center; transition: text-shadow 0.4s var(--ease);
-  background: linear-gradient(180deg, #fff 20%, rgba(255,255,255,0.72));
+  position: relative; z-index: 1; font-weight: 900; letter-spacing: -0.02em;
+  font-size: 60px; line-height: 1.05; text-align: center; transition: text-shadow 0.4s var(--ease);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 @media (max-width: 700px) { .section-toggle .st-title { font-size: 34px; } }
@@ -177,15 +172,24 @@ main { width: 100%; margin: 0; padding: 60px 56px 90px; }
 .section-toggle.c-twitch::before {
   background: radial-gradient(circle at 50% 55%, rgba(145,70,255,0.45), rgba(6,4,10,0.97) 72%), #08050d;
 }
-.section-toggle.c-twitch .st-title { text-shadow: 0 0 46px rgba(145,70,255,0.55); }
+.section-toggle.c-twitch .st-title {
+  background-image: linear-gradient(180deg, #caa4ff, var(--twitch));
+  text-shadow: 0 0 60px rgba(145,70,255,0.7);
+}
 .section-toggle.c-discord::before {
   background: radial-gradient(circle at 50% 55%, rgba(88,101,242,0.45), rgba(5,6,12,0.97) 72%), #06070f;
 }
-.section-toggle.c-discord .st-title { text-shadow: 0 0 46px rgba(88,101,242,0.55); }
+.section-toggle.c-discord .st-title {
+  background-image: linear-gradient(180deg, #aab2ff, var(--discord));
+  text-shadow: 0 0 60px rgba(88,101,242,0.7);
+}
 .section-toggle.c-widget::before {
   background: radial-gradient(circle at 50% 55%, rgba(29,185,84,0.4), rgba(4,9,6,0.97) 72%), #050a06;
 }
-.section-toggle.c-widget .st-title { text-shadow: 0 0 46px rgba(29,185,84,0.5); }
+.section-toggle.c-widget .st-title {
+  background-image: linear-gradient(180deg, #7fe8a5, var(--widget));
+  text-shadow: 0 0 60px rgba(29,185,84,0.65);
+}
 
 .section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); background: var(--bg); }
 .product-section.expanded .section-body { grid-template-rows: 1fr; }
