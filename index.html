@@ -17,12 +17,12 @@
 <link rel="icon" href="rex-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --accent: #9146FF; --accent-hover: #a366ff; --accent-soft: rgba(145,70,255,0.13);
-  --bg: #09090b; --surface: #141416; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
-  --text: #f0f0f2; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
+  --accent: #00C6FF; --accent-2: #6c8cff; --accent-hover: #33d2ff; --accent-soft: rgba(0,198,255,0.13);
+  --bg: #08090b; --surface: #131417; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
+  --text: #f4f4f6; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
   --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
   --twitch-soft: #caa4ff; --discord-soft: #aab2ff; --widget-soft: #7fe8a5;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
@@ -34,20 +34,20 @@ html { background: var(--bg); scroll-behavior: smooth; }
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 15px;
-  display: flex; min-height: 100vh; -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; position: relative; overflow-x: hidden;
 }
-/* Each section's color corresponds to the app it's about -- Twitch purple,
-   Discord blurple, widget green -- and the background glow (keyed off the
-   same --accent var) follows along automatically as you scroll. */
+/* The active tab's product color tints the CTA, tab pill and glow --
+   Twitch purple / Discord blurple / widget green, each only where it's
+   actually that product's own brand color. */
 body[data-active="twitch"]  { --accent: var(--twitch);  --accent-hover: #a366ff; --accent-soft: rgba(145,70,255,0.13); }
 body[data-active="discord"] { --accent: var(--discord); --accent-hover: #707dff; --accent-soft: rgba(88,101,242,0.13); }
 body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065; --accent-soft: rgba(29,185,84,0.13); }
 .glow {
-  position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(110px); opacity: 0.16;
+  position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.18;
   transition: background 0.6s var(--ease);
 }
-.glow.a { width: 520px; height: 520px; background: var(--accent); top: -160px; left: 120px; animation: drift-a 22s ease-in-out infinite; }
-.glow.b { width: 460px; height: 460px; background: var(--accent); opacity: 0.1; bottom: 10%; right: -120px; animation: drift-b 26s ease-in-out infinite; }
+.glow.a { width: 560px; height: 560px; background: var(--accent); top: -200px; left: -80px; animation: drift-a 22s ease-in-out infinite; }
+.glow.b { width: 480px; height: 480px; background: var(--rex-blue); opacity: 0.08; top: 120px; right: -160px; animation: drift-b 26s ease-in-out infinite; }
 @keyframes drift-a {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(40px, 30px) scale(1.12); }
@@ -58,182 +58,134 @@ body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065;
   40% { transform: translate(-50px, -30px) scale(1.15); }
   75% { transform: translate(20px, 20px) scale(0.9); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .glow.a, .glow.b, .section-toggle::before, .section-toggle .chevron { animation: none; }
-}
+@media (prefers-reduced-motion: reduce) { .glow.a, .glow.b, .tab-chevron { animation: none; } }
 
-aside.sidebar {
-  width: 216px; flex-shrink: 0; height: 100vh; position: sticky; top: 0; align-self: flex-start; z-index: 1;
-  background: linear-gradient(180deg, #131315, #0e0e10); border-right: 1px solid var(--border-soft);
-  display: flex; flex-direction: column; padding: 20px 12px;
+/* ============ HEADER ============ */
+.site-header {
+  position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; max-width: 1180px; margin: 0 auto; padding: 22px 32px;
 }
-.brand { display: flex; align-items: center; gap: 10px; padding: 2px 8px 22px; }
-.brand img { width: 34px; height: 34px; border-radius: 8px; box-shadow: var(--shadow-sm); }
-.brand span { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(0,198,255,0.4)); }
+.brand span { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
 .brand span .rex { color: var(--rex-blue); }
-.sidebar-login {
-  display: flex; align-items: center; justify-content: center; gap: 7px; margin: 0 8px 18px;
-  padding: 9px 10px; border-radius: 7px; background: var(--rex-blue); color: #04181f; font-weight: 700;
-  font-size: 12.5px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-  transition: filter 0.15s var(--ease);
+.top-nav { display: flex; align-items: center; gap: 28px; }
+.top-nav a {
+  color: var(--muted); font-size: 13.5px; font-weight: 600; text-decoration: none;
+  transition: color 0.15s var(--ease);
 }
-.sidebar-login:hover { filter: brightness(1.08); }
-.sidebar-login svg { width: 14px; height: 14px; flex-shrink: 0; }
-nav.sidenav { display: flex; flex-direction: column; gap: 2px; }
-nav.sidenav .nav-btn {
-  display: flex; align-items: center; gap: 9px; background: none; border: none; text-decoration: none;
-  text-align: left; width: 100%; color: var(--muted); font-size: 13px; font-weight: 500;
-  padding: 8px 10px; border-radius: 7px; cursor: pointer; transition: background 0.15s var(--ease), color 0.15s var(--ease);
+.top-nav a:hover, .top-nav a.active { color: #fff; }
+.header-cta {
+  display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 650; font-size: 13.5px;
+  text-decoration: none; padding: 9px 18px; border-radius: 999px; white-space: nowrap;
+  background: linear-gradient(100deg, var(--rex-blue), var(--accent-2));
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
 }
-nav.sidenav .nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.7; transition: opacity 0.15s var(--ease); }
-nav.sidenav .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
-nav.sidenav .nav-btn:hover svg { opacity: 0.9; }
-nav.sidenav .nav-btn.active { color: #fff; background: var(--rex-blue); box-shadow: var(--shadow-sm); }
-nav.sidenav .nav-btn.active svg { opacity: 1; }
-.nav-divider { height: 1px; background: var(--border-soft); margin: 11px 4px; }
-.sidebar-links { display: flex; flex-direction: column; gap: 1px; }
-.sidebar-links a {
-  display: flex; align-items: center; gap: 9px; color: var(--faint); font-size: 12.5px; font-weight: 500;
-  padding: 7px 9px; border-radius: 6px; text-decoration: none; transition: color 0.15s var(--ease), background 0.15s var(--ease);
-}
-.sidebar-links a:hover { color: var(--muted); background: rgba(255,255,255,0.04); }
-.sidebar-links a svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.75; }
-.sidebar-footer {
-  margin-top: auto; display: flex; align-items: center; gap: 6px; padding: 12px 9px 2px; font-size: 11px; color: var(--faint);
-}
-.sidebar-footer img { height: 10px; opacity: 0.7; }
+.header-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+@media (max-width: 780px) { .top-nav { display: none; } .site-header { padding: 18px 20px; } }
 
-.content { flex: 1; min-width: 0; position: relative; z-index: 1; }
-main { width: 100%; margin: 0; padding: 0 56px 90px; }
+/* ============ HERO ============ */
+.hero { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 28px 24px 8px; text-align: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12.5px; font-weight: 600;
+  letter-spacing: 0.03em; margin-bottom: 18px;
+}
+.eyebrow .dot { color: var(--rex-blue); }
+.hero-title {
+  font-size: 46px; font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; margin: 0 0 18px; color: #fff;
+  text-shadow: 0 0 34px rgba(0,198,255,0.35), 0 0 2px rgba(255,255,255,0.4);
+}
+.hero-title .hl { color: var(--rex-blue); }
+@media (max-width: 640px) { .hero-title { font-size: 32px; } }
+.hero-lead { color: var(--muted); font-size: 15.5px; max-width: 560px; margin: 0 auto 34px; }
+.hero-lead b { color: var(--text); font-weight: 600; }
 
-@media (max-width: 780px) {
-  body { flex-direction: column; }
-  aside.sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--border-soft); padding: 12px; background: #131315; }
-  .brand { margin-bottom: 8px; }
-  nav.sidenav { flex-direction: row; flex-wrap: wrap; gap: 3px; }
-  nav.sidenav .nav-btn { flex: 1 1 auto; justify-content: center; padding: 9px 8px; font-size: 12px; white-space: nowrap; }
-  .nav-divider, .sidebar-links, .sidebar-footer { display: none; }
-  main { padding: 32px 18px 60px; }
+/* ============ TAB SWITCHER ============ */
+.tab-group {
+  display: inline-flex; gap: 4px; padding: 5px; background: var(--surface-2); border: 1px solid var(--border-soft);
+  border-radius: 999px; margin: 0 auto 44px;
 }
+@media (max-width: 640px) { .tab-group { display: flex; width: 100%; } }
+.tab-btn {
+  border: none; background: none; font-family: inherit; cursor: pointer; white-space: nowrap;
+  color: var(--muted); font-size: 13.5px; font-weight: 650; padding: 10px 20px; border-radius: 999px;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+@media (max-width: 640px) { .tab-btn { flex: 1; padding: 10px 8px; font-size: 12px; } }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active.c-twitch { background: var(--twitch); color: #fff; }
+.tab-btn.active.c-discord { background: var(--discord); color: #fff; }
+.tab-btn.active.c-widget { background: var(--widget); color: #041b0b; }
 
-.intro {
-  scroll-margin-top: 40px; width: calc(100% + 112px); margin: 0 -56px 0; padding: 64px 56px 56px;
-  background: radial-gradient(circle at 50% 30%, rgba(0,198,255,0.22), rgba(6,10,12,0.97) 72%), #04080a;
-}
-@media (max-width: 780px) { .intro { width: calc(100% + 36px); margin: 0 -18px 0; padding: 40px 18px 34px; } }
-.intro .eyebrow { color: var(--muted); }
-.intro .eyebrow .dot { color: var(--rex-blue); }
-.intro h1 {
-  font-size: 38px; font-weight: 650; line-height: 1.14; margin: 0 0 16px;
-  letter-spacing: -0.02em; max-width: 600px; color: var(--text);
-}
-@media (max-width: 500px) { .intro h1 { font-size: 28px; } }
-.intro .lead { color: var(--muted); font-size: 15.5px; max-width: 520px; margin: 0; }
-.intro .lead b { color: var(--text); font-weight: 600; }
-.jump-row { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
-.jump-chip {
-  display: inline-flex; align-items: center; gap: 7px; background: var(--surface); border: 1px solid var(--border);
-  color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 7px 13px; border-radius: 999px;
-  text-decoration: none; transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
-}
-.jump-chip:hover { color: var(--text); border-color: var(--faint); }
-.jump-chip svg { width: 13px; height: 13px; }
-.jump-chip.c-twitch svg { color: var(--twitch); }
-.jump-chip.c-discord svg { color: var(--discord); }
-.jump-chip.c-widget svg { color: var(--widget); }
+/* ============ TAB PANELS ============ */
+.tab-panel { display: none; text-align: left; animation: panel-in 0.3s var(--ease); }
+.tab-panel.active { display: block; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-.product-section { scroll-margin-top: 0; }
-.product-divider { display: none; }
+.hero-row { display: flex; gap: 44px; align-items: center; max-width: 1040px; margin: 0 auto; }
+.hero-text { flex: 1 1 380px; min-width: 260px; }
+.hero-visual { flex: 0 1 360px; max-width: 360px; width: 100%; }
+@media (max-width: 860px) { .hero-row { flex-direction: column; } .hero-visual { max-width: 460px; } }
 
-/* --- collapsible section bands: a full-width glowing block with just the
-   product name, that opens into the full detail as it scrolls into view
-   (or on click) -- reads as three big statements first, detail second. --- */
-@keyframes bob {
-  0%, 100% { transform: translateY(0); opacity: 0.55; }
-  50% { transform: translateY(4px); opacity: 0.95; }
-}
-.section-toggle {
-  display: flex; align-items: center; width: calc(100% + 112px); margin: 0 -56px; min-height: 40vh;
-  border: none; cursor: pointer; position: relative; overflow: hidden; font-family: inherit;
-  transition: filter 0.35s var(--ease);
-}
-@media (max-width: 780px) { .section-toggle { width: calc(100% + 36px); margin: 0 -18px; min-height: 34vh; } }
-.section-toggle::before {
-  content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.9;
-  transition: opacity 0.4s var(--ease);
-}
-.section-toggle:hover::before { opacity: 1; }
-.section-toggle:hover { filter: brightness(1.06); }
-/* soft fade at the top/bottom seam so bands bleed into each other instead
-   of cutting hard at the edge. */
-.section-toggle::after {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: linear-gradient(180deg, var(--bg), transparent 14%, transparent 86%, var(--bg));
-  opacity: 0.55;
-}
+.tb-kicker { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.tb-kicker .dot-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tb-kicker .dot-icon svg { width: 14px; height: 14px; display: block; }
+.tb-kicker .label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; }
+.tab-panel.c-twitch .tb-kicker .dot-icon { background: rgba(145,70,255,0.18); color: var(--twitch-soft); }
+.tab-panel.c-twitch .tb-kicker .label { color: var(--twitch-soft); }
+.tab-panel.c-discord .tb-kicker .dot-icon { background: rgba(88,101,242,0.18); color: var(--discord-soft); }
+.tab-panel.c-discord .tb-kicker .label { color: var(--discord-soft); }
+.tab-panel.c-widget .tb-kicker .dot-icon { background: rgba(29,185,84,0.16); color: var(--widget-soft); }
+.tab-panel.c-widget .tb-kicker .label { color: var(--widget-soft); }
 
-/* --- band content: the product's own name/tagline on the left, and the
-   actual interface it lives in on the right (Twitch chat scrolling by,
-   a Discord voice channel, a player transport) instead of one shared
-   graphic -- sitting on the same glowing gradient as before. --- */
-.tb-row {
-  position: relative; z-index: 1; display: flex; align-items: center; gap: 44px;
-  width: 100%; max-width: 1020px; margin: 0 auto; padding: 0 56px;
-}
-@media (max-width: 900px) { .tb-row { flex-direction: column; align-items: flex-start; gap: 30px; } }
-@media (max-width: 780px) { .tb-row { padding: 0 18px; } }
+h1.headline { font-size: 30px; font-weight: 700; line-height: 1.2; margin: 0 0 14px; letter-spacing: -0.02em; color: var(--text); }
+@media (max-width: 500px) { h1.headline { font-size: 24px; } }
+h1.headline em { font-style: normal; color: var(--accent); }
+.hero-sub { color: var(--muted); font-size: 14.5px; max-width: 460px; margin: 0 0 26px; }
 
-.tb-text { flex: 1 1 360px; min-width: 260px; text-align: left; }
-.tb-kicker { display: inline-flex; align-items: center; gap: 11px; margin-bottom: 18px; }
-.tb-kicker .dot-icon {
-  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 650; font-size: 15px;
+  text-decoration: none; background: var(--accent); padding: 11px 22px; border-radius: 999px;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.14);
+  transition: background 0.15s var(--ease), transform 0.15s var(--ease);
 }
-.tb-kicker .dot-icon svg { width: 15px; height: 15px; display: block; }
-.tb-kicker .label { font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
-
-.tb-title { display: block; font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 12px; color: #fff; text-wrap: balance; }
-@media (max-width: 700px) { .tb-title { font-size: 27px; } }
-.tb-sub { display: block; font-size: 14.5px; color: rgba(255,255,255,0.58); max-width: 380px; margin: 0 0 22px; line-height: 1.55; }
-
-.tb-explore {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+.cta-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.cta-btn:active { transform: translateY(0); }
+.cta-btn svg { width: 15px; height: 15px; flex: none; }
+.cta-meta { margin-top: 13px; color: var(--faint); font-size: 12.5px; max-width: 440px; }
+.cta-meta a { color: var(--muted); text-decoration: underline; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13.5px;
+  padding: 9px 17px; border-radius: 999px; text-decoration: none; border: 1px solid var(--border); color: var(--muted);
+  background: var(--surface); transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
 }
-.section-toggle .chevron {
-  width: 15px; height: 15px; color: inherit;
-  transition: transform 0.4s var(--ease);
-  animation: bob 2.2s ease-in-out infinite;
-}
-.product-section.expanded .section-toggle .chevron { transform: rotate(180deg); animation: none; }
+.btn:hover { border-color: var(--faint); color: var(--text); }
+.btn svg { width: 14px; height: 14px; flex: none; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
 
+/* --- mini live UI mocks -- the "proof" cards for each product --- */
 .tb-card {
-  flex: 0 0 320px; width: 320px; border-radius: 12px; overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.14); background: rgba(10,8,14,0.55); backdrop-filter: blur(14px);
-  box-shadow: 0 24px 60px -26px rgba(0,0,0,0.65);
+  border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,15,20,0.6);
+  backdrop-filter: blur(14px); box-shadow: 0 24px 60px -26px rgba(0,0,0,0.65);
 }
-@media (max-width: 900px) { .tb-card { width: 100%; max-width: 380px; flex: 0 0 auto; } }
-
-/* -- twitch: live chat -- */
-.chat-head { display: flex; align-items: center; gap: 7px; padding: 9px 13px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); }
+.chat-head { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); }
 .chat-head .live { display: flex; align-items: center; gap: 5px; font-family: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; color: #ff6b6b; }
-.chat-head .live .dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4d4d; }
+.chat-head .live .dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 .chat-head .name { margin-left: auto; font-size: 10.5px; color: rgba(255,255,255,0.45); }
-.chat-msgs { padding: 12px 13px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+.chat-msgs { padding: 14px; display: flex; flex-direction: column; gap: 9px; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.75); }
 .chat-msgs .m b { color: #fff; }
-.chat-msgs .m.bot { background: rgba(145,70,255,0.16); border-radius: 6px; padding: 6px 9px; margin: 0 -4px; }
+.chat-msgs .m.bot { background: rgba(145,70,255,0.16); border-radius: 7px; padding: 6px 9px; margin: 0 -4px; }
 .chat-msgs .m.bot b { color: var(--twitch-soft); }
-.chat-input { display: flex; align-items: center; gap: 8px; padding: 9px 13px; border-top: 1px solid rgba(255,255,255,0.1); }
-.chat-input .box { flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px; padding: 6px 10px; font-size: 11px; color: rgba(255,255,255,0.4); }
+.chat-input { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.1); }
+.chat-input .box { flex: 1; background: rgba(255,255,255,0.06); border-radius: 999px; padding: 6px 12px; font-size: 11px; color: rgba(255,255,255,0.4); }
 .chat-input .send { font-size: 10.5px; color: var(--twitch-soft); font-weight: 700; }
 
-/* -- discord: voice channel -- */
-.voice-head { padding: 9px 13px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10.5px; color: rgba(255,255,255,0.45); }
-.voice-members { padding: 8px; display: flex; flex-direction: column; gap: 2px; }
-.voice-member { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; }
-.voice-member .avatar {
-  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--discord);
-  display: flex; align-items: center; justify-content: center; color: #fff;
-}
+.voice-head { padding: 10px 14px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10.5px; color: rgba(255,255,255,0.45); }
+.voice-members { padding: 9px; display: flex; flex-direction: column; gap: 2px; }
+.voice-member { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 8px; }
+.voice-member .avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--discord); display: flex; align-items: center; justify-content: center; color: #fff; }
 .voice-member.speaking .avatar { box-shadow: 0 0 0 2px var(--discord-soft); }
 .voice-member .avatar svg { width: 14px; height: 14px; }
 .voice-member .who { display: flex; flex-direction: column; min-width: 0; }
@@ -243,99 +195,20 @@ main { width: 100%; margin: 0; padding: 0 56px 90px; }
 .voice-member .mic { margin-left: auto; opacity: 0.5; flex-shrink: 0; }
 .voice-member .mic svg { width: 13px; height: 13px; }
 
-/* -- widget: player transport -- */
-.player-card { padding: 18px; }
-.player-track { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.player-art { width: 46px; height: 46px; border-radius: 7px; flex-shrink: 0; background: linear-gradient(135deg, var(--widget-soft), var(--widget)); }
+.player-card { padding: 20px; }
+.player-track { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.player-art { width: 46px; height: 46px; border-radius: 8px; flex-shrink: 0; background: linear-gradient(135deg, var(--widget-soft), var(--widget)); }
 .player-meta .title { font-size: 13px; font-weight: 700; color: #fff; }
 .player-meta .artist { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
 .player-progress { height: 3px; background: rgba(255,255,255,0.12); border-radius: 999px; margin-bottom: 6px; overflow: hidden; }
 .player-progress .fill { width: 38%; height: 100%; background: var(--widget); }
-.player-times { display: flex; justify-content: space-between; font-size: 9.5px; color: rgba(255,255,255,0.35); margin-bottom: 18px; }
-.player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.player-times { display: flex; justify-content: space-between; font-size: 9.5px; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+.player-controls { display: flex; align-items: center; justify-content: center; gap: 26px; }
 .player-controls svg { width: 17px; height: 17px; color: rgba(255,255,255,0.6); }
-.player-controls .play {
-  width: 38px; height: 38px; border-radius: 50%; background: var(--widget); display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 22px -6px rgba(29,185,84,0.6);
-}
+.player-controls .play { width: 40px; height: 40px; border-radius: 50%; background: var(--widget); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 22px -6px rgba(29,185,84,0.6); }
 .player-controls .play svg { width: 15px; height: 15px; color: #06120a; }
 
-.section-toggle.c-twitch::before {
-  background: radial-gradient(circle at 12% 50%, rgba(145,70,255,0.32), rgba(6,4,10,0.97) 62%), #08050d;
-}
-.section-toggle.c-twitch .tb-kicker .dot-icon { background: rgba(145,70,255,0.22); color: var(--twitch-soft); }
-.section-toggle.c-twitch .tb-kicker .label { color: var(--twitch-soft); }
-.section-toggle.c-twitch .tb-explore { color: rgba(202,164,255,0.75); }
-
-.section-toggle.c-discord::before {
-  background: radial-gradient(circle at 12% 50%, rgba(88,101,242,0.32), rgba(5,6,12,0.97) 62%), #06070f;
-}
-.section-toggle.c-discord .tb-kicker .dot-icon { background: rgba(88,101,242,0.22); color: var(--discord-soft); }
-.section-toggle.c-discord .tb-kicker .label { color: var(--discord-soft); }
-.section-toggle.c-discord .tb-explore { color: rgba(170,178,255,0.75); }
-
-.section-toggle.c-widget::before {
-  background: radial-gradient(circle at 12% 50%, rgba(29,185,84,0.28), rgba(4,9,6,0.97) 62%), #050a06;
-}
-.section-toggle.c-widget .tb-kicker .dot-icon { background: rgba(29,185,84,0.2); color: var(--widget-soft); }
-.section-toggle.c-widget .tb-kicker .label { color: var(--widget-soft); }
-.section-toggle.c-widget .tb-explore { color: rgba(127,232,165,0.75); }
-
-.section-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); background: var(--bg); }
-.product-section.expanded .section-body { grid-template-rows: 1fr; }
-.section-body-inner { overflow: hidden; min-height: 0; padding: 0 56px; }
-.product-section.expanded .section-body-inner { padding-top: 48px; padding-bottom: 12px; }
-@media (max-width: 780px) { .section-body-inner { padding-left: 18px; padding-right: 18px; } }
-.section-body-content {
-  opacity: 0; transform: translateY(14px);
-  transition: opacity 0.5s var(--ease) 0.05s, transform 0.5s var(--ease) 0.05s;
-}
-.product-section.expanded .section-body-content { opacity: 1; transform: translateY(0); }
-
-.hero-row { display: flex; gap: 36px; align-items: flex-start; }
-.hero-text { flex: 1 1 380px; min-width: 260px; }
-.hero-visual { flex: 0 1 360px; max-width: 360px; width: 100%; }
-@media (max-width: 860px) {
-  .hero-row { flex-direction: column; }
-  .hero-visual { max-width: 460px; }
-}
-
-/* --- mockups: real visual proof instead of another wall of text --- */
-.mock-frame {
-  position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
-  box-shadow: var(--shadow-md); background: #0c0c0e; margin: 0;
-}
-.mock-titlebar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #151517; border-bottom: 1px solid var(--border-soft); }
-.mock-titlebar span { width: 8px; height: 8px; border-radius: 50%; background: #2c2c30; }
-.mock-titlebar .src-name { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 650; color: var(--faint); }
-.mock-titlebar .src-name img { width: 13px; height: 13px; border-radius: 3px; opacity: 0.9; }
-.mock-scene {
-  position: relative; aspect-ratio: 16/9; overflow: hidden;
-  background: linear-gradient(180deg, rgba(9,9,11,0.1), rgba(9,9,11,0.6) 85%), url("game-capture.jpg");
-  background-size: cover; background-position: center 35%;
-}
-.mock-live {
-  position: absolute; top: 12px; left: 12px; display: flex; align-items: center; gap: 6px;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 9px; border-radius: 999px;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
-}
-.mock-live .dot { width: 6px; height: 6px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-.mock-chat { position: absolute; top: 12px; right: 12px; width: 168px; display: flex; flex-direction: column; gap: 5px; }
-.mock-chat .msg { background: rgba(10,11,14,0.7); backdrop-filter: blur(3px); border-radius: 6px; padding: 5px 8px; font-size: 10.5px; color: #cbd2d8; }
-.mock-chat .msg b { color: #fff; }
-.mock-chat .msg.reply b { color: var(--accent); }
-.mock-widget {
-  position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 11px;
-  padding: 9px 16px 9px 12px; background: #000; border: 1px solid #fff; border-radius: 9px; box-shadow: 0 8px 22px rgba(0,0,0,0.5);
-}
-.mock-widget .mock-mark { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; opacity: 0.95; }
-.mock-art { width: 38px; height: 38px; border-radius: 5px; flex-shrink: 0; background: url("m83-art.jpg") center/cover; }
-.mock-meta .label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px; }
-.mock-meta .title { font-size: 12.5px; font-weight: 650; color: #fff; }
-.mock-meta .artist { font-size: 10.5px; color: #b3b3b3; margin-top: 1px; }
-
-.mock-discord { padding: 16px 18px; background: #0c0c0e; }
+.mock-discord { padding: 16px 18px; background: rgba(0,0,0,0.2); }
 .mock-dmsg { display: flex; gap: 11px; margin-top: 14px; }
 .mock-dmsg:first-child { margin-top: 0; }
 .mock-davatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--discord); display: flex; align-items: center; justify-content: center; }
@@ -344,86 +217,32 @@ main { width: 100%; margin: 0; padding: 0 56px 90px; }
 .mock-dbody .dname { font-size: 12.5px; font-weight: 650; color: var(--text); }
 .mock-dbody .dname .tag { font-size: 9px; background: var(--discord); color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 6px; font-weight: 700; vertical-align: 1px; }
 .mock-dbody .dtext { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-.mock-dembed {
-  margin-top: 6px; border-left: 3px solid var(--discord); background: #101012; border-radius: 0 6px 6px 0;
-  padding: 8px 12px; display: flex; align-items: center; gap: 10px;
-}
-.mock-dembed .mock-art { width: 34px; height: 34px; }
+.mock-dembed { margin-top: 6px; border-left: 3px solid var(--discord); background: rgba(255,255,255,0.03); border-radius: 0 8px 8px 0; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
+.mock-art { width: 34px; height: 34px; border-radius: 6px; flex-shrink: 0; background: linear-gradient(135deg, #f0a, #50e); }
 
-.widget-hero { display: flex; align-items: center; justify-content: center; padding: 40px 16px; margin: 0;
-  background: #0c0c0e; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-md);
-  background-image: radial-gradient(circle at 30% 20%, rgba(29,185,84,0.08), transparent 55%); }
-.widget-hero .mock-widget { position: static; transform: scale(1.1); }
+/* ============ SECONDARY CONTENT (per tab) ============ */
+.section-head { margin: 52px 0 16px; text-align: center; }
+.section-head h2 { font-size: 20px; font-weight: 700; margin: 0 0 5px; letter-spacing: -0.01em; }
+.section-head p { color: var(--muted); font-size: 13.5px; margin: 0; }
 
-.eyebrow {
-  font-size: 12px; font-weight: 600; color: var(--muted);
-  letter-spacing: 0.02em; margin-bottom: 16px;
-}
-.eyebrow .dot { color: var(--accent); }
-h1.headline {
-  font-size: 32px; font-weight: 650; line-height: 1.2; margin: 0 0 15px;
-  letter-spacing: -0.02em; max-width: 560px; color: var(--text);
-}
-@media (max-width: 500px) { h1.headline { font-size: 25px; } }
-h1.headline em { font-style: normal; color: var(--accent); }
-.hero-sub { color: var(--muted); font-size: 14.5px; max-width: 460px; margin: 0 0 28px; }
-
-.cta-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--accent); color: #fff; font-weight: 600;
-  font-size: 15px; padding: 10px 20px; border-radius: 8px; text-decoration: none;
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.14);
-  transition: background 0.15s var(--ease), transform 0.15s var(--ease);
-}
-.cta-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
-.cta-btn:active { transform: translateY(0); }
-.cta-btn svg { width: 15px; height: 15px; flex: none; }
-.cta-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; max-width: 440px; }
-.cta-meta a { color: var(--muted); text-decoration: underline; }
-.btn {
-  display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13.5px;
-  padding: 9px 17px; border-radius: 7px; text-decoration: none; transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
-}
-.btn.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
-.btn.secondary:hover { border-color: var(--faint); color: var(--text); }
-.btn svg { width: 14px; height: 14px; flex: none; }
-.row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
-
-.section-head { margin: 48px 0 18px; }
-.section-head h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
-.section-head p { color: var(--muted); font-size: 13px; margin: 0; }
-
-.cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 760px; margin: 0 auto; }
 @media (max-width: 560px) { .cmd-list { grid-template-columns: 1fr; } }
-.cmd {
-  display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 12px 14px; box-shadow: var(--shadow-sm); transition: border-color 0.15s var(--ease);
-}
-.cmd:hover { border-color: var(--accent-soft); }
-.cmd code {
-  font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; font-weight: 600; color: var(--accent);
-  background: var(--surface-2); padding: 3px 8px; border-radius: 5px; white-space: nowrap;
-}
+.cmd { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; }
+.cmd code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; font-weight: 600; color: var(--accent); background: var(--surface-2); padding: 3px 8px; border-radius: 5px; white-space: nowrap; }
 .cmd span { color: var(--muted); font-size: 13.5px; }
 
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
 @media (max-width: 680px) { .steps { grid-template-columns: 1fr; } }
-.step { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow-sm); }
-.step .num {
-  display: inline-block; color: var(--accent); font-weight: 700;
-  font-size: 12px; margin-bottom: 9px; font-family: ui-monospace, "SF Mono", Consolas, monospace;
-}
+.step { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.step .num { display: inline-block; color: var(--accent); font-weight: 700; font-size: 12px; margin-bottom: 9px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
 .step .num::before { content: "0"; opacity: 0.5; }
-.step h3 { font-size: 13px; font-weight: 650; margin: 0 0 4px; }
+.step h3 { font-size: 13.5px; font-weight: 650; margin: 0 0 4px; }
 .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
 
-.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
+.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
 @media (max-width: 680px) { .features { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 460px) { .features { grid-template-columns: 1fr; } }
-.feature {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 15px;
-  box-shadow: var(--shadow-sm); transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
-}
+.feature { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: border-color 0.15s var(--ease), transform 0.15s var(--ease); }
 .feature:hover { border-color: var(--accent-soft); transform: translateY(-1px); }
 .feature h3 { font-size: 13.5px; font-weight: 650; margin: 0 0 4px; color: var(--text); }
 .feature p { color: var(--muted); font-size: 13px; margin: 0; line-height: 1.5; }
@@ -432,452 +251,355 @@ code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 0.9
 a { color: var(--accent); transition: color 0.12s var(--ease); }
 a:hover { color: var(--accent-hover); }
 
-footer {
-  display: flex; align-items: center; gap: 7px; justify-content: center;
-  margin-top: 68px; font-size: 12px; color: var(--faint);
+/* ============ INTEGRATIONS ============ */
+.integrations { position: relative; z-index: 1; text-align: center; padding: 56px 24px; border-top: 1px solid var(--border-soft); margin-top: 60px; }
+.integrations-label { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-bottom: 22px; }
+.integration-pills { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.integration-pills span {
+  display: inline-flex; align-items: center; padding: 10px 22px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--muted); font-size: 13.5px; font-weight: 600;
 }
-footer img { height: 12px; opacity: 0.7; }
-footer a { color: var(--faint); }
+
+/* ============ FAQ ============ */
+.faq { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 12px 24px 70px; }
+.faq h2 { text-align: center; font-size: 26px; font-weight: 700; margin: 0 0 34px; letter-spacing: -0.01em; }
+.faq-item { border-bottom: 1px solid var(--border-soft); }
+.faq-q {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: none; border: none; text-align: left; font-family: inherit; cursor: pointer;
+  color: var(--text); font-size: 15px; font-weight: 650; padding: 18px 2px;
+}
+.faq-q .plus { flex-shrink: 0; width: 18px; height: 18px; color: var(--faint); transition: transform 0.25s var(--ease); }
+.faq-item.open .faq-q .plus { transform: rotate(45deg); color: var(--accent); }
+.faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s var(--ease); }
+.faq-item.open .faq-a { grid-template-rows: 1fr; }
+.faq-a-inner { overflow: hidden; }
+.faq-a p { color: var(--muted); font-size: 14px; margin: 0 2px 18px; max-width: 620px; }
+
+/* ============ FOOTER ============ */
+.site-footer { position: relative; z-index: 1; border-top: 1px solid var(--border-soft); padding: 48px 24px 26px; }
+.footer-cols { display: flex; gap: 60px; max-width: 1040px; margin: 0 auto 34px; flex-wrap: wrap; }
+.footer-brand { flex: 1 1 240px; min-width: 200px; }
+.footer-brand .brand { margin-bottom: 10px; }
+.footer-brand p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 260px; }
+.footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
+.footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { text-align: center; padding-top: 22px; border-top: 1px solid var(--border-soft); color: var(--faint); font-size: 12.5px; }
+.footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
 </style>
 </head>
 <body data-active="twitch">
 <div class="glow a"></div>
 <div class="glow b"></div>
 
-<aside class="sidebar">
-  <div class="brand">
-    <img src="rex-mark.png" alt="">
-    <span><span class="rex">REX</span>BOT</span>
-  </div>
-  <a class="btn sidebar-login" href="/twitch/login">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<header class="site-header">
+  <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
+  <nav class="top-nav">
+    <a href="#twitch" data-panel="twitch" class="nav-link active">Twitch Chatbot</a>
+    <a href="#discord" data-panel="discord" class="nav-link">Discord Bot</a>
+    <a href="#widget" data-panel="widget" class="nav-link">Now Playing</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+  </nav>
+  <a class="header-cta" href="/twitch/login">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     Log in / Get started
   </a>
-  <nav class="sidenav">
-    <a class="nav-btn active" href="#twitch" data-panel="twitch">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Twitch Chatbot
-    </a>
-    <a class="nav-btn" href="#discord" data-panel="discord">
-      <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-      Discord Bot
-    </a>
-    <a class="nav-btn" href="#widget" data-panel="widget">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      Now Playing Widget
-    </a>
-  </nav>
-  <div class="nav-divider"></div>
-  <div class="sidebar-links">
-    <a href="/help.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"/><circle cx="12" cy="17.5" r=".6" fill="currentColor"/></svg>
-      Install help
-    </a>
-    <a href="https://github.com/imeverex/rexbot-site" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
-      Source on GitHub
-    </a>
-  </div>
-  <div class="sidebar-footer"><img src="everex-mark.png" alt=""> by everex</div>
-</aside>
+</header>
 
-<div class="content">
 <main>
-
-  <!-- ============ INTRO ============ -->
-  <section class="intro" id="top">
+  <section class="hero" id="top">
     <div class="eyebrow"><span class="dot">●</span> Free · by everex</div>
-    <h1>One bot. <span style="color:var(--rex-blue);">Everything</span> your stream needs, in one place.</h1>
-    <p class="lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
+    <h1 class="hero-title">One bot. <span class="hl">Everything</span><br>your stream needs.</h1>
+    <p class="hero-lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
       for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and an OBS
-      <b>now-playing widget</b> — three tools, one project, all free. Scroll down to see each one, or jump straight in.</p>
-    <div class="jump-row">
-      <a class="jump-chip c-twitch" href="#twitch">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Twitch Chatbot
-      </a>
-      <a class="jump-chip c-discord" href="#discord">
-        <svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-        Discord Bot
-      </a>
-      <a class="jump-chip c-widget" href="#widget">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        Now Playing Widget
-      </a>
-    </div>
-  </section>
+      <b>now-playing widget</b> — three tools, one project, all free.</p>
 
-  <!-- ============ TWITCH ============ -->
-  <section class="panel product-section" id="twitch" data-panel="twitch">
-    <button class="section-toggle c-twitch" data-panel="twitch" aria-expanded="false">
-      <div class="tb-row">
-        <div class="tb-text">
+    <div class="tab-group" role="tablist">
+      <button class="tab-btn active c-twitch" data-panel="twitch">Twitch Chatbot</button>
+      <button class="tab-btn c-discord" data-panel="discord">Discord Bot</button>
+      <button class="tab-btn c-widget" data-panel="widget">Now Playing Widget</button>
+    </div>
+
+    <!-- ============ TWITCH PANEL ============ -->
+    <div class="tab-panel active c-twitch" data-panel="twitch" id="twitch">
+      <div class="hero-row">
+        <div class="hero-text">
           <span class="tb-kicker">
             <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
             <span class="label">Twitch Chatbot</span>
           </span>
-          <span class="tb-title">Chat commands, timers &amp; song requests.</span>
-          <span class="tb-sub">Viewers type <code>!sr</code> and it lands straight in your Spotify queue.</span>
-          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+          <h1 class="headline">Custom commands, timers, and song requests — <em>running whether you're live or not.</em></h1>
+          <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
+            Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
+          <a class="cta-btn" href="/twitch/login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Connect Twitch
+          </a>
+          <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
         </div>
-        <div class="tb-card">
-          <div class="chat-head"><span class="live"><span class="dot"></span>LIVE</span><span class="name">#your_channel</span></div>
-          <div class="chat-msgs">
-            <div class="m"><b>mod_kate:</b> anyone else loving this playlist</div>
-            <div class="m"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
-            <div class="m bot"><b>RexBot:</b> queued ✓ — Never Gonna Give You Up</div>
-            <div class="m"><b>viewer_92:</b> lol nice</div>
-          </div>
-          <div class="chat-input"><span class="box">Send a message</span><span class="send">Chat</span></div>
-        </div>
-      </div>
-    </button>
-    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
-
-    <div class="hero-row">
-      <div class="hero-text">
-        <h1 class="headline">Custom commands, timers, and song requests — <em>running whether you're live or not.</em></h1>
-        <p class="hero-sub">An always-on Twitch chat bot: viewers type <code>!sr</code> and it queues straight to your
-          Spotify, plus custom commands, auto-messages, and basic moderation. Nothing installed on your PC.</p>
-
-        <a class="cta-btn" href="/twitch/login">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Connect Twitch
-        </a>
-        <div class="cta-meta">You'll approve on Twitch's own page. Free, runs in the cloud — manage everything from your dashboard afterward.</div>
-      </div>
-      <div class="hero-visual">
-        <div class="mock-frame">
-          <div class="mock-titlebar"><span></span><span></span><span></span>
-            <div class="src-name"><img src="rex-mark.png" alt="">Rex Overlay — Browser Source</div>
-          </div>
-          <div class="mock-scene">
-            <div class="mock-live"><span class="dot"></span>LIVE</div>
-            <div class="mock-chat">
-              <div class="msg"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
-              <div class="msg reply"><b>RexBot:</b> queued ✓</div>
+        <div class="hero-visual">
+          <div class="tb-card">
+            <div class="chat-head"><span class="live"><span class="dot"></span>LIVE</span><span class="name">#your_channel</span></div>
+            <div class="chat-msgs">
+              <div class="m"><b>mod_kate:</b> anyone else loving this playlist</div>
+              <div class="m"><b>viewer_92:</b> !sr Never Gonna Give You Up</div>
+              <div class="m bot"><b>RexBot:</b> queued ✓ — Never Gonna Give You Up</div>
+              <div class="m"><b>viewer_92:</b> lol nice</div>
             </div>
-            <div class="mock-widget">
-              <img class="mock-mark" src="rex-mark.png" alt="">
-              <div class="mock-art"></div>
-              <div class="mock-meta">
-                <div class="label">Now Playing</div>
-                <div class="title">Midnight City</div>
-                <div class="artist">M83</div>
-              </div>
-            </div>
+            <div class="chat-input"><span class="box">Send a message</span><span class="send">Chat</span></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="section-head">
-      <h2>What it does</h2>
-      <p>Everything below is managed from your dashboard once you connect — no config files.</p>
-    </div>
-    <div class="features">
-      <div class="feature">
-        <h3>Custom commands</h3>
-        <p>Add <code>!discord</code>, <code>!socials</code>, whatever you want. Cooldowns and permission levels built in.</p>
-      </div>
-      <div class="feature">
-        <h3>Timers &amp; auto-messages</h3>
-        <p>Auto-post reminders on a repeating interval. Set it once, forget about it.</p>
-      </div>
-      <div class="feature">
-        <h3>Moderation</h3>
-        <p>Banned-word and link filtering with automatic timeouts, once the bot's a mod in your channel.</p>
-      </div>
-      <div class="feature">
-        <h3>Song requests</h3>
-        <p><code>!sr &lt;song&gt;</code> queues straight to your Spotify. Needs Spotify Premium, same as any request bot.</p>
+      <div class="section-head"><h2>What it does</h2><p>Everything below is managed from your dashboard once you connect — no config files.</p></div>
+      <div class="features">
+        <div class="feature"><h3>Custom commands</h3><p>Add <code>!discord</code>, <code>!socials</code>, whatever you want. Cooldowns and permission levels built in.</p></div>
+        <div class="feature"><h3>Timers &amp; auto-messages</h3><p>Auto-post reminders on a repeating interval. Set it once, forget about it.</p></div>
+        <div class="feature"><h3>Moderation</h3><p>Banned-word and link filtering with automatic timeouts, once the bot's a mod in your channel.</p></div>
+        <div class="feature"><h3>Song requests</h3><p><code>!sr &lt;song&gt;</code> queues straight to your Spotify. Needs Spotify Premium, same as any request bot.</p></div>
       </div>
     </div>
 
-    </div></div></div>
-  </section>
-
-  <!-- ============ DISCORD ============ -->
-  <hr class="product-divider">
-  <section class="panel product-section" id="discord" data-panel="discord">
-    <button class="section-toggle c-discord" data-panel="discord" aria-expanded="false">
-      <div class="tb-row">
-        <div class="tb-text">
+    <!-- ============ DISCORD PANEL ============ -->
+    <div class="tab-panel c-discord" data-panel="discord" id="discord">
+      <div class="hero-row">
+        <div class="hero-text">
           <span class="tb-kicker">
             <span class="dot-icon"><svg viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg></span>
             <span class="label">Discord Bot</span>
           </span>
-          <span class="tb-title">Music in your voice channel, on request.</span>
-          <span class="tb-sub">One command, <code>/play</code>, and it joins your voice channel and starts playing.</span>
-          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+          <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
+          <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
+          <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Sign in to add it
+          </a>
+          <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) &mdash; the "Add to Discord" button lives on your dashboard.</div>
         </div>
-        <div class="tb-card">
-          <div class="voice-head">🔊 general</div>
-          <div class="voice-members">
-            <div class="voice-member speaking">
-              <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
-              <div class="who"><span class="name">yourname</span></div>
-            </div>
-            <div class="voice-member">
-              <div class="avatar" style="background:#2b2d31;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-              <div class="who"><span class="name">RexMusicBot<span class="tag">BOT</span></span><span class="now">🎵 Never Gonna Give You Up</span></div>
-            </div>
-            <div class="voice-member">
-              <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
-              <div class="who"><span class="name">mod_sam</span></div>
-              <div class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2M12 19v3"/></svg></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </button>
-    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
-
-    <div class="hero-row">
-      <div class="hero-text">
-        <h1 class="headline">Play music in your <em>Discord voice channel</em>, on request.</h1>
-        <p class="hero-sub">One bot, one command. <code>/play</code> a song and it joins your voice channel and plays it.</p>
-
-        <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Sign in to add it
-        </a>
-        <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) &mdash; the "Add to Discord" button lives on your dashboard.</div>
-      </div>
-      <div class="hero-visual">
-        <div class="mock-frame">
-          <div class="mock-titlebar"><span></span><span></span><span></span>
-            <div class="src-name"><img src="rex-mark.png" alt="">#music-requests</div>
-          </div>
-          <div class="mock-discord">
-            <div class="mock-dmsg">
-              <div class="mock-davatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
-              <div class="mock-dbody">
-                <div class="dname">yourname</div>
-                <div class="dtext">/play never gonna give you up</div>
+        <div class="hero-visual">
+          <div class="tb-card">
+            <div class="mock-discord">
+              <div class="mock-dmsg">
+                <div class="mock-davatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+                <div class="mock-dbody"><div class="dname">yourname</div><div class="dtext">/play never gonna give you up</div></div>
               </div>
-            </div>
-            <div class="mock-dmsg">
-              <div class="mock-davatar bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-              <div class="mock-dbody">
-                <div class="dname">RexMusicBot <span class="tag">BOT</span></div>
-                <div class="dtext">▶ Now playing <b>Never Gonna Give You Up</b> — requested by yourname</div>
-                <div class="mock-dembed">
-                  <div class="mock-art"></div>
-                  <div class="mock-meta"><div class="title" style="font-size:11.5px;">Never Gonna Give You Up</div><div class="artist">Rick Astley</div></div>
+              <div class="mock-dmsg">
+                <div class="mock-davatar bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+                <div class="mock-dbody">
+                  <div class="dname">RexMusicBot <span class="tag">BOT</span></div>
+                  <div class="dtext">▶ Now playing <b>Never Gonna Give You Up</b> — requested by yourname</div>
+                  <div class="mock-dembed"><div class="mock-art"></div><div class="player-meta"><div class="title" style="font-size:11.5px;">Never Gonna Give You Up</div><div class="artist">Rick Astley</div></div></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="section-head">
-      <h2>Commands</h2>
-      <p>Slash commands: type <code>/</code> in any channel it's in.</p>
-    </div>
-    <div class="cmd-list">
-      <div class="cmd"><code>/play</code><span>Search + play a song, or queue it if something's playing</span></div>
-      <div class="cmd"><code>/skip</code><span>Skip the current song</span></div>
-      <div class="cmd"><code>/pause</code><span>Pause playback</span></div>
-      <div class="cmd"><code>/resume</code><span>Resume playback</span></div>
-      <div class="cmd"><code>/queue</code><span>See what's playing and what's next</span></div>
-      <div class="cmd"><code>/leave</code><span>Disconnect and clear the queue</span></div>
-    </div>
+      <div class="section-head"><h2>Commands</h2><p>Slash commands: type <code>/</code> in any channel it's in.</p></div>
+      <div class="cmd-list">
+        <div class="cmd"><code>/play</code><span>Search + play a song, or queue it if something's playing</span></div>
+        <div class="cmd"><code>/skip</code><span>Skip the current song</span></div>
+        <div class="cmd"><code>/pause</code><span>Pause playback</span></div>
+        <div class="cmd"><code>/resume</code><span>Resume playback</span></div>
+        <div class="cmd"><code>/queue</code><span>See what's playing and what's next</span></div>
+        <div class="cmd"><code>/leave</code><span>Disconnect and clear the queue</span></div>
+      </div>
 
-    <div class="section-head">
-      <h2>Why it's simple</h2>
-    </div>
-    <div class="features">
-      <div class="feature">
-        <h3>Free, no catches</h3>
-        <p>No premium tier, no paywalled commands, just <code>/play</code> and go.</p>
-      </div>
-      <div class="feature">
-        <h3>Just search &amp; go</h3>
-        <p>Type a song, artist, or paste a link. No accounts or playlists to set up first.</p>
-      </div>
-      <div class="feature">
-        <h3>Leaves you alone</h3>
-        <p>Auto-disconnects after 5 idle minutes with nothing queued, so it doesn't linger in your voice channel.</p>
+      <div class="section-head"><h2>Why it's simple</h2></div>
+      <div class="features">
+        <div class="feature"><h3>Free, no catches</h3><p>No premium tier, no paywalled commands, just <code>/play</code> and go.</p></div>
+        <div class="feature"><h3>Just search &amp; go</h3><p>Type a song, artist, or paste a link. No accounts or playlists to set up first.</p></div>
+        <div class="feature"><h3>Leaves you alone</h3><p>Auto-disconnects after 5 idle minutes with nothing queued, so it doesn't linger in your voice channel.</p></div>
       </div>
     </div>
 
-    </div></div></div>
-  </section>
-
-  <!-- ============ NOW PLAYING WIDGET ============ -->
-  <hr class="product-divider">
-  <section class="panel product-section" id="widget" data-panel="widget">
-    <button class="section-toggle c-widget" data-panel="widget" aria-expanded="false">
-      <div class="tb-row">
-        <div class="tb-text">
+    <!-- ============ NOW PLAYING WIDGET PANEL ============ -->
+    <div class="tab-panel c-widget" data-panel="widget" id="widget">
+      <div class="hero-row">
+        <div class="hero-text">
           <span class="tb-kicker">
             <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
             <span class="label">Now Playing Widget</span>
           </span>
-          <span class="tb-title">Show what's playing, live from the cloud.</span>
-          <span class="tb-sub">A clean OBS overlay that reads your Spotify account directly &mdash; nothing to install.</span>
-          <span class="tb-explore">Explore <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+          <h1 class="headline">Show what's playing. <em>Straight from the cloud.</em></h1>
+          <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
+            cloud — no app to run, nothing to keep open while you stream.</p>
+          <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Sign in to get your overlay
+          </a>
+          <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) — your overlay URL
+            lives on your dashboard, ready to drop into OBS.</div>
         </div>
-        <div class="tb-card player-card">
-          <div class="player-track">
-            <div class="player-art"></div>
-            <div class="player-meta"><div class="title">Midnight City</div><div class="artist">M83</div></div>
-          </div>
-          <div class="player-progress"><div class="fill"></div></div>
-          <div class="player-times"><span>1:24</span><span>-2:36</span></div>
-          <div class="player-controls">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
-            <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg>
-          </div>
-        </div>
-      </div>
-    </button>
-    <div class="section-body"><div class="section-body-inner"><div class="section-body-content">
-
-    <div class="hero-row">
-      <div class="hero-text">
-        <h1 class="headline">Show what's playing. <em>Straight from the cloud.</em></h1>
-        <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
-          cloud — no app to run, nothing to keep open while you stream.</p>
-
-        <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Sign in to get your overlay
-        </a>
-        <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family) — your overlay URL
-          lives on your dashboard, ready to drop into OBS.</div>
-      </div>
-      <div class="hero-visual">
-        <div class="widget-hero">
-          <div class="mock-widget">
-            <img class="mock-mark" src="rex-mark.png" alt="">
-            <div class="mock-art"></div>
-            <div class="mock-meta">
-              <div class="label">Now Playing</div>
-              <div class="title">Midnight City</div>
-              <div class="artist">M83</div>
+        <div class="hero-visual">
+          <div class="tb-card player-card">
+            <div class="player-track">
+              <div class="player-art"></div>
+              <div class="player-meta"><div class="title">Midnight City</div><div class="artist">M83</div></div>
+            </div>
+            <div class="player-progress"><div class="fill"></div></div>
+            <div class="player-times"><span>1:24</span><span>-2:36</span></div>
+            <div class="player-controls">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+              <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z"/></svg>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="section-head">
-      <h2>Three steps. That's it.</h2>
-      <p>No accounts to create, no config files, no API keys to hunt down.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <h3>Sign in &amp; connect Spotify</h3>
-        <p>Same login as the Twitch bot — one account covers everything.</p>
+      <div class="section-head"><h2>Three steps. That's it.</h2><p>No accounts to create, no config files, no API keys to hunt down.</p></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Sign in &amp; connect Spotify</h3><p>Same login as the Twitch bot — one account covers everything.</p></div>
+        <div class="step"><div class="num">2</div><h3>Copy your overlay URL</h3><p>It's on the Overlay tab of your dashboard, unique to you.</p></div>
+        <div class="step"><div class="num">3</div><h3>Add it as a Browser Source</h3><p>Paste it into OBS. It's already showing what's playing — no restart needed when a track changes.</p></div>
       </div>
-      <div class="step">
-        <div class="num">2</div>
-        <h3>Copy your overlay URL</h3>
-        <p>It's on the Overlay tab of your dashboard, unique to you.</p>
+      <div class="features">
+        <div class="feature"><h3>Runs in the cloud</h3><p>Reads your Spotify account's playback state directly — works whether you're playing from desktop, phone, or browser.</p></div>
+        <div class="feature"><h3>Always up to date</h3><p>No installer to update, no version to fall behind on. It's just a URL.</p></div>
+        <div class="feature"><h3>Nothing to keep open</h3><p>No tray icon, no background process on your PC — one less thing that can crash mid-stream.</p></div>
       </div>
-      <div class="step">
-        <div class="num">3</div>
-        <h3>Add it as a Browser Source</h3>
-        <p>Paste it into OBS. It's already showing what's playing — no restart needed when a track changes.</p>
-      </div>
-    </div>
-    <div class="features">
-      <div class="feature">
-        <h3>Runs in the cloud</h3>
-        <p>Reads your Spotify account's playback state directly — works whether you're playing from desktop, phone, or browser.</p>
-      </div>
-      <div class="feature">
-        <h3>Always up to date</h3>
-        <p>No installer to update, no version to fall behind on. It's just a URL.</p>
-      </div>
-      <div class="feature">
-        <h3>Nothing to keep open</h3>
-        <p>No tray icon, no background process on your PC — one less thing that can crash mid-stream.</p>
-      </div>
-    </div>
 
-    <div class="section-head">
-      <h2>Prefer a local app instead?</h2>
-      <p>The original Windows widget still works, and reads any player (not just Spotify) via Windows' own media session.</p>
+      <div class="section-head"><h2>Prefer a local app instead?</h2><p>The original Windows widget still works, and reads any player (not just Spotify) via Windows' own media session.</p></div>
+      <div class="row" style="justify-content:center;">
+        <a class="btn" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download for Windows
+        </a>
+      </div>
+      <p style="text-align:center; margin-top:10px;">Windows 10/11 · new apps trip a Windows warning the first time —
+        <a href="/help.html">what to do →</a></p>
     </div>
-    <div class="row">
-      <a class="btn secondary" href="https://github.com/imeverex/rexbot-site/releases/latest/download/RexNowPlayingWidgetSetup.exe">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        Download for Windows
-      </a>
-    </div>
-    <p style="margin-top:10px;">Windows 10/11 · new apps trip a Windows warning the first time —
-      <a href="/help.html">what to do →</a></p>
-
-    </div></div></div>
   </section>
 
-  <footer>
-    <img src="everex-mark.png" alt=""> by <a href="https://everexmedia.ca" target="_blank">everex</a>
-    · <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
-  </footer>
+  <!-- ============ INTEGRATIONS ============ -->
+  <section class="integrations">
+    <div class="integrations-label">Works with the tools you already use</div>
+    <div class="integration-pills">
+      <span>Twitch</span><span>Discord</span><span>OBS</span><span>Spotify</span>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Is RexBot free to use?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes — the Twitch bot, Discord bot, and Now Playing widget are all free, by everex.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need Spotify Premium?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>For song requests and the Now Playing overlay, yes — Spotify's API requires Premium for the playback control these features rely on, same as any request bot.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Does the bot need to be a moderator in my channel?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Only if you turn on moderation. Timeouts silently do nothing unless RexBot is a mod in your channel — chat commands, timers, and song requests all work without it.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need to install anything?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>No — the Twitch bot, Discord bot, and Now Playing widget all run in the cloud. There's an optional legacy Windows app for the widget if you'd rather run it locally, but it's not required.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What happens to my data?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Rex stores what it needs to run your bot and overlay (your settings, connection tokens) on Everex's own server. See the dashboard's Legal tab for the full rundown.</p></div></div>
+      </div>
+    </div>
+  </section>
 </main>
-</div>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div class="footer-brand">
+      <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
+      <p>Twitch chat bot, Discord music bot, and OBS overlay — three tools, one project, free.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#twitch" data-panel="twitch">Twitch Chatbot</a>
+      <a href="#discord" data-panel="discord">Discord Bot</a>
+      <a href="#widget" data-panel="widget">Now Playing Widget</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="https://everexmedia.ca" target="_blank">everex</a>
+      <a href="https://github.com/imeverex/rexbot-site" target="_blank">Source on GitHub</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="/help.html">Install help</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 RexBot &mdash; by <img src="everex-mark.png" alt="">everex</div>
+</footer>
 
 <script>
-// Scrollspy: highlight the sidebar item and shift the accent color as each
-// product section scrolls into view, instead of click-to-swap panels --
-// the whole page is one continuous scroll now.
-const TITLES = {
-  twitch: "Rex — Twitch Chatbot",
-  discord: "Rex — Discord Bot",
-  widget: "Rex — Now Playing Widget",
-};
-let current = "twitch";
-function setActive(name) {
-  if (name === current) return;
-  current = name;
-  document.querySelectorAll(".nav-btn").forEach(b => { b.classList.toggle("active", b.dataset.panel === name); });
-  document.body.setAttribute("data-active", name);
-  document.title = TITLES[name] || "Rex — everex";
-  history.replaceState(null, "", name === "twitch" ? "#twitch" : "#" + name);
-}
-const sections = document.querySelectorAll(".product-section");
-const observer = new IntersectionObserver((entries) => {
-  // Pick whichever observed section has the most of itself in the viewport
-  // right now, so the nav follows naturally rather than flickering between
-  // adjacent sections at the boundary.
-  let best = null, bestRatio = 0;
-  for (const e of entries) {
-    if (e.intersectionRatio > bestRatio) { bestRatio = e.intersectionRatio; best = e.target; }
+// rex-mark.png ships on a flat light-gray square (made for light UIs) --
+// key it out to transparent client-side, same trick used on the dashboard.
+(function keyLogoTransparent() {
+  function process(img) {
+    try {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const frame = ctx.getImageData(0, 0, c.width, c.height);
+      const px = frame.data;
+      for (let i = 0; i < px.length; i += 4) {
+        if (px[i] > 190 && px[i + 1] > 190 && px[i + 2] > 190) px[i + 3] = 0;
+      }
+      ctx.putImageData(frame, 0, 0);
+      img.src = c.toDataURL('image/png');
+    } catch (e) { /* canvas op failed -- leave the logo as shipped */ }
   }
-  if (best) setActive(best.id);
-}, { threshold: [0.25, 0.5, 0.75], rootMargin: "-80px 0px -40% 0px" });
-sections.forEach(s => observer.observe(s));
+  document.querySelectorAll('img.brand-logo').forEach(img => {
+    if (img.complete && img.naturalWidth) process(img);
+    else img.addEventListener('load', () => process(img));
+  });
+})();
 
-// Each product section is collapsed to just its colored title bar by default
-// and opens only when its toggle is clicked -- no scroll-triggered auto-open,
-// which used to fire (and un-fire) on every section as you scrolled past it.
-function setExpanded(section, on) {
-  section.classList.toggle("expanded", on);
-  const btn = section.querySelector(".section-toggle");
-  if (btn) btn.setAttribute("aria-expanded", String(on));
+// Tab switching -- click a pill, a header nav link, or a footer product
+// link and the matching panel shows, the accent color follows (Twitch
+// purple / Discord blurple / widget green), and the URL hash updates.
+const PANELS = ["twitch", "discord", "widget"];
+const TITLES = {
+  twitch: "RexBot — Twitch Chatbot",
+  discord: "RexBot — Discord Bot",
+  widget: "RexBot — Now Playing Widget",
+};
+function showPanel(name) {
+  if (!PANELS.includes(name)) return;
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.dataset.panel === name));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.panel === name));
+  document.querySelectorAll(".top-nav a[data-panel]").forEach(a => a.classList.toggle("active", a.dataset.panel === name));
+  document.body.setAttribute("data-active", name);
+  document.title = TITLES[name];
+  history.replaceState(null, "", "#" + name);
 }
-
-document.querySelectorAll(".section-toggle").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const section = btn.closest(".product-section");
-    const willOpen = !section.classList.contains("expanded");
-    setExpanded(section, willOpen);
-    if (willOpen) section.scrollIntoView({ behavior: "smooth", block: "start" });
+document.querySelectorAll("[data-panel]").forEach(el => {
+  el.addEventListener("click", (e) => {
+    if (el.tagName === "A" || el.tagName === "BUTTON") {
+      if (el.tagName === "A") e.preventDefault();
+      showPanel(el.dataset.panel);
+      if (el.tagName === "A") document.getElementById("top").scrollIntoView({ behavior: "smooth" });
+    }
   });
 });
 
-// Deep link on load (e.g. /#discord) without fighting the scrollspy.
-if (location.hash) {
-  const target = document.getElementById(location.hash.slice(1));
-  if (target) { setActive(target.id); setExpanded(target, true); target.scrollIntoView(); }
+// FAQ accordion.
+document.querySelectorAll(".faq-q").forEach(btn => {
+  btn.addEventListener("click", () => {
+    btn.closest(".faq-item").classList.toggle("open");
+  });
+});
+
+// Land on the right tab if arriving via a #twitch / #discord / #widget link.
+if (location.hash && PANELS.includes(location.hash.slice(1))) {
+  showPanel(location.hash.slice(1));
 }
 </script>
 </body>
