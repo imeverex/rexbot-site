@@ -857,18 +857,13 @@ const observer = new IntersectionObserver((entries) => {
 sections.forEach(s => observer.observe(s));
 
 // Each product section is collapsed to just its colored title bar by default
-// and opens into the full detail as it scrolls through the viewport, closing
-// again once it's scrolled past -- keeps the page tidy instead of one long
-// wall, while still reading top to bottom as you scroll.
+// and opens only when its toggle is clicked -- no scroll-triggered auto-open,
+// which used to fire (and un-fire) on every section as you scrolled past it.
 function setExpanded(section, on) {
   section.classList.toggle("expanded", on);
   const btn = section.querySelector(".section-toggle");
   if (btn) btn.setAttribute("aria-expanded", String(on));
 }
-const expandObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => setExpanded(e.target, e.isIntersecting));
-}, { threshold: 0.001, rootMargin: "-10% 0px -10% 0px" });
-sections.forEach(s => expandObserver.observe(s));
 
 document.querySelectorAll(".section-toggle").forEach(btn => {
   btn.addEventListener("click", () => {
