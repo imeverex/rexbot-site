@@ -58,14 +58,8 @@ body {
 .brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(0,198,255,0.4)); }
 .brand span { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
 .brand span .rex { color: var(--rex-blue); }
-.top-nav { display: flex; align-items: center; gap: 28px; }
-.top-nav a {
-  color: var(--muted); font-size: 13.5px; font-weight: 600; text-decoration: none;
-  transition: color 0.15s var(--ease);
-}
-.top-nav a:hover, .top-nav a.active { color: #fff; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
 .header-cta {
-  position: fixed; top: 20px; right: 32px; z-index: 20;
   display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 650; font-size: 13.5px;
   text-decoration: none; padding: 9px 18px; border-radius: 999px; white-space: nowrap;
   background: linear-gradient(100deg, var(--rex-blue), var(--accent-2));
@@ -73,7 +67,11 @@ body {
   transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .header-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
-@media (max-width: 780px) { .top-nav { display: none; } .site-header { padding: 18px 20px; } .header-cta { top: 14px; right: 20px; } }
+.header-cta.ghost {
+  color: var(--muted); background: transparent; box-shadow: none; border: 1px solid var(--border);
+}
+.header-cta.ghost:hover { color: #fff; border-color: var(--faint); filter: none; }
+@media (max-width: 640px) { .site-header { padding: 18px 20px; flex-wrap: wrap; } }
 
 /* ============ ROADMAP PAGE ============ */
 main.roadmap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 20px 24px 90px; }
@@ -141,17 +139,16 @@ h1.rm-title .hl { color: var(--rex-blue); }
 
 <header class="site-header">
   <a class="brand" href="/"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></a>
-  <nav class="top-nav">
-    <a href="/#twitch">Twitch Chatbot</a>
-    <a href="/#discord">Discord Bot</a>
-    <a href="/#widget">Now Playing</a>
-    <a href="/roadmap.html" class="active">Roadmap</a>
-    <a href="/#faq">FAQ</a>
-  </nav>
-  <a class="header-cta" href="/twitch/login">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Log in / Get started
-  </a>
+  <div class="header-actions">
+    <a class="header-cta ghost" href="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Back to home</span>
+    </a>
+    <a class="header-cta" href="/twitch/login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Log in / Get started
+    </a>
+  </div>
 </header>
 
 <main class="roadmap">
