@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap · RexBot</title>
+<meta name="description" content="What's shipped and what's next for RexBot: the Twitch chat bot, Discord bot, and OBS overlay.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rexbot.everexmedia.ca/roadmap.html">
+<meta property="og:title" content="Roadmap · RexBot">
+<meta property="og:description" content="What's shipped and what's next for RexBot.">
+<meta property="og:image" content="https://rexbot.everexmedia.ca/rex-mark.png">
+<link rel="icon" href="rex-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #00C6FF; --accent-2: #6c8cff; --accent-hover: #33d2ff; --accent-soft: rgba(0,198,255,0.13);
+  --bg: #08090b; --surface: #131417; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
+  --text: #f4f4f6; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
+  --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
+  --twitch-soft: #caa4ff; --discord-soft: #aab2ff; --widget-soft: #7fe8a5;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 15px;
+  -webkit-font-smoothing: antialiased; position: relative; overflow-x: hidden;
+}
+.glow {
+  position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.18;
+}
+.glow.a { width: 560px; height: 560px; background: var(--accent); top: -200px; left: -80px; animation: drift-a 22s ease-in-out infinite; }
+.glow.b { width: 480px; height: 480px; background: var(--rex-blue); opacity: 0.08; top: 120px; right: -160px; animation: drift-b 26s ease-in-out infinite; }
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, 30px) scale(1.12); }
+  66% { transform: translate(-20px, 50px) scale(0.92); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(-50px, -30px) scale(1.15); }
+  75% { transform: translate(20px, 20px) scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce) { .glow.a, .glow.b { animation: none; } }
+
+/* ============ HEADER (matches index.html) ============ */
+.site-header {
+  position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; max-width: 1180px; margin: 0 auto; padding: 22px 32px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(0,198,255,0.4)); }
+.brand span { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
+.brand span .rex { color: var(--rex-blue); }
+.top-nav { display: flex; align-items: center; gap: 28px; }
+.top-nav a {
+  color: var(--muted); font-size: 13.5px; font-weight: 600; text-decoration: none;
+  transition: color 0.15s var(--ease);
+}
+.top-nav a:hover, .top-nav a.active { color: #fff; }
+.header-cta {
+  position: fixed; top: 20px; right: 32px; z-index: 20;
+  display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 650; font-size: 13.5px;
+  text-decoration: none; padding: 9px 18px; border-radius: 999px; white-space: nowrap;
+  background: linear-gradient(100deg, var(--rex-blue), var(--accent-2));
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.header-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+@media (max-width: 780px) { .top-nav { display: none; } .site-header { padding: 18px 20px; } .header-cta { top: 14px; right: 20px; } }
+
+/* ============ ROADMAP PAGE ============ */
+main.roadmap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 20px 24px 90px; }
+.eyebrow {
+  display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:650; letter-spacing:0.04em;
+  text-transform:uppercase; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft);
+  padding:6px 13px 6px 10px; border-radius:999px;
+}
+.eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--widget); box-shadow:0 0 0 3px rgba(29,185,84,0.18); }
+h1.rm-title { font-weight:800; font-size:clamp(28px,5vw,40px); letter-spacing:-0.025em; margin:16px 0 8px; color:#fff; }
+h1.rm-title .hl { color: var(--rex-blue); }
+.rm-sub { color: var(--muted); font-size: 15px; max-width: 62ch; margin: 0 0 28px; }
+
+.stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 18px; flex:1 1 140px; min-width:120px; }
+.stat b { display:block; font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+.stat span { color:var(--faint); font-size:12px; font-weight:600; letter-spacing:0.02em; text-transform:uppercase; }
+.stat.shipped b { color: var(--widget); }
+.stat.building b { color: var(--rex-blue); }
+.stat.planned b { color: var(--muted); }
+
+.progress-track { height:9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden; margin-bottom:34px; }
+.progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--widget), var(--rex-blue)); }
+
+.board { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+@media (max-width:760px) { .board { grid-template-columns:1fr; } }
+.col { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
+.col-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 4px 0; }
+.col-title { font-size:13px; font-weight:700; letter-spacing:0.02em; display:flex; align-items:center; gap:8px; color:#fff; }
+.col-dot { width:8px; height:8px; border-radius:50%; }
+.col[data-col="shipped"] .col-dot { background: var(--widget); }
+.col[data-col="building"] .col-dot { background: var(--rex-blue); }
+.col[data-col="planned"] .col-dot { background: var(--faint); }
+.count { font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft); border-radius:999px; padding:2px 9px; }
+
+.card { background:var(--surface-2); border:1px solid var(--border-soft); border-radius:12px; padding:13px 13px 12px; margin-bottom:9px; }
+.card-title { font-weight:650; font-size:14px; margin:0 0 4px; line-height:1.32; color:#fff; }
+.card-desc { color:var(--muted); font-size:12.5px; line-height:1.5; margin:0; }
+.card-foot { margin-top:10px; }
+.tag { font-size:10.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+.tag.c-twitch { color: var(--twitch-soft); background: rgba(145,70,255,0.16); }
+.tag.c-discord { color: var(--discord-soft); background: rgba(88,101,242,0.16); }
+.tag.c-widget { color: var(--widget-soft); background: rgba(29,185,84,0.14); }
+.tag.c-accent { color: #8fe3ff; background: var(--accent-soft); }
+
+.rm-footnote { margin-top: 26px; color: var(--faint); font-size: 12.5px; }
+.rm-footnote a { color: var(--muted); }
+
+/* ============ FOOTER (matches index.html) ============ */
+.site-footer { position: relative; z-index: 1; border-top: 1px solid var(--border-soft); padding: 48px 24px 26px; margin-top: 40px; }
+.footer-cols { display: flex; gap: 60px; max-width: 1040px; margin: 0 auto 34px; flex-wrap: wrap; }
+.footer-brand { flex: 1 1 240px; min-width: 200px; }
+.footer-brand .brand { margin-bottom: 10px; }
+.footer-brand p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 260px; }
+.footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
+.footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { text-align: center; padding-top: 22px; border-top: 1px solid var(--border-soft); color: var(--faint); font-size: 12.5px; }
+.footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
+</style>
+</head>
+<body>
+<div class="glow a"></div>
+<div class="glow b"></div>
+
+<header class="site-header">
+  <a class="brand" href="/"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></a>
+  <nav class="top-nav">
+    <a href="/#twitch">Twitch Chatbot</a>
+    <a href="/#discord">Discord Bot</a>
+    <a href="/#widget">Now Playing</a>
+    <a href="/roadmap.html" class="active">Roadmap</a>
+    <a href="/#faq">FAQ</a>
+  </nav>
+  <a class="header-cta" href="/twitch/login">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Log in / Get started
+  </a>
+</header>
+
+<main class="roadmap">
+  <span class="eyebrow"><span class="dot"></span>what's shipped, what's next</span>
+  <h1 class="rm-title">Rex<span class="hl">Bot</span> roadmap</h1>
+  <p class="rm-sub">A running list of what's live in the Twitch bot, Discord bot, and OBS overlay today, and what's being built next.</p>
+
+  <div class="stats">
+    <div class="stat shipped"><b id="statShipped">0</b><span>Shipped</span></div>
+    <div class="stat building"><b id="statBuilding">0</b><span>Building</span></div>
+    <div class="stat planned"><b id="statPlanned">0</b><span>Planned</span></div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="board">
+    <div class="col" data-col="shipped">
+      <div class="col-head"><div class="col-title"><span class="col-dot"></span>Shipped</div><div class="count" id="countShipped">0</div></div>
+      <div class="cards" id="listShipped"></div>
+    </div>
+    <div class="col" data-col="building">
+      <div class="col-head"><div class="col-title"><span class="col-dot"></span>Building</div><div class="count" id="countBuilding">0</div></div>
+      <div class="cards" id="listBuilding"></div>
+    </div>
+    <div class="col" data-col="planned">
+      <div class="col-head"><div class="col-title"><span class="col-dot"></span>Planned</div><div class="count" id="countPlanned">0</div></div>
+      <div class="cards" id="listPlanned"></div>
+    </div>
+  </div>
+
+  <p class="rm-footnote">Spot something wrong, or want a feature bumped up? <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Open an issue on GitHub</a>.</p>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div class="footer-brand">
+      <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
+      <p>Twitch chat bot, Discord music bot, and OBS overlay. Three tools, one project, free.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/#twitch">Twitch Chatbot</a>
+      <a href="/#discord">Discord Bot</a>
+      <a href="/#widget">Now Playing Widget</a>
+      <a href="/roadmap.html">Roadmap</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="https://everexmedia.ca" target="_blank">everex</a>
+      <a href="https://github.com/imeverex/rexbot-site" target="_blank">Source on GitHub</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="/help.html">Install help</a>
+      <a href="/#faq">FAQ</a>
+      <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Report a bug</a>
+      <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 RexBot · by <img src="everex-mark.png" alt="">everex</div>
+</footer>
+
+<script>
+// rex-mark.png ships on a flat light-gray square (made for light UIs) --
+// key it out to transparent client-side, same trick used on the dashboard.
+(function keyLogoTransparent() {
+  function process(img) {
+    try {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const frame = ctx.getImageData(0, 0, c.width, c.height);
+      const px = frame.data;
+      for (let i = 0; i < px.length; i += 4) {
+        if (px[i] > 235 && px[i+1] > 235 && px[i+2] > 235) px[i+3] = 0;
+      }
+      ctx.putImageData(frame, 0, 0);
+      img.src = c.toDataURL();
+    } catch (e) {}
+  }
+  document.querySelectorAll('img.brand-logo').forEach(img => {
+    if (img.complete) process(img); else img.addEventListener('load', () => process(img));
+  });
+})();
+
+(function(){
+  var ITEMS = [
+    { title:'Custom commands', desc:'Dashboard-managed, with global + per-user cooldowns, permission levels, and {user}/{channel}/{count} variables.', tag:'chat bot', cat:'twitch', status:'shipped' },
+    { title:'Timers & auto-messages', desc:'Repeating reminders on a background scheduler thread.', tag:'chat bot', cat:'twitch', status:'shipped' },
+    { title:'Moderation', desc:'Banned-word & link filtering with escalating auto-timeouts.', tag:'chat bot', cat:'twitch', status:'shipped' },
+    { title:'Event alerts', desc:'Follow / raid / sub / resub / gift-sub messages, fully templated.', tag:'chat bot', cat:'twitch', status:'shipped' },
+    { title:'Song requests', desc:'!sr / !queue / !nowplaying / !remove — queues onto each streamer\'s own Spotify.', tag:'spotify', cat:'widget', status:'shipped' },
+    { title:'OBS Now Playing widget', desc:'Per-streamer themed browser-source overlay, no install required.', tag:'obs', cat:'widget', status:'shipped' },
+    { title:'Usage log + admin panel', desc:'Per-command use log and an admin stats panel — the seed of real analytics.', tag:'dashboard', cat:'accent', status:'shipped' },
+    { title:'Discord music bot', desc:'/play /skip /pause /resume /queue /leave, auto-leaves when idle.', tag:'discord', cat:'discord', status:'shipped' },
+
+    { title:'Twitch Chat Bot badge', desc:'Moving chat off IRC onto Twitch\'s Send Chat Message API to earn the official Chat Bot label.', tag:'twitch api', cat:'twitch', status:'planned' },
+    { title:'Loyalty / custom currency', desc:'Points earned by watch time, redeemable for perks.', tag:'chat bot', cat:'twitch', status:'planned' },
+    { title:'Giveaways & polls', desc:'!enter / !vote, auto winner pick, results overlay.', tag:'chat bot', cat:'twitch', status:'planned' },
+    { title:'More OBS widgets', desc:'Alert box, goal bars, event widgets beyond now-playing.', tag:'obs', cat:'widget', status:'planned' },
+    { title:'Customizable win counter', desc:'A real per-streamer configurable widget, same pattern as the now-playing overlay.', tag:'obs', cat:'widget', status:'planned' },
+    { title:'Nightbot / StreamElements import', desc:'One-click migration of an existing streamer\'s commands & timers.', tag:'onboarding', cat:'accent', status:'planned' },
+    { title:'Discord live notifications', desc:'Auto-post to a Discord channel when the stream goes live.', tag:'discord', cat:'discord', status:'planned' },
+    { title:'Viewer queue controls', desc:'!skip, vote-skip, and a block list for song requests.', tag:'spotify', cat:'widget', status:'planned' },
+    { title:'Streamer-facing analytics', desc:'A dashboard view for streamers to see their own command/request stats.', tag:'dashboard', cat:'accent', status:'planned' },
+    { title:'Stream Deck / OBS WebSocket', desc:'Trigger scenes & bot actions from Stream Deck.', tag:'integration', cat:'accent', status:'planned' }
+  ];
+
+  var lists = { shipped: document.getElementById('listShipped'), building: document.getElementById('listBuilding'), planned: document.getElementById('listPlanned') };
+  var counts = { shipped: document.getElementById('countShipped'), building: document.getElementById('countBuilding'), planned: document.getElementById('countPlanned') };
+  var stats = { shipped: document.getElementById('statShipped'), building: document.getElementById('statBuilding'), planned: document.getElementById('statPlanned') };
+
+  var grouped = { shipped:[], building:[], planned:[] };
+  ITEMS.forEach(function(item){ grouped[item.status].push(item); });
+
+  ['shipped','building','planned'].forEach(function(key){
+    counts[key].textContent = grouped[key].length;
+    stats[key].textContent = grouped[key].length;
+    grouped[key].forEach(function(item){
+      var card = document.createElement('div');
+      card.className = 'card';
+      var title = document.createElement('p');
+      title.className = 'card-title';
+      title.textContent = item.title;
+      var desc = document.createElement('p');
+      desc.className = 'card-desc';
+      desc.textContent = item.desc;
+      var foot = document.createElement('div');
+      foot.className = 'card-foot';
+      var tag = document.createElement('span');
+      tag.className = 'tag c-' + item.cat;
+      tag.textContent = item.tag;
+      foot.appendChild(tag);
+      card.appendChild(title);
+      card.appendChild(desc);
+      card.appendChild(foot);
+      lists[key].appendChild(card);
+    });
+  });
+
+  var total = ITEMS.length;
+  var pct = total ? Math.round((grouped.shipped.length / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+})();
+</script>
+</body>
+</html>
