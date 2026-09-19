@@ -203,6 +203,8 @@ h1.headline em { font-style: normal; color: var(--accent); }
   background: linear-gradient(180deg, rgba(9,9,11,0.1), rgba(9,9,11,0.7) 85%), url("game-capture.jpg");
   background-size: cover; background-position: center 35%;
 }
+.widget-demo { position: absolute; inset: 0; opacity: 0; transform: translateY(5px) scale(0.985); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); pointer-events: none; }
+.widget-demo.active { opacity: 1; transform: translateY(0) scale(1); }
 .overlay-widget {
   position: absolute; bottom: 14px; left: 14px; display: flex; align-items: center; gap: 11px;
   padding: 9px 16px 9px 12px; background: #000; border: 1px solid #fff; border-radius: 10px; box-shadow: 0 8px 22px rgba(0,0,0,0.5);
@@ -223,6 +225,13 @@ h1.headline em { font-style: normal; color: var(--accent); }
 .win-widget .win-score span { color: #91e8ff; font-size: 11px; margin-left: 2px; }
 .win-widget .win-track { height: 3px; margin-top: 6px; border-radius: 99px; overflow: hidden; background: rgba(145,232,255,0.25); }
 .win-widget .win-fill { width: 70%; height: 100%; background: var(--rex-blue); }
+.widget-switcher { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+.widget-switcher button {
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted);
+  padding: 6px 11px; font: 600 11px/1 inherit; cursor: pointer; transition: all 0.18s var(--ease);
+}
+.widget-switcher button:hover { color: var(--text); border-color: var(--faint); }
+.widget-switcher button.active { color: #041b0b; background: var(--widget); border-color: var(--widget); }
 
 .mock-discord { padding: 16px 18px; background: rgba(0,0,0,0.2); }
 .mock-dmsg { display: flex; gap: 11px; margin-top: 14px; }
@@ -254,6 +263,20 @@ h1.headline em { font-style: normal; color: var(--accent); }
 .step .num::before { content: "0"; opacity: 0.5; }
 .step h3 { font-size: 13.5px; font-weight: 650; margin: 0 0 4px; }
 .step p { color: var(--muted); font-size: 13.5px; margin: 0; }
+.widget-setup {
+  display: flex; align-items: stretch; max-width: 900px; margin: 0 auto 12px; padding: 5px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
+}
+.widget-setup .setup-item { flex: 1; padding: 12px 14px; min-width: 0; }
+.widget-setup .setup-item + .setup-item { border-left: 1px solid var(--border); }
+.widget-setup b { display: block; color: var(--text); font-size: 13px; margin-bottom: 3px; }
+.widget-setup span { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.features.widget-features { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 680px) {
+  .widget-setup { flex-direction: column; }
+  .widget-setup .setup-item + .setup-item { border-left: 0; border-top: 1px solid var(--border); }
+  .features.widget-features { grid-template-columns: 1fr; }
+}
 
 .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
 @media (max-width: 680px) { .features { grid-template-columns: 1fr 1fr; } }
@@ -454,39 +477,44 @@ a:hover { color: var(--accent-hover); }
         <div class="hero-visual">
           <div class="tb-card overlay-scene">
             <div class="scene-bg"></div>
-            <div class="win-widget" aria-label="Win counter showing seven of ten wins">
-              <div class="win-icon" aria-hidden="true">★</div>
-              <div class="win-copy">
-                <div class="win-label">Wins</div>
-                <div class="win-score">7 <span>/ 10</span></div>
-                <div class="win-track"><div class="win-fill"></div></div>
+            <div class="widget-demo active" data-widget-demo="spotify">
+              <div class="overlay-widget" aria-label="Now Playing overlay showing Midnight City by M83">
+                <div class="w-art"></div>
+                <div>
+                  <div class="w-label">Now Playing</div>
+                  <div class="w-title">Midnight City</div>
+                  <div class="w-artist">M83</div>
+                </div>
               </div>
             </div>
-            <div class="overlay-widget">
-              <div class="w-art"></div>
-              <div>
-                <div class="w-label">Now Playing</div>
-                <div class="w-title">Midnight City</div>
-                <div class="w-artist">M83</div>
+            <div class="widget-demo" data-widget-demo="wins">
+              <div class="win-widget" aria-label="Win counter showing seven of ten wins">
+                <div class="win-icon" aria-hidden="true">★</div>
+                <div class="win-copy">
+                  <div class="win-label">Wins</div>
+                  <div class="win-score">7 <span>/ 10</span></div>
+                  <div class="win-track"><div class="win-fill"></div></div>
+                </div>
               </div>
             </div>
+          </div>
+          <div class="widget-switcher" aria-label="Choose an OBS widget preview">
+            <button class="active" type="button" data-widget-switch="spotify" aria-pressed="true">Now Playing</button>
+            <button type="button" data-widget-switch="wins" aria-pressed="false">Win Counter</button>
           </div>
         </div>
       </div>
 
-      <div class="section-head"><h2>Three steps. That's it.</h2><p>No accounts to create, no config files, no API keys to hunt down.</p></div>
-      <div class="steps">
-        <div class="step"><div class="num">1</div><h3>Sign in &amp; connect Spotify</h3><p>Same login as the Twitch bot. One account covers everything.</p></div>
-        <div class="step"><div class="num">2</div><h3>Copy your overlay URL</h3><p>It's on the Overlay tab of your dashboard, unique to you.</p></div>
-        <div class="step"><div class="num">3</div><h3>Add it as a Browser Source</h3><p>Paste it into OBS. It's already showing what's playing, no restart needed when a track changes.</p></div>
+      <div class="section-head"><h2>Two widgets. One simple setup.</h2><p>Nothing to install or keep running during your stream.</p></div>
+      <div class="widget-setup">
+        <div class="setup-item"><b>1. Sign in</b><span>Connect Twitch, plus Spotify if you want Now Playing.</span></div>
+        <div class="setup-item"><b>2. Copy a URL</b><span>Each widget has its own private Browser Source URL.</span></div>
+        <div class="setup-item"><b>3. Add it to OBS</b><span>Paste the URL once; updates happen automatically.</span></div>
       </div>
-      <div class="features">
-        <div class="feature"><h3>Runs in the cloud</h3><p>Reads your Spotify account's playback state directly. Works whether you're playing from desktop, phone, or browser.</p></div>
-        <div class="feature"><h3>Always up to date</h3><p>No installer to update, no version to fall behind on. It's just a URL.</p></div>
-        <div class="feature"><h3>Nothing to keep open</h3><p>No tray icon, no background process on your PC, one less thing that can crash mid-stream.</p></div>
-        <div class="feature"><h3>Fully customizable</h3><p>Colors, fonts, border thickness, background opacity, labels, and sizing are all editable from your dashboard.</p></div>
-        <div class="feature"><h3>Persistent win counter</h3><p>Wins and goals stay synchronized across <code>!win</code> and <code>!wins</code>, dashboard controls, your OBS overlay, and a private controller dock.</p></div>
-        <div class="feature"><h3>Your style and icons</h3><p>Match the Now Playing theme automatically or give the counter its own look, installed font, custom label, and one of 16 supplied icons.</p></div>
+      <div class="features widget-features">
+        <div class="feature"><h3>Now Playing</h3><p>Show live Spotify track details from any device, directly in OBS.</p></div>
+        <div class="feature"><h3>Win Counter</h3><p>Keep wins and goals synced across chat commands, dashboard controls, and a private OBS dock.</p></div>
+        <div class="feature"><h3>Made to match</h3><p>Share one theme or customize colors, fonts, labels, sizing, and counter icons separately.</p></div>
       </div>
 
       <div class="section-head"><h2>Prefer a local app instead?</h2><p>The original Windows widget still works, and reads any player (not just Spotify) via Windows' own media session.</p></div>
@@ -624,6 +652,53 @@ document.querySelectorAll("[data-panel]").forEach(el => {
     }
   });
 });
+
+// OBS widget showcase: alternate automatically, but keep direct controls
+// available and pause while someone is inspecting the scene.
+const widgetDemoNames = ["spotify", "wins"];
+const widgetScene = document.querySelector(".overlay-scene");
+let widgetDemoIndex = 0;
+let widgetDemoTimer = null;
+function showWidgetDemo(name) {
+  const index = widgetDemoNames.indexOf(name);
+  if (index < 0) return;
+  widgetDemoIndex = index;
+  document.querySelectorAll("[data-widget-demo]").forEach(demo => {
+    const active = demo.dataset.widgetDemo === name;
+    demo.classList.toggle("active", active);
+    demo.setAttribute("aria-hidden", active ? "false" : "true");
+  });
+  document.querySelectorAll("[data-widget-switch]").forEach(button => {
+    const active = button.dataset.widgetSwitch === name;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+function stopWidgetDemoCycle() {
+  if (widgetDemoTimer) clearInterval(widgetDemoTimer);
+  widgetDemoTimer = null;
+}
+function startWidgetDemoCycle() {
+  stopWidgetDemoCycle();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  widgetDemoTimer = setInterval(() => {
+    showWidgetDemo(widgetDemoNames[(widgetDemoIndex + 1) % widgetDemoNames.length]);
+  }, 4200);
+}
+document.querySelectorAll("[data-widget-switch]").forEach(button => {
+  button.addEventListener("click", () => {
+    showWidgetDemo(button.dataset.widgetSwitch);
+    startWidgetDemoCycle();
+  });
+});
+if (widgetScene) {
+  widgetScene.addEventListener("mouseenter", stopWidgetDemoCycle);
+  widgetScene.addEventListener("mouseleave", startWidgetDemoCycle);
+  widgetScene.addEventListener("focusin", stopWidgetDemoCycle);
+  widgetScene.addEventListener("focusout", startWidgetDemoCycle);
+}
+showWidgetDemo(widgetDemoNames[0]);
+startWidgetDemoCycle();
 
 // FAQ accordion.
 document.querySelectorAll(".faq-q").forEach(btn => {
