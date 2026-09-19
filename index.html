@@ -211,6 +211,18 @@ h1.headline em { font-style: normal; color: var(--accent); }
 .overlay-widget .w-label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #b3b3b3; margin-bottom: 2px; }
 .overlay-widget .w-title { font-size: 13px; font-weight: 650; color: #fff; }
 .overlay-widget .w-artist { font-size: 11px; color: #b3b3b3; margin-top: 1px; }
+.win-widget {
+  position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 9px; min-width: 142px;
+  padding: 9px 11px; background: rgba(3,16,24,0.94); border: 1px solid var(--rex-blue); border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.5); color: #fff;
+}
+.win-widget .win-icon { color: #ffd84a; font-size: 27px; line-height: 1; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.45)); }
+.win-widget .win-copy { flex: 1; min-width: 0; }
+.win-widget .win-label { color: #91e8ff; font-size: 11px; line-height: 1; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
+.win-widget .win-score { margin-top: 3px; font-size: 23px; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+.win-widget .win-score span { color: #91e8ff; font-size: 11px; margin-left: 2px; }
+.win-widget .win-track { height: 3px; margin-top: 6px; border-radius: 99px; overflow: hidden; background: rgba(145,232,255,0.25); }
+.win-widget .win-fill { width: 70%; height: 100%; background: var(--rex-blue); }
 
 .mock-discord { padding: 16px 18px; background: rgba(0,0,0,0.2); }
 .mock-dmsg { display: flex; gap: 11px; margin-top: 14px; }
@@ -318,7 +330,7 @@ a:hover { color: var(--accent-hover); }
   <section class="hero" id="top">
     <h1 class="hero-title">Chat tools, Discord music, and<br>stream overlays. <span class="hl">One login.</span></h1>
     <p class="hero-lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
-      for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and an OBS
+      for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and
       <b>OBS widgets</b> for now playing and win tracking. One project, all free.</p>
 
     <div class="tab-group" role="tablist">
@@ -442,6 +454,14 @@ a:hover { color: var(--accent-hover); }
         <div class="hero-visual">
           <div class="tb-card overlay-scene">
             <div class="scene-bg"></div>
+            <div class="win-widget" aria-label="Win counter showing seven of ten wins">
+              <div class="win-icon" aria-hidden="true">★</div>
+              <div class="win-copy">
+                <div class="win-label">Wins</div>
+                <div class="win-score">7 <span>/ 10</span></div>
+                <div class="win-track"><div class="win-fill"></div></div>
+              </div>
+            </div>
             <div class="overlay-widget">
               <div class="w-art"></div>
               <div>
@@ -531,7 +551,7 @@ a:hover { color: var(--accent-hover); }
       <h4>Product</h4>
       <a href="#twitch" data-panel="twitch">Twitch Chatbot</a>
       <a href="#discord" data-panel="discord">Discord Bot</a>
-      <a href="#widget" data-panel="widget">Now Playing Widget</a>
+      <a href="#widget" data-panel="widget">OBS Widgets</a>
       <a href="/roadmap.html">Roadmap</a>
     </div>
     <div class="footer-col">
@@ -584,7 +604,7 @@ const PANELS = ["twitch", "discord", "widget"];
 const TITLES = {
   twitch: "RexBot: Twitch Chatbot",
   discord: "RexBot: Discord Bot",
-  widget: "RexBot: Now Playing Widget",
+  widget: "RexBot: OBS Stream Widgets",
 };
 function showPanel(name) {
   if (!PANELS.includes(name)) return;
