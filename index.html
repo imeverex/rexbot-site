@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RexBot: Twitch Chatbot, Discord Bot &amp; OBS Overlay</title>
-<meta name="description" content="RexBot: an always-on Twitch chat bot, a Discord music bot, and an install-free OBS now-playing overlay. Three tools, one project, free. By everex.">
+<title>RexBot: Twitch Chatbot, Discord Bot &amp; OBS Overlays</title>
+<meta name="description" content="RexBot: an always-on Twitch chat bot, a Discord music bot, and install-free OBS overlays for now playing and a customizable win counter. Free, by everex.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rexbot.everexmedia.ca/">
-<meta property="og:title" content="RexBot: Twitch Chatbot, Discord Bot & OBS Overlay">
-<meta property="og:description" content="An always-on Twitch chat bot, a Discord music bot, and an install-free OBS now-playing overlay. Three tools, one project, free.">
+<meta property="og:title" content="RexBot: Twitch Chatbot, Discord Bot & OBS Overlays">
+<meta property="og:description" content="An always-on Twitch chat bot, a Discord music bot, and install-free OBS overlays for now playing and win tracking. Free.">
 <meta property="og:image" content="https://rexbot.everexmedia.ca/rex-mark.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RexBot: Twitch Chatbot, Discord Bot & OBS Overlay">
-<meta name="twitter:description" content="An always-on Twitch chat bot, a Discord music bot, and an install-free OBS now-playing overlay. Three tools, one project, free.">
+<meta name="twitter:title" content="RexBot: Twitch Chatbot, Discord Bot & OBS Overlays">
+<meta name="twitter:description" content="An always-on Twitch chat bot, a Discord music bot, and install-free OBS overlays for now playing and win tracking. Free.">
 <meta name="twitter:image" content="https://rexbot.everexmedia.ca/rex-mark.png">
 <link rel="icon" href="rex-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
@@ -316,15 +316,15 @@ a:hover { color: var(--accent-hover); }
 
 <main>
   <section class="hero" id="top">
-    <h1 class="hero-title">Song requests, Discord music, and a<br>clean overlay. <span class="hl">One login.</span></h1>
+    <h1 class="hero-title">Chat tools, Discord music, and<br>stream overlays. <span class="hl">One login.</span></h1>
     <p class="hero-lead">I built <b>Rex</b> to cover the whole thing end to end: an always-on <b>Twitch chat bot</b>
       for commands, timers and song requests, a <b>Discord bot</b> for music in voice chat, and an OBS
-      <b>now-playing widget</b>. Three tools, one project, all free.</p>
+      <b>OBS widgets</b> for now playing and win tracking. One project, all free.</p>
 
     <div class="tab-group" role="tablist">
       <button class="tab-btn active c-twitch" data-panel="twitch">Twitch Chatbot</button>
       <button class="tab-btn c-discord" data-panel="discord">Discord Bot</button>
-      <button class="tab-btn c-widget" data-panel="widget">Now Playing Widget</button>
+      <button class="tab-btn c-widget" data-panel="widget">OBS Widgets</button>
     </div>
 
     <!-- ============ TWITCH PANEL ============ -->
@@ -427,17 +427,17 @@ a:hover { color: var(--accent-hover); }
         <div class="hero-text">
           <span class="tb-kicker">
             <span class="dot-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-            <span class="label">Now Playing Widget</span>
+            <span class="label">OBS Stream Widgets</span>
           </span>
-          <h1 class="headline">Show what's playing. <em>Straight from Spotify.</em></h1>
-          <p class="hero-sub">A clean now-playing overlay for OBS that reads straight from your Spotify account in the
-            cloud, fully customizable to match your stream. No app to run, nothing to keep open while you stream.</p>
+          <h1 class="headline">Show what's playing. <em>Track every win.</em></h1>
+          <p class="hero-sub">Install-free OBS Browser Sources for your Spotify now-playing details and a persistent win counter.
+            Both can match your stream's theme, run in the cloud, and stay in sync with your RexBot dashboard.</p>
           <a class="cta-btn" href="https://rexbot.everexmedia.ca/twitch/login">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Sign in to get your overlay
+            Sign in to get your overlays
           </a>
-          <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family). Your overlay URL
-            lives on your dashboard, ready to drop into OBS.</div>
+          <div class="cta-meta">Sign in with Twitch first (one account for the whole Rex family). Your private overlay URLs
+            live on your dashboard, ready to drop into OBS.</div>
         </div>
         <div class="hero-visual">
           <div class="tb-card overlay-scene">
@@ -464,7 +464,9 @@ a:hover { color: var(--accent-hover); }
         <div class="feature"><h3>Runs in the cloud</h3><p>Reads your Spotify account's playback state directly. Works whether you're playing from desktop, phone, or browser.</p></div>
         <div class="feature"><h3>Always up to date</h3><p>No installer to update, no version to fall behind on. It's just a URL.</p></div>
         <div class="feature"><h3>Nothing to keep open</h3><p>No tray icon, no background process on your PC, one less thing that can crash mid-stream.</p></div>
-        <div class="feature"><h3>Fully customizable</h3><p>Colors, fonts, border thickness, background opacity, all editable from your dashboard, with saved presets to switch looks fast.</p></div>
+        <div class="feature"><h3>Fully customizable</h3><p>Colors, fonts, border thickness, background opacity, labels, and sizing are all editable from your dashboard.</p></div>
+        <div class="feature"><h3>Persistent win counter</h3><p>Wins and goals stay synchronized across <code>!win</code> and <code>!wins</code>, dashboard controls, your OBS overlay, and a private controller dock.</p></div>
+        <div class="feature"><h3>Your style and icons</h3><p>Match the Now Playing theme automatically or give the counter its own look, installed font, custom label, and one of 16 supplied icons.</p></div>
       </div>
 
       <div class="section-head"><h2>Prefer a local app instead?</h2><p>The original Windows widget still works, and reads any player (not just Spotify) via Windows' own media session.</p></div>
@@ -497,7 +499,7 @@ a:hover { color: var(--accent-hover); }
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q">Is RexBot free to use?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-        <div class="faq-a"><div class="faq-a-inner"><p>Yes. The Twitch bot, Discord bot, and Now Playing widget are all free, by everex.</p></div></div>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. The Twitch bot, Discord bot, Now Playing overlay, and win counter are all free, by everex.</p></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Do I need Spotify Premium?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -509,7 +511,7 @@ a:hover { color: var(--accent-hover); }
       </div>
       <div class="faq-item">
         <button class="faq-q">Do I need to install anything?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
-        <div class="faq-a"><div class="faq-a-inner"><p>No. The Twitch bot, Discord bot, and Now Playing widget all run in the cloud. There's an optional legacy Windows app for the widget if you'd rather run it locally, but it's not required.</p></div></div>
+        <div class="faq-a"><div class="faq-a-inner"><p>No. The Twitch bot, Discord bot, Now Playing overlay, and win counter all run in the cloud. There's an optional legacy Windows app for Now Playing if you'd rather run it locally, but it isn't required.</p></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">What happens to my data?<svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -523,7 +525,7 @@ a:hover { color: var(--accent-hover); }
   <div class="footer-cols">
     <div class="footer-brand">
       <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
-      <p>Twitch chat bot, Discord music bot, and OBS overlay. Three tools, one project, free.</p>
+      <p>Twitch chat bot, Discord music bot, and OBS stream overlays. One project, free.</p>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
