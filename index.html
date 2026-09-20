@@ -36,12 +36,12 @@ body {
   margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 15px;
   -webkit-font-smoothing: antialiased; position: relative; overflow-x: hidden;
 }
-/* The active tab's product color tints the CTA, tab pill and glow --
-   Twitch purple / Discord blurple / widget green, each only where it's
-   actually that product's own brand color. */
+/* The active product tints the CTA, tab pill and glow. The OBS tab follows
+   the widget being shown: Spotify green or Rex blue for Win Counter. */
 body[data-active="twitch"]  { --accent: var(--twitch);  --accent-hover: #a366ff; --accent-soft: rgba(145,70,255,0.13); }
 body[data-active="discord"] { --accent: var(--discord); --accent-hover: #707dff; --accent-soft: rgba(88,101,242,0.13); }
 body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065; --accent-soft: rgba(29,185,84,0.13); }
+body[data-active="widget"][data-widget-active="wins"] { --accent: var(--rex-blue); --accent-hover: #33d2ff; --accent-soft: rgba(0,198,255,0.13); }
 .glow {
   position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.18;
   transition: background 0.6s var(--ease);
@@ -113,7 +113,7 @@ body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065;
 .tab-btn:hover { color: var(--text); }
 .tab-btn.active.c-twitch { background: var(--twitch); color: #fff; }
 .tab-btn.active.c-discord { background: var(--discord); color: #fff; }
-.tab-btn.active.c-widget { background: var(--widget); color: #041b0b; }
+.tab-btn.active.c-widget { background: var(--accent); color: #04151a; }
 
 /* ============ TAB PANELS ============ */
 .tab-panel { display: none; text-align: left; animation: panel-in 0.3s var(--ease); }
@@ -133,8 +133,8 @@ body[data-active="widget"]  { --accent: var(--widget);  --accent-hover: #26e065;
 .tab-panel.c-twitch .tb-kicker .label { color: var(--twitch-soft); }
 .tab-panel.c-discord .tb-kicker .dot-icon { background: rgba(88,101,242,0.18); color: var(--discord-soft); }
 .tab-panel.c-discord .tb-kicker .label { color: var(--discord-soft); }
-.tab-panel.c-widget .tb-kicker .dot-icon { background: rgba(29,185,84,0.16); color: var(--widget-soft); }
-.tab-panel.c-widget .tb-kicker .label { color: var(--widget-soft); }
+.tab-panel.c-widget .tb-kicker .dot-icon { background: var(--accent-soft); color: var(--accent-hover); }
+.tab-panel.c-widget .tb-kicker .label { color: var(--accent-hover); }
 
 h1.headline { font-size: 30px; font-weight: 700; line-height: 1.2; margin: 0 0 14px; letter-spacing: -0.02em; color: var(--text); }
 @media (max-width: 500px) { h1.headline { font-size: 24px; } }
@@ -231,7 +231,7 @@ h1.headline em { font-style: normal; color: var(--accent); }
   padding: 6px 11px; font: 600 11px/1 inherit; cursor: pointer; transition: all 0.18s var(--ease);
 }
 .widget-switcher button:hover { color: var(--text); border-color: var(--faint); }
-.widget-switcher button.active { color: #041b0b; background: var(--widget); border-color: var(--widget); }
+.widget-switcher button.active { color: #04151a; background: var(--accent); border-color: var(--accent); }
 
 .mock-discord { padding: 16px 18px; background: rgba(0,0,0,0.2); }
 .mock-dmsg { display: flex; gap: 11px; margin-top: 14px; }
@@ -624,8 +624,8 @@ a:hover { color: var(--accent-hover); }
 })();
 
 // Tab switching -- click a pill, a header nav link, or a footer product
-// link and the matching panel shows, the accent color follows (Twitch
-// purple / Discord blurple / widget green), and the URL hash updates.
+// link and the matching panel shows, the accent color follows, and the URL
+// hash updates. The OBS tab then follows its active widget palette.
 const PANELS = ["twitch", "discord", "widget"];
 const TITLES = {
   twitch: "RexBot: Twitch Chatbot",
@@ -710,6 +710,7 @@ function showWidgetDemo(name) {
   const index = widgetDemoNames.indexOf(name);
   if (index < 0) return;
   widgetDemoIndex = index;
+  document.body.setAttribute("data-widget-active", name);
   document.querySelectorAll("[data-widget-demo]").forEach(demo => {
     const active = demo.dataset.widgetDemo === name;
     demo.classList.toggle("active", active);
