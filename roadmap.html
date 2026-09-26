@@ -90,20 +90,18 @@ h1.rm-title .hl { color: var(--rex-blue); }
 .stat b { display:block; font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
 .stat span { color:var(--faint); font-size:12px; font-weight:600; letter-spacing:0.02em; text-transform:uppercase; }
 .stat.shipped b { color: var(--widget); }
-.stat.building b { color: var(--rex-blue); }
 .stat.planned b { color: var(--muted); }
 
 .progress-track { height:9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden; margin-bottom:34px; }
 .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--widget), var(--rex-blue)); }
 
-.board { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.board { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
 @media (max-width:760px) { .board { grid-template-columns:1fr; } }
 .col { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
 .col-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 4px 0; }
 .col-title { font-size:13px; font-weight:700; letter-spacing:0.02em; display:flex; align-items:center; gap:8px; color:#fff; }
 .col-dot { width:8px; height:8px; border-radius:50%; }
 .col[data-col="shipped"] .col-dot { background: var(--widget); }
-.col[data-col="building"] .col-dot { background: var(--rex-blue); }
 .col[data-col="planned"] .col-dot { background: var(--faint); }
 .count { font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft); border-radius:999px; padding:2px 9px; }
 
@@ -167,7 +165,6 @@ h1.rm-title .hl { color: var(--rex-blue); }
 
   <div class="stats">
     <div class="stat shipped"><b id="statShipped">0</b><span>Shipped</span></div>
-    <div class="stat building"><b id="statBuilding">0</b><span>Building</span></div>
     <div class="stat planned"><b id="statPlanned">0</b><span>Planned</span></div>
   </div>
 
@@ -177,10 +174,6 @@ h1.rm-title .hl { color: var(--rex-blue); }
     <div class="col" data-col="shipped">
       <div class="col-head"><div class="col-title"><span class="col-dot"></span>Shipped</div><div class="count" id="countShipped">0</div></div>
       <div class="cards" id="listShipped"></div>
-    </div>
-    <div class="col" data-col="building">
-      <div class="col-head"><div class="col-title"><span class="col-dot"></span>Building</div><div class="count" id="countBuilding">0</div></div>
-      <div class="cards" id="listBuilding"></div>
     </div>
     <div class="col" data-col="planned">
       <div class="col-head"><div class="col-title"><span class="col-dot"></span>Planned</div><div class="count" id="countPlanned">0</div></div>
@@ -276,14 +269,14 @@ h1.rm-title .hl { color: var(--rex-blue); }
     { title:'Stream Deck / OBS WebSocket', desc:'Trigger scenes & bot actions from Stream Deck.', tag:'integration', cat:'accent', status:'planned' }
   ];
 
-  var lists = { shipped: document.getElementById('listShipped'), building: document.getElementById('listBuilding'), planned: document.getElementById('listPlanned') };
-  var counts = { shipped: document.getElementById('countShipped'), building: document.getElementById('countBuilding'), planned: document.getElementById('countPlanned') };
-  var stats = { shipped: document.getElementById('statShipped'), building: document.getElementById('statBuilding'), planned: document.getElementById('statPlanned') };
+  var lists = { shipped: document.getElementById('listShipped'), planned: document.getElementById('listPlanned') };
+  var counts = { shipped: document.getElementById('countShipped'), planned: document.getElementById('countPlanned') };
+  var stats = { shipped: document.getElementById('statShipped'), planned: document.getElementById('statPlanned') };
 
-  var grouped = { shipped:[], building:[], planned:[] };
-  ITEMS.forEach(function(item){ grouped[item.status].push(item); });
+  var grouped = { shipped:[], planned:[] };
+  ITEMS.forEach(function(item){ (grouped[item.status] || grouped.planned).push(item); });
 
-  ['shipped','building','planned'].forEach(function(key){
+  ['shipped','planned'].forEach(function(key){
     counts[key].textContent = grouped[key].length;
     stats[key].textContent = grouped[key].length;
     grouped[key].forEach(function(item){
