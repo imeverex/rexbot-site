@@ -17,6 +17,7 @@
     { "source": "/twitch/:path*", "destination": "https://rextwitchbot-production.up.railway.app/twitch/:path*" },
     { "source": "/spotify/:path*", "destination": "https://rextwitchbot-production.up.railway.app/spotify/:path*" },
     { "source": "/overlay/:path*", "destination": "https://rextwitchbot-production.up.railway.app/overlay/:path*" },
+    { "source": "/email/:path*", "destination": "https://rextwitchbot-production.up.railway.app/email/:path*" },
     { "source": "/commands/:path*", "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*" },
     { "source": "/timers/:path*", "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*" }
   ]
