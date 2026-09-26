@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path((?!overlay/|requests\\.json|bot-healthz).*)",
+      "has": [{ "type": "host", "value": "rexbot.everexmedia.ca" }],
+      "destination": "https://rexbotapp.com/:path",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/dashboard", "destination": "https://rextwitchbot-production.up.railway.app/dashboard" },
     { "source": "/commands", "destination": "https://rextwitchbot-production.up.railway.app/commands" },
