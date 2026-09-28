@@ -12,20 +12,21 @@
 // uses the real logo, colours and Inter type instead of AI-generated art.
 
 import { ImageResponse } from '@vercel/og';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
-export const config = { runtime: 'edge' };
+// Node runtime; the asset files are bundled via "includeFiles" in vercel.json.
+const ASSET_DIR = path.join(process.cwd(), 'api', '_social');
 
 const C = {
   bg: '#08090b', surface: '#131417', text: '#f4f4f6', muted: '#9d9da4',
   blue: '#00C6FF', twitch: '#9146FF', discord: '#5865F2', widget: '#1db954',
 };
 
-const asset = (name) => fetch(new URL(`./_social/${name}`, import.meta.url)).then((r) => r.arrayBuffer());
+const asset = async (name) => { const b = await readFile(path.join(ASSET_DIR, name)); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength); };
 const toDataUri = (buf, mime) => {
-  let bin = '';
   const bytes = new Uint8Array(buf);
-  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  return `data:${mime};base64,${btoa(bin)}`;
+  return `data:${mime};base64,${Buffer.from(bytes).toString('base64')}`;
 };
 
 // Tiny element helper so this file needs no JSX build step.
@@ -60,7 +61,7 @@ function card(key, icons, compact) {
   );
 }
 
-export default async function handler(req) {
+export async function GET(req) {
   const q = new URL(req.url).searchParams;
   const headline = (q.get('h') || 'One login. Three tools.').slice(0, 120);
   const accent = (q.get('a') || '').slice(0, 60);
