@@ -53,6 +53,83 @@ const FEATURES = {
   widget: { title: 'Now Playing Widget', desc: 'A clean now-playing overlay for OBS.', color: C.widget, icon: 'spotify' },
 };
 
+// --- Balanced line breaking -------------------------------------------------
+// Satori wraps greedily, which leaves one-word last lines ("yet?"). Instead we
+// estimate text width, pick the largest size that fits in few lines, and split
+// words so every line is about the same length.
+function charEm(ch) {
+  if (ch === ' ') return 0.26;
+  if ('il.,:;!|\'`'.includes(ch)) return 0.28;
+  if ('fjtr()[]/-'.includes(ch)) return 0.38;
+  if ('mwMW@'.includes(ch)) return 0.9;
+  if (/[A-Z]/.test(ch)) return 0.7;
+  if (/[0-9]/.test(ch)) return 0.62;
+  return 0.57;
+}
+function textWidth(t, size, tracking) {
+  let w = 0;
+  for (const ch of t) w += charEm(ch) * size + tracking;
+  return w;
+}
+// Split words into exactly n lines minimising the widest line.
+function splitBalanced(words, n, size, tracking) {
+  const W = (a, b) => textWidth(words.slice(a, b).join(' '), size, tracking);
+  const memo = new Map();
+  const best = (start, k) => {
+    const key = start + ',' + k;
+    if (memo.has(key)) return memo.get(key);
+    let res;
+    if (k === 1) { const w = W(start, words.length); res = { max: w, cost: w, breaks: [] }; }
+    else {
+      res = { max: Infinity, cost: Infinity, breaks: [] };
+      for (let i = start + 1; i <= words.length - (k - 1); i++) {
+        const rest = best(i, k - 1);
+        const m = Math.max(W(start, i), rest.max);
+        // Prefer breaking after punctuation ("Chat bot. / Discord music.").
+        const cost = Math.max(W(start, i), rest.cost ?? rest.max) + (/[.,!?:;]$/.test(words[i - 1]) ? 0 : size * 1.6);
+        if (cost < (res.cost ?? Infinity)) res = { max: m, cost, breaks: [i, ...rest.breaks] };
+      }
+    }
+    memo.set(key, res);
+    return res;
+  };
+  const { max, breaks } = best(0, n);
+  const lines = [];
+  let a = 0;
+  for (const b of [...breaks, words.length]) { lines.push(words.slice(a, b).join(' ')); a = b; }
+  return { lines, max };
+}
+// Fewest lines that fit maxWidth, balanced. Returns null if it can't fit in maxLines.
+function layoutLines(text, size, tracking, maxWidth, maxLines, bySentence = true) {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (!words.length) return { lines: [], max: 0 };
+  // Multi-sentence copy ("Chat bot. Discord music. Overlay."): if it fits with
+  // one sentence per line, do that rather than splitting a phrase.
+  const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
+  if (bySentence && sentences.length > 1 && sentences.length <= maxLines &&
+      sentences.every((l) => textWidth(l, size, tracking) <= maxWidth)) {
+    return { lines: sentences, max: Math.max(...sentences.map((l) => textWidth(l, size, tracking))) };
+  }
+  for (let n = 1; n <= Math.min(maxLines, words.length); n++) {
+    const r = splitBalanced(words, n, size, tracking);
+    if (r.max <= maxWidth) return r;
+  }
+  return null;
+}
+// Largest size (from the list) where headline + accent fit in few balanced lines.
+function fitHeadline(headline, accent, maxWidth) {
+  for (const size of [116, 104, 96, 88, 80, 72, 64]) {
+    const tr = -size * 0.035;
+    const sentences = headline.split(/(?<=[.!?])\s+/).filter(Boolean).length;
+    const lim = Math.max(size >= 96 ? 2 : 3, Math.min(sentences, 3));
+    const hl = layoutLines(headline, size, tr, maxWidth, lim);
+    const al = accent ? layoutLines(accent, size, tr, maxWidth, lim) : { lines: [] };
+    if (hl && al && hl.lines.length + al.lines.length <= (size >= 88 ? 4 : 5)) return { size, tr, hl: hl.lines, al: al.lines };
+  }
+  const size = 64, tr = -size * 0.035;
+  return { size, tr, hl: splitBalanced(headline.split(/\s+/), 3, size, tr).lines, al: accent ? splitBalanced(accent.split(/\s+/), 2, size, tr).lines : [] };
+}
+
 // Viewer name colours, like Twitch chat.
 const NAME_COLORS = ['#ff7eb6', '#ffb86b', '#7fe8a5', '#caa4ff', '#ffd866', '#78dce8'];
 
@@ -161,13 +238,16 @@ async function render(req) {
   let body;
   if (type === 'chat') {
     body = h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, width: '100%', gap: 44 },
-      headline ? h('div', { display: 'flex', fontSize: headline.length > 50 ? 56 : 68, fontWeight: 800, lineHeight: 1.1, letterSpacing: -2 }, headline) : null,
+      headline ? h('div', { display: 'flex', flexDirection: 'column' },
+        (layoutLines(headline, 68, -2, 900, 2) || splitBalanced(headline.split(/\s+/), 2, 56, -2)).lines
+          .map((l) => h('div', { display: 'flex', fontSize: headline.length > 50 ? 56 : 68, fontWeight: 800, lineHeight: 1.1, letterSpacing: -2, whiteSpace: 'nowrap' }, l))) : null,
       chatPanel(chatLines.length ? chatLines : [{ name: 'viewer123', msg: '!sr lofi beats' }, { name: 'RexBot', msg: 'Added to the queue: Lofi Beats' }], logoUri),
     );
   } else {
-    // Headline sizing: shorter copy gets bigger type.
-    const len = Math.max(headline.length, accent.length);
-    const big = len > 34 ? 76 : len > 22 ? 92 : 112;
+    // Headline sizing + balanced line breaks (content width = 1080 - 2*80).
+    const fit = fitHeadline(headline, accent, 900);
+    const lineStyle = (color) => ({ display: 'flex', fontSize: fit.size, fontWeight: 800, lineHeight: 1.02, letterSpacing: fit.tr, color, whiteSpace: 'nowrap' });
+    const subLines = sub ? (layoutLines(sub, 34, 0, 860, 3, false) || splitBalanced(sub.split(/\s+/), 3, 34, 0)).lines : [];
     let cards = null;
     if (feature === 'all') {
       cards = h('div', { display: 'flex', gap: 20, width: '100%' },
@@ -178,10 +258,11 @@ async function render(req) {
     body = h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', flex: 1, width: '100%', gap: 52, paddingBottom: 56 },
       h('div', { display: 'flex', flexDirection: 'column', gap: 34 },
         h('div', { display: 'flex', flexDirection: 'column' },
-          h('div', { display: 'flex', fontSize: big, fontWeight: 800, lineHeight: 1.02, letterSpacing: -4 }, headline),
-          accent ? h('div', { display: 'flex', fontSize: big, fontWeight: 800, lineHeight: 1.02, letterSpacing: -4, color: C.blue, marginTop: 6 }, accent) : null,
+          fit.hl.map((l) => h('div', lineStyle(C.text), l)),
+          fit.al.map((l, i) => h('div', { ...lineStyle(C.blue), marginTop: i === 0 ? 6 : 0 }, l)),
         ),
-        sub ? h('div', { display: 'flex', fontSize: 34, fontWeight: 500, color: C.soft, lineHeight: 1.4, maxWidth: 820 }, sub) : null,
+        subLines.length ? h('div', { display: 'flex', flexDirection: 'column' },
+          subLines.map((l) => h('div', { display: 'flex', fontSize: 34, fontWeight: 500, color: C.soft, lineHeight: 1.4, whiteSpace: 'nowrap' }, l))) : null,
       ),
       cards,
     );
