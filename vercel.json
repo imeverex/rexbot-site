@@ -8,6 +8,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/analytics.json", "destination": "https://rextwitchbot-production.up.railway.app/analytics.json" },
     { "source": "/discord/:path*", "destination": "https://rextwitchbot-production.up.railway.app/discord/:path*" },
     { "source": "/dashboard", "destination": "https://rextwitchbot-production.up.railway.app/dashboard" },
     { "source": "/commands", "destination": "https://rextwitchbot-production.up.railway.app/commands" },
