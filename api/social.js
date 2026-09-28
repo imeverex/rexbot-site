@@ -63,6 +63,15 @@ function card(key, icons, compact) {
 }
 
 export async function GET(req) {
+  try {
+    return await render(req);
+  } catch (err) {
+    console.error('social image failed', err);
+    return new Response(`social image failed: ${err && err.message}`, { status: 500 });
+  }
+}
+
+async function render(req) {
   const q = new URL(req.url).searchParams;
   const headline = (q.get('h') || 'One login. Three tools.').slice(0, 120);
   const accent = (q.get('a') || '').slice(0, 60);
