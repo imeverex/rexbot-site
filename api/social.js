@@ -11,7 +11,8 @@
 // Renders a PNG in the same style as rexbotapp.com, so every automated post
 // uses the real logo, colours and Inter type instead of AI-generated art.
 
-import { ImageResponse } from '@vercel/og';
+import satori from 'satori';
+import { Resvg } from '@resvg/resvg-js';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -128,13 +129,16 @@ export async function GET(req) {
     ),
   );
 
-  return new ImageResponse(tree, {
+  const svg = await satori(tree, {
     width: W, height: H,
     fonts: [
       { name: 'Inter', data: f500, weight: 500, style: 'normal' },
       { name: 'Inter', data: f700, weight: 700, style: 'normal' },
       { name: 'Inter', data: f800, weight: 800, style: 'normal' },
     ],
-    headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
+  });
+  const png = new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+  return new Response(png, {
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000, immutable' },
   });
 }
