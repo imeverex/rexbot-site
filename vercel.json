@@ -18,6 +18,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/bot/auth", "destination": "https://rextwitchbot-production.up.railway.app/bot/auth" },
     {
       "source": "/analytics.json",
       "destination": "https://rextwitchbot-production.up.railway.app/analytics.json"
