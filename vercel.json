@@ -72,6 +72,10 @@
       "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*"
     },
     {
+      "source": "/raids/:path*",
+      "destination": "https://rextwitchbot-production.up.railway.app/raids/:path*"
+    },
+    {
       "source": "/timers/:path*",
       "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*"
     }
