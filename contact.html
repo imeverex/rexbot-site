@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Everex · RexBot</title>
+<meta name="description" content="Contact Everex for RexBot support, bug reports, and feature ideas.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rexbotapp.com/contact.html">
+<meta property="og:title" content="Contact Everex · RexBot">
+<meta property="og:description" content="Contact Everex for RexBot support.">
+<meta property="og:image" content="https://rexbotapp.com/rex-mark.png">
+<link rel="icon" href="rex-mark.png">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+:root {
+  --accent: #00C6FF; --accent-2: #6c8cff; --accent-hover: #33d2ff; --accent-soft: rgba(0,198,255,0.13);
+  --bg: #08090b; --surface: #131417; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
+  --text: #f4f4f6; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
+  --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
+  --twitch-soft: #caa4ff; --discord-soft: #aab2ff; --widget-soft: #7fe8a5;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 15px;
+  -webkit-font-smoothing: antialiased; position: relative; overflow-x: hidden;
+}
+.glow {
+  position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.18;
+}
+.glow.a { width: 560px; height: 560px; background: var(--accent); top: -200px; left: -80px; animation: drift-a 22s ease-in-out infinite; }
+.glow.b { width: 480px; height: 480px; background: var(--rex-blue); opacity: 0.08; top: 120px; right: -160px; animation: drift-b 26s ease-in-out infinite; }
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, 30px) scale(1.12); }
+  66% { transform: translate(-20px, 50px) scale(0.92); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(-50px, -30px) scale(1.15); }
+  75% { transform: translate(20px, 20px) scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce) { .glow.a, .glow.b { animation: none; } }
+
+/* ============ HEADER (matches index.html) ============ */
+.site-header {
+  position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; max-width: 1180px; margin: 0 auto; padding: 22px 32px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(0,198,255,0.4)); }
+.brand span { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
+.brand span .rex { color: var(--rex-blue); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.header-cta {
+  display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 650; font-size: 13.5px;
+  text-decoration: none; padding: 9px 18px; border-radius: 999px; white-space: nowrap;
+  background: linear-gradient(100deg, var(--rex-blue), var(--accent-2));
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.header-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.header-cta.ghost {
+  color: var(--muted); background: transparent; box-shadow: none; border: 1px solid var(--border);
+}
+.header-cta.ghost:hover { color: #fff; border-color: var(--faint); filter: none; }
+@media (max-width: 640px) { .site-header { padding: 18px 20px; flex-wrap: wrap; } }
+
+/* ============ ROADMAP PAGE ============ */
+main.roadmap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 20px 24px 90px; }
+.eyebrow {
+  display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:650; letter-spacing:0.04em;
+  text-transform:uppercase; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft);
+  padding:6px 13px 6px 10px; border-radius:999px;
+}
+.eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--widget); box-shadow:0 0 0 3px rgba(29,185,84,0.18); }
+h1.rm-title { font-weight:800; font-size:clamp(28px,5vw,40px); letter-spacing:-0.025em; margin:16px 0 8px; color:#fff; }
+h1.rm-title .hl { color: var(--rex-blue); }
+.rm-sub { color: var(--muted); font-size: 15px; max-width: 62ch; margin: 0 0 28px; }
+
+.stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 18px; flex:1 1 140px; min-width:120px; }
+.stat b { display:block; font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+.stat span { color:var(--faint); font-size:12px; font-weight:600; letter-spacing:0.02em; text-transform:uppercase; }
+.stat.shipped b { color: var(--widget); }
+.stat.planned b { color: var(--muted); }
+
+.progress-track { height:9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden; margin-bottom:34px; }
+.progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--widget), var(--rex-blue)); }
+
+.board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+@media (max-width:760px) { .board { grid-template-columns:1fr; } }
+.col { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
+.col-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 4px 0; }
+.col-title { font-size:13px; font-weight:700; letter-spacing:0.02em; display:flex; align-items:center; gap:8px; color:#fff; }
+.col-dot { width:8px; height:8px; border-radius:50%; }
+.col[data-col="current"] .col-dot { background: var(--widget); }
+.col[data-col="later"] .col-dot { background: var(--faint); }
+.col[data-col="next"] .col-dot { background: var(--rex-blue); }
+.discord-expansion { margin-top:34px; scroll-margin-top:24px; }
+.discord-expansion h2 { font-size:24px; letter-spacing:-0.02em; margin:0 0 8px; }
+.discord-features { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.card-link { color:var(--discord-soft); font-size:12.5px; display:inline-block; margin-top:10px; }
+@media (max-width:760px) { .discord-features { grid-template-columns:1fr; } }
+.count { font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft); border-radius:999px; padding:2px 9px; }
+
+.card { background:var(--surface-2); border:1px solid var(--border-soft); border-radius:12px; padding:13px 13px 12px; margin-bottom:9px; }
+.card-title { font-weight:650; font-size:14px; margin:0 0 4px; line-height:1.32; color:#fff; }
+.card-desc { color:var(--muted); font-size:12.5px; line-height:1.5; margin:0; }
+.card-foot { margin-top:10px; }
+.tag { font-size:10.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+.tag.c-twitch { color: var(--twitch-soft); background: rgba(145,70,255,0.16); }
+.tag.c-discord { color: var(--discord-soft); background: rgba(88,101,242,0.16); }
+.tag.c-widget { color: var(--widget-soft); background: rgba(29,185,84,0.14); }
+.tag.c-accent { color: #8fe3ff; background: var(--accent-soft); }
+
+.rm-footnote { margin-top: 26px; color: var(--faint); font-size: 12.5px; }
+.rm-footnote a { color: var(--muted); }
+
+/* ============ FOOTER (matches index.html) ============ */
+.site-footer { position: relative; z-index: 1; border-top: 1px solid var(--border-soft); padding: 48px 24px 26px; margin-top: 40px; }
+.footer-cols { display: flex; gap: 60px; max-width: 1040px; margin: 0 auto 34px; flex-wrap: wrap; }
+.footer-brand { flex: 1 1 240px; min-width: 200px; }
+.footer-brand .brand { margin-bottom: 10px; }
+.footer-brand p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 260px; }
+.social-block { margin-top: 18px; }
+.social-label { display: block; margin-bottom: 9px; color: var(--faint); font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.social-links { display: flex; gap: 8px; }
+.social-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; transition: color 0.16s var(--ease), background 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.16s var(--ease); }
+.social-link svg { width: 17px; height: 17px; }
+.social-link:hover { transform: translateY(-2px); }
+.social-link.instagram:hover { color: #ff5a8a; background: rgba(225,48,108,0.1); border-color: rgba(225,48,108,0.55); }
+.social-link.x-social:hover { color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.35); }
+.social-link.twitch-social:hover { color: #b991ff; background: rgba(145,70,255,0.12); border-color: rgba(145,70,255,0.55); }
+.footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
+.footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { text-align: center; padding-top: 22px; border-top: 1px solid var(--border-soft); color: var(--faint); font-size: 12.5px; }
+.footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
+</style>
+</head>
+<body>
+<div class="glow a"></div>
+<div class="glow b"></div>
+
+<header class="site-header">
+  <a class="brand" href="/"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></a>
+  <div class="header-actions">
+    <a class="header-cta ghost" href="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Back to home</span>
+    </a>
+    <a class="header-cta" href="/twitch/login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Log in / Get started
+    </a>
+  </div>
+</header>
+
+<main class="roadmap">
+  <span class="eyebrow"><span class="dot"></span>Built by Everex</span>
+  <h1 class="rm-title">Contact <span class="hl">Everex</span></h1>
+  <p class="rm-sub">Found a bug, have a feature idea, or need a hand with Rex? Send me a message.</p>
+  <section class="col" style="max-width:640px; padding:28px;">
+    <h2 style="margin-top:0;">Email me</h2>
+    <p style="color:var(--muted);">Use the button below, or copy the address into your email app.</p>
+    <p><a href="mailto:support@rexbotapp.com?subject=RexBot%20support" style="color:var(--rex-blue); overflow-wrap:anywhere;">support@rexbotapp.com</a></p>
+    <a class="header-cta" href="mailto:support@rexbotapp.com?subject=RexBot%20support">Email Everex</a>
+    <p style="color:var(--muted); margin-top:24px;">For bugs, tell me what you expected, what happened, and which feature you were using. Please keep passwords, tokens and private OBS URLs out of your message.</p>
+    <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank" rel="noopener noreferrer" style="color:var(--rex-blue);">You can also report a bug on GitHub</a>
+  </section>
+  <p style="margin-top:24px;"><a href="/roadmap.html" style="color:var(--rex-blue);">See what is new on the roadmap</a></p>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div class="footer-brand">
+      <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
+      <p>Twitch chatbot, Discord bot, and customizable stream widgets. One project, free.</p>
+      <div class="social-block">
+        <span class="social-label">Follow RexBot</span>
+        <div class="social-links">
+          <a class="social-link instagram" href="https://www.instagram.com/rexbotapp/" target="_blank" rel="noopener noreferrer" aria-label="RexBot on Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a class="social-link x-social" href="https://x.com/RexBotApp" target="_blank" rel="noopener noreferrer" aria-label="RexBot on X" title="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22H17l-4.8-6.3L6.7 22H3.6l7.1-8.1L1 2h6.4l4.4 5.8L18.9 2Zm-1.1 17.9h1.7L6.5 4H4.7l13.1 15.9Z"/></svg></a>
+          <a class="social-link twitch-social" href="https://www.twitch.tv/rexbotapp" target="_blank" rel="noopener noreferrer" aria-label="RexBot on Twitch" title="Twitch"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2 2 6v14h5v3l3-3h4l8-8V2H4Zm16 9-4 4h-5l-3 3v-3H4V4h16v7Z"/><path d="M15 6h2v5h-2V6Zm-5 0h2v5h-2V6Z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/#twitch">Twitch Chatbot</a>
+      <a href="/#discord">Discord Bot</a>
+      <a href="/#widget">OBS Widgets</a>
+      <a href="/roadmap.html">Roadmap</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="https://everexmedia.ca" target="_blank">everex</a>
+      <a href="https://github.com/imeverex/rexbot-site" target="_blank">Source on GitHub</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="/contact.html">Contact Everex</a>
+      <a href="/help.html">Install help</a>
+      <a href="/#faq">FAQ</a>
+      <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Report a bug</a>
+      <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 RexBot · by <img src="everex-mark.png" alt="">everex</div>
+</footer>
+
+
+</body>
+</html>

@@ -163,9 +163,11 @@ h1.rm-title .hl { color: var(--rex-blue); }
 </header>
 
 <main class="roadmap">
+  <a class="header-cta ghost" href="/contact.html" style="float:right; margin-bottom:16px;">Contact Everex</a>
   <span class="eyebrow"><span class="dot"></span>what's shipped, what's next</span>
   <h1 class="rm-title">Rex<span class="hl">Bot</span> roadmap</h1>
   <p class="rm-sub">What is live, up next, and planned for later across Twitch, Discord, and your stream.</p>
+  <p class="rm-sub" style="font-size:13px; margin-top:-14px;">Updated October 5, 2026. Current means deployed; features may require Twitch permissions or a compatible settings file.</p>
 
   <div class="stats">
     <div class="stat shipped"><b id="stat-current">0</b><span>Current</span></div>
@@ -224,6 +226,7 @@ h1.rm-title .hl { color: var(--rex-blue); }
     </div>
     <div class="footer-col">
       <h4>Support</h4>
+      <a href="/contact.html">Contact Everex</a>
       <a href="/help.html">Install help</a>
       <a href="/#faq">FAQ</a>
       <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Report a bug</a>
@@ -275,14 +278,14 @@ h1.rm-title .hl { color: var(--rex-blue); }
   },
   {
     "title": "Timers",
-    "desc": "Schedule recurring chat messages and reminders.",
+    "desc": "Schedule recurring messages, rotate timer groups, and optionally space all timers with a channel-wide minimum gap.",
     "cat": "twitch",
     "status": "current",
     "tag": "twitch"
   },
   {
     "title": "Song requests",
-    "desc": "Let viewers request songs and manage the queue.",
+    "desc": "Let viewers request songs and manage the queue. !q shows three numbered songs in one message, separated by ||, plus the remaining count.",
     "cat": "widget",
     "status": "current",
     "tag": "widgets + music"
@@ -303,7 +306,7 @@ h1.rm-title .hl { color: var(--rex-blue); }
   },
   {
     "title": "Spotify Now Playing",
-    "desc": "Show what is playing on Spotify.",
+    "desc": "Show Spotify album art, song details, and progress in horizontal or vertical OBS layouts. Preview and save your appearance in the dashboard.",
     "cat": "widget",
     "status": "current",
     "tag": "widgets + music"
@@ -359,9 +362,9 @@ h1.rm-title .hl { color: var(--rex-blue); }
   },
   {
     "title": "Alert Box: Bits/cheers, sounds, and custom visuals",
-    "desc": "Extend the on-screen Alert Box to Bits/cheers, with sound effects and more visual customization beyond the themed text card.",
+    "desc": "Celebrate Bits/cheers with customizable animations, colors, media and sounds in the Alert Box browser source.",
     "cat": "widget",
-    "status": "next",
+    "status": "current",
     "tag": "stream alerts"
   },
   {
@@ -432,6 +435,34 @@ h1.rm-title .hl { color: var(--rex-blue); }
     "desc": "A new community game for your stream.",
     "cat": "accent",
     "status": "later",
+    "tag": "rexbot"
+  },
+  {
+    "title": "Follower, subscriber and Bits goals",
+    "desc": "Customize OBS goal bars with your own targets and appearance. Follower/subscriber counts reconcile with Twitch; Bits goals retain their tracked totals.",
+    "cat": "widget",
+    "status": "current",
+    "tag": "stream goals"
+  },
+  {
+    "title": "Import commands and timers",
+    "desc": "Bring compatible Nightbot, StreamElements and Streamlabs Cloudbot settings across using JSON/CSV files or pasted text. Preview entries first; existing Rex settings are kept and imports start disabled by default.",
+    "cat": "twitch",
+    "status": "current",
+    "tag": "migration"
+  },
+  {
+    "title": "Goal sync and recovery",
+    "desc": "Persistent goal state, duplicate-event protection and reconnect reconciliation help counters recover after interruptions. Dashboard sync information shows when counts need attention.",
+    "cat": "widget",
+    "status": "current",
+    "tag": "reliability"
+  },
+  {
+    "title": "Dashboard welcome and social links",
+    "desc": "A one-time thank-you from Everex for early testers, plus a Rex social button linking to all our socials.",
+    "cat": "accent",
+    "status": "current",
     "tag": "rexbot"
   }
 ];
