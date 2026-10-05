@@ -300,6 +300,17 @@ a:hover { color: var(--accent-hover); }
 .integration-pills .logo-badge:hover { border-color: var(--faint); transform: translateY(-1px); }
 .integration-pills .logo-badge img { width: 30px; height: 30px; object-fit: contain; }
 
+/* ============ ABOUT ============ */
+.about { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 8px 24px 64px; }
+.about-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px 32px; }
+.about .about-eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rex-blue); }
+.about h2 { font-size: 26px; font-weight: 700; margin: 0 0 18px; letter-spacing: -0.01em; }
+.about p { color: var(--muted); font-size: 15.5px; line-height: 1.65; margin: 0 0 14px; }
+.about-sign { display: flex; align-items: center; gap: 10px; margin-top: 22px; color: var(--text); font-size: 14.5px; font-weight: 650; }
+.about-sign img { height: 18px; width: auto; }
+.about-sign span { color: var(--faint); font-weight: 500; }
+@media (max-width: 560px) { .about-card { padding: 24px 20px; } .about h2 { font-size: 22px; } }
+
 /* ============ FAQ ============ */
 .faq { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 12px 24px 70px; }
 .faq h2 { text-align: center; font-size: 26px; font-weight: 700; margin: 0 0 34px; letter-spacing: -0.01em; }
@@ -551,6 +562,19 @@ a:hover { color: var(--accent-hover); }
     </div>
   </section>
 
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about" aria-labelledby="aboutTitle">
+    <div class="about-card">
+      <p class="about-eyebrow">About</p>
+      <h2 id="aboutTitle">Why I built Rex</h2>
+      <p>I'm Everex. I'm a competitive FPS gamer with a love for art, design, and tech, and I studied computer science and new media production.</p>
+      <p>Rex exists because I kept having to set up three or four different bots between Twitch and Discord just to get every feature I wanted. That drove me nuts, so I built Rex to do it all.</p>
+      <p>I gave Rex his personality by jumping into my friends' streams on the Rex account and trolling chat.</p>
+      <p>Rex is for everyone. I want him to be a simple, cover-all-bases Twitch and Discord tool that anyone can set up and find their way around easily. And he'll always be free to use.</p>
+      <div class="about-sign"><img src="everex-mark.png" alt="">Everex <span>&middot; creator of RexBot</span></div>
+    </div>
+  </section>
+
   <!-- ============ FAQ ============ -->
   <section class="faq" id="faq">
     <h2>Frequently asked questions</h2>
@@ -602,6 +626,7 @@ a:hover { color: var(--accent-hover); }
     </div>
     <div class="footer-col">
       <h4>Company</h4>
+      <a href="#about">About</a>
       <a href="https://everexmedia.ca" target="_blank">everex</a>
       <a href="https://github.com/imeverex/rexbot-site" target="_blank">Source on GitHub</a>
     </div>

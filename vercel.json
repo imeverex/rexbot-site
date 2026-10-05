@@ -76,6 +76,26 @@
       "destination": "https://rextwitchbot-production.up.railway.app/commands/:path*"
     },
     {
+      "source": "/mod-activity/:path*",
+      "destination": "https://rextwitchbot-production.up.railway.app/mod-activity/:path*"
+    },
+    {
+      "source": "/raids/:path*",
+      "destination": "https://rextwitchbot-production.up.railway.app/raids/:path*"
+    },
+    {
+      "source": "/moderation/:path*",
+      "destination": "https://rextwitchbot-production.up.railway.app/moderation/:path*"
+    },
+    {
+      "source": "/setlist/:path*",
+      "destination": "https://rextwitchbot-production.up.railway.app/setlist/:path*"
+    },
+    {
+      "source": "/activity.json",
+      "destination": "https://rextwitchbot-production.up.railway.app/activity.json"
+    },
+    {
       "source": "/timers/:path*",
       "destination": "https://rextwitchbot-production.up.railway.app/timers/:path*"
     }
