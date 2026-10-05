@@ -18,6 +18,10 @@
     }
   ],
   "rewrites": [
+    { "source": "/editors", "destination": "https://rextwitchbot-production.up.railway.app/editors" },
+    { "source": "/editors.json", "destination": "https://rextwitchbot-production.up.railway.app/editors.json" },
+    { "source": "/editors/:path*", "destination": "https://rextwitchbot-production.up.railway.app/editors/:path*" },
+    { "source": "/session/:path*", "destination": "https://rextwitchbot-production.up.railway.app/session/:path*" },
     { "source": "/bot/auth", "destination": "https://rextwitchbot-production.up.railway.app/bot/auth" },
     {
       "source": "/analytics.json",
