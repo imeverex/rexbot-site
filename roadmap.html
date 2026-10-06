@@ -119,6 +119,22 @@ h1.rm-title .hl { color: var(--rex-blue); }
 .tag.c-widget { color: var(--widget-soft); background: rgba(29,185,84,0.14); }
 .tag.c-accent { color: #8fe3ff; background: var(--accent-soft); }
 
+.section-title { font-size:15px; }
+.col-dot.ship { background: var(--widget); }
+.ship-groups { columns: 3 300px; column-gap:14px; margin-bottom:28px; }
+.ship-groups .ship-group { break-inside:avoid; margin-bottom:14px; }
+.ship-group { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 16px 6px; }
+.ship-group h3 { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 6px; font-size:14px; color:#fff; }
+.ship-group h3 .tag { font-size:10px; }
+.ship-list { list-style:none; margin:0; padding:0; }
+.ship-list li { padding:9px 0; border-top:1px solid var(--border-soft); }
+.ship-list li:first-child { border-top:none; }
+.ship-list b { display:block; font-size:13.5px; font-weight:650; color:#fff; }
+.ship-list span { display:block; color:var(--muted); font-size:12.5px; line-height:1.5; margin-top:2px; }
+.board-2 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.plan .ship-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:24px; }
+.plan .ship-list li:nth-child(2) { border-top:none; }
+@media (max-width:760px) { .board-2, .plan .ship-list { grid-template-columns:1fr; } .plan .ship-list li:nth-child(2) { border-top:1px solid var(--border-soft); } }
 .rm-footnote { margin-top: 26px; color: var(--faint); font-size: 12.5px; }
 .rm-footnote a { color: var(--muted); }
 
@@ -168,19 +184,21 @@ h1.rm-title .hl { color: var(--rex-blue); }
   <span class="eyebrow"><span class="dot"></span>what's shipped, what's next</span>
   <h1 class="rm-title">Rex<span class="hl">Bot</span> roadmap</h1>
   <p class="rm-sub">What is live, up next, and planned for later across Twitch, Discord, and your stream.</p>
-  <p class="rm-sub" style="font-size:13px; margin-top:-14px;">Updated October 5, 2026. Current means deployed; features may require Twitch permissions or a compatible settings file.</p>
+  <p class="rm-sub" style="font-size:13px; margin-top:-14px;">Updated October 6, 2026. Shipped means live right now; features may require Twitch permissions or a compatible settings file.</p>
 
   <div class="stats">
-    <div class="stat shipped"><b id="stat-current">0</b><span>Current</span></div>
-    <div class="stat planned"><b id="stat-next">0</b><span>Up Next</span></div>
+    <div class="stat shipped"><b id="stat-current">0</b><span>Shipped</span></div>
+    <div class="stat planned"><b id="stat-next">0</b><span>Up next</span></div>
     <div class="stat planned"><b id="stat-later">0</b><span>Later</span></div>
   </div>
   <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-  <div class="board">
-    <section class="col" data-col="current" aria-labelledby="heading-current">
-      <div class="col-head"><h2 class="col-title" id="heading-current"><span class="col-dot"></span>CURRENT</h2><div class="count" id="count-current">0</div></div>
-      <div class="cards" id="list-current"></div>
-    </section>
+
+  <section aria-labelledby="heading-current">
+    <div class="col-head"><h2 class="col-title section-title" id="heading-current"><span class="col-dot ship"></span>SHIPPED</h2><div class="count" id="count-current">0</div></div>
+    <div class="ship-groups" id="list-current"></div>
+  </section>
+
+  <div class="board board-2">
     <section class="col" data-col="next" aria-labelledby="heading-next">
       <div class="col-head"><h2 class="col-title" id="heading-next"><span class="col-dot"></span>UP NEXT</h2><div class="count" id="count-next">0</div></div>
       <div class="cards" id="list-next"></div>
@@ -190,10 +208,11 @@ h1.rm-title .hl { color: var(--rex-blue); }
       <div class="cards" id="list-later"></div>
     </section>
   </div>
+
   <section class="discord-expansion" id="discord-expansion" aria-labelledby="discord-title">
-    <h2 id="discord-title">Discord Bot Expansion</h2>
-    <p class="rm-sub">Up next: a full Discord bot for music, moderation, and community management, configured in your RexBot dashboard.</p>
-    <div class="board discord-features" id="list-discord"></div>
+    <h2 id="discord-title">Planned for Discord</h2>
+    <p class="rm-sub">What's coming to the Discord side, all set up from your RexBot dashboard. The Discord features already out are under Shipped.</p>
+    <div class="ship-group plan"><ul class="ship-list" id="list-discord"></ul></div>
   </section>
 
   <p class="rm-footnote">Spot something wrong, or want a feature bumped up? <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Open an issue on GitHub</a>.</p>
@@ -262,335 +281,277 @@ h1.rm-title .hl { color: var(--rex-blue); }
 })();
 
 (function(){
-  var ITEMS = [
+  var SHIPPED = [
   {
-    "title": "Twitch chatbot",
-    "desc": "Keep your Twitch chat connected and active.",
+    "name": "Twitch chat",
     "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
+    "items": [
+      [
+        "Always-on chat bot",
+        "Rex sits in your chat around the clock. Nothing to run on your PC."
+      ],
+      [
+        "Custom commands",
+        "Cooldowns, permissions, variables, counters and aliases. Import yours from Nightbot, StreamElements or Streamlabs."
+      ],
+      [
+        "Timers",
+        "Repeating messages with rotating groups, live-only timers and automatic spacing."
+      ],
+      [
+        "Shoutouts",
+        "!so posts a streamer's real name and the game they last played."
+      ],
+      [
+        "Raid suggestions",
+        "Live channels worth raiding, with favorites, friends and follows first, and the reason for each."
+      ]
+    ]
   },
   {
-    "title": "Custom commands",
-    "desc": "Manage chat commands, cooldowns, and permissions.",
+    "name": "Moderation",
     "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
+    "items": [
+      [
+        "Auto-moderation",
+        "Banned words, links, caps, spam and repeat messages. Warnings before timeouts, longer timeouts for repeat offenders."
+      ],
+      [
+        "Mod activity",
+        "What each moderator did and when, with clear notes on what Rex could and couldn't see."
+      ]
+    ]
   },
   {
-    "title": "Timers",
-    "desc": "Schedule recurring messages, rotate timer groups, and optionally space all timers with a channel-wide minimum gap.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
-  },
-  {
-    "title": "Song requests",
-    "desc": "Let viewers request songs and manage the queue. !q shows three numbered songs in one message, separated by ||, plus the remaining count.",
+    "name": "Music",
     "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
+    "items": [
+      [
+        "Song requests",
+        "!sr adds songs to your Spotify queue, with cooldowns, limits, vote-skip and !clear for mods."
+      ],
+      [
+        "Now Playing overlay",
+        "Album art, song and progress for OBS, with ready-made looks or your own theme."
+      ],
+      [
+        "Setlist to playlist",
+        "Turn what you played on stream into a Spotify playlist in one click."
+      ]
+    ]
   },
   {
-    "title": "Twitch moderation",
-    "desc": "Filter unwanted words and links with automatic timeouts.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
+    "name": "Stream overlays",
+    "cat": "widget",
+    "items": [
+      [
+        "Alerts",
+        "Popups for follows, subs, gifts, raids and Bits with your own sounds and visuals, plus thank-yous in chat."
+      ],
+      [
+        "Goals",
+        "Follower, sub and Bits goal bars that stay in sync with Twitch and recover after a restart."
+      ],
+      [
+        "Win counter",
+        "Count wins from chat, the dashboard or a Stream Deck."
+      ],
+      [
+        "Scoreboard",
+        "Head-to-head scores by round for kill races and best-ofs. Update it from the dashboard, chat or a Stream Deck."
+      ],
+      [
+        "Chat overlay",
+        "Recent chat on stream, styled like Twitch or like the rest of your overlays."
+      ],
+      [
+        "Stream Deck and hotkeys",
+        "Change wins and scores from a Stream Deck, Touch Portal, Companion or AutoHotkey."
+      ]
+    ]
   },
   {
-    "title": "Discord music",
-    "desc": "Play music together in your Discord server.",
+    "name": "Discord",
     "cat": "discord",
-    "status": "current",
-    "tag": "discord"
+    "items": [
+      [
+        "Discord music",
+        "/play, /skip, /pause, /queue and more in your voice channels."
+      ],
+      [
+        "Go-live posts",
+        "Posts within seconds of you going live, with an optional role ping and stream card. Friends going live too."
+      ],
+      [
+        "Welcome and leave messages",
+        "Greet new members and note departures in a channel you pick."
+      ],
+      [
+        "Button roles",
+        "A role picker with up to 25 buttons, for the games people play or go-live alerts."
+      ],
+      [
+        "Server stats",
+        "Joins, leaves and growth for your linked servers."
+      ]
+    ]
   },
   {
-    "title": "Spotify Now Playing",
-    "desc": "Show Spotify album art, song details, and progress in horizontal or vertical OBS layouts. Preview and save your appearance in the dashboard.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
-  },
-  {
-    "title": "Customizable stream widgets and alerts",
-    "desc": "Personalize stream overlays, chat, win counters, and alerts.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
-  },
-  {
-    "title": "Dashboard editors",
-    "desc": "Let trusted Twitch accounts manage your commands, timers, moderation, and widgets — like Nightbot managers.",
+    "name": "Dashboard",
     "cat": "accent",
-    "status": "current",
-    "tag": "rexbot"
-  },
-  {
-    "title": "Shoutout command",
-    "desc": "!so looks a user up live on Twitch and posts their channel and last-played game.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
-  },
-  {
-    "title": "Stream setlist → Spotify playlist",
-    "desc": "Track what's played during a stream and turn it into a real Spotify playlist in one click.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
-  },
+    "items": [
+      [
+        "Editors",
+        "Let people you trust help run your commands, timers, moderation and overlays."
+      ],
+      [
+        "Built to be easy",
+        "Every setting explains itself, and every save tells you what happened."
+      ],
+      [
+        "Analytics",
+        "All-time requests, skips, timeouts and your most-used commands."
+      ]
+    ]
+  }
+];
+  var NEXT = [
   {
     "title": "Discord Bot Expansion",
-    "desc": "Music, moderation, community tools, and Twitch connections in one dashboard.",
+    "desc": "Discord moderation, custom commands, Twitch role syncing and more, all in the dashboard.",
     "cat": "discord",
-    "status": "next",
-    "tag": "discord"
-  },
-  {
-    "title": "Stronger Twitch moderation",
-    "desc": "Timed spam and repeated-message filters, allowed link domains, warnings before timeouts, and visible failed actions. Existing accounts reconnect Twitch once for timeout permission.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
-  },
-  {
-    "title": "On-screen Twitch alerts",
-    "desc": "Celebrate follows, subscriptions, resubs, gift subs, and raids on stream with a themed popup card in an OBS browser source, using the same messages as your chat announcements.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
-  },
-  {
-    "title": "Alert Box: Bits/cheers, sounds, and custom visuals",
-    "desc": "Celebrate Bits/cheers with customizable animations, colors, media and sounds in the Alert Box browser source.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "stream alerts"
-  },
-  {
-    "title": "More widget customization",
-    "desc": "Rex cyan, Minimal and Album poster presets for Now Playing, with adjustable spacing, corner radius and progress color. Preview and save your look.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "widgets + music"
-  },
-  {
-    "title": "Command variables and counters",
-    "desc": "Use arguments, target names and persistent named counters in custom responses. Aliases share permissions and cooldowns; counter increments and usage counts update atomically.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "twitch"
-  },
-  {
-    "title": "Stream notifications",
-    "desc": "Send a customizable go-live message to a connected Discord server channel. Opt in from the dashboard; saved broadcast IDs prevent repeat announcements after restarts.",
-    "cat": "accent",
-    "status": "current",
-    "tag": "rexbot"
-  },
+    "tag": "discord",
+    "link": true
+  }
+];
+  var LATER = [
   {
     "title": "Loyalty and currencies",
     "desc": "Reward your community with points and custom currencies.",
     "cat": "twitch",
-    "status": "later",
     "tag": "twitch"
   },
   {
     "title": "Giveaways and polls",
     "desc": "Run community giveaways and collect viewer votes.",
     "cat": "accent",
-    "status": "later",
     "tag": "rexbot"
   },
   {
     "title": "Advanced automations",
     "desc": "Connect events and actions across your stream tools.",
     "cat": "accent",
-    "status": "later",
     "tag": "rexbot"
   },
   {
-    "title": "Analytics",
-    "desc": "Explore deeper insights into your stream and community.",
+    "title": "Deeper analytics",
+    "desc": "More insight into your stream and community over time.",
     "cat": "accent",
-    "status": "later",
     "tag": "rexbot"
-  },
-  {
-    "title": "Stream Deck / OBS integrations",
-    "desc": "Control stream tools and bot actions from your setup.",
-    "cat": "widget",
-    "status": "later",
-    "tag": "widgets + music"
-  },
-  {
-    "title": "Deeper Twitch / Discord syncing",
-    "desc": "Bring your Twitch and Discord communities closer together.",
-    "cat": "discord",
-    "status": "later",
-    "tag": "discord"
   },
   {
     "title": "RexBot Derby",
     "desc": "A new community game for your stream.",
     "cat": "accent",
-    "status": "later",
-    "tag": "rexbot"
-  },
-  {
-    "title": "Follower, subscriber and Bits goals",
-    "desc": "Customize OBS goal bars with your own targets and appearance. Follower/subscriber counts reconcile with Twitch; Bits goals retain their tracked totals.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "stream goals"
-  },
-  {
-    "title": "Import commands and timers",
-    "desc": "Bring compatible Nightbot, StreamElements and Streamlabs Cloudbot settings across using JSON/CSV files or pasted text. Preview entries first; existing Rex settings are kept and imports start disabled by default.",
-    "cat": "twitch",
-    "status": "current",
-    "tag": "migration"
-  },
-  {
-    "title": "Goal sync and recovery",
-    "desc": "Persistent goal state, duplicate-event protection and reconnect reconciliation help counters recover after interruptions. Dashboard sync information shows when counts need attention.",
-    "cat": "widget",
-    "status": "current",
-    "tag": "reliability"
-  },
-  {
-    "title": "Dashboard welcome, socials and contact",
-    "desc": "A one-time thank-you from Everex for early testers, a Rex social button, and Contact Everex inside the dashboard. Public pages recognize your active login.",
-    "cat": "accent",
-    "status": "current",
     "tag": "rexbot"
   }
 ];
-  var DISCORD_FEATURES = [
-  {
-    "title": "Music commands",
-    "desc": "/skip, /pause, /resume, /queue, /nowplaying, /remove, /clear, /shuffle, /loop, and /volume.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Customizable Twitch live notifications",
-    "desc": "Available now: posts within seconds of going live, pings a role or @everyone if you want, and can add a card with the title, game and thumbnail. Also announces friends going live, for up to 50 channels you pick.",
-    "cat": "discord",
-    "tag": "available"
-  },
-  {
-    "title": "Twitch ↔ Discord account linking",
-    "desc": "Connect Twitch and Discord accounts for a shared community experience.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Twitch role syncing",
-    "desc": "Sync subscriber, follower, VIP, and moderator roles where Twitch permissions allow.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Discord moderation",
-    "desc": "Warnings, timeout, kick, ban, purge, slowmode controls, and mod logs.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Custom commands and auto-responses",
-    "desc": "Create Discord commands and automatic replies for your server.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Welcome and leave messages",
-    "desc": "Available now: greet new members and note departures in a channel you pick, with your own message.",
-    "cat": "discord",
-    "tag": "available"
-  },
-  {
-    "title": "Button roles",
-    "desc": "Available now: a role picker with up to 25 buttons, like games people play or go-live alerts. Set up in the dashboard.",
-    "cat": "discord",
-    "tag": "available"
-  },
-  {
-    "title": "Server activity logging",
-    "desc": "Track important server activity in one place.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Polls and giveaways",
-    "desc": "Run polls and giveaways directly in Discord.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Twitch stream stat commands",
-    "desc": "Check your stream with /stream, /uptime, and /followers.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Spotify / Now Playing commands",
-    "desc": "Share what is playing on Spotify in Discord.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Permissions by Discord role",
-    "desc": "Choose which roles can use each command and feature.",
-    "cat": "discord",
-    "tag": "planned"
-  },
-  {
-    "title": "Full dashboard configuration",
-    "desc": "Manage all Discord settings inside the existing RexBot dashboard.",
-    "cat": "discord",
-    "tag": "planned"
-  }
+  var DISCORD_PLANNED = [
+  [
+    "More music commands",
+    "/nowplaying, /remove, /clear, /shuffle, /loop and /volume."
+  ],
+  [
+    "Discord moderation",
+    "Warnings, timeouts, kicks, bans, purge, slowmode and a mod log."
+  ],
+  [
+    "Custom commands and auto-responses",
+    "Your own Discord commands and automatic replies."
+  ],
+  [
+    "Twitch and Discord account linking",
+    "Connect Twitch and Discord accounts for one shared community."
+  ],
+  [
+    "Twitch role syncing",
+    "Subscriber, follower, VIP and moderator roles in Discord, where Twitch allows it."
+  ],
+  [
+    "Server activity log",
+    "Important server activity in one place."
+  ],
+  [
+    "Polls and giveaways",
+    "Run them right in Discord."
+  ],
+  [
+    "Stream commands",
+    "/stream, /uptime and /followers."
+  ],
+  [
+    "Now Playing in Discord",
+    "Share what's playing on Spotify."
+  ],
+  [
+    "Permissions by role",
+    "Choose which Discord roles can use each command and feature."
+  ]
 ];
+  var TAG_LABEL = { twitch: 'Twitch', widget: 'Stream', discord: 'Discord', accent: 'RexBot' };
 
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text) node.textContent = text;
+    return node;
+  }
+  function listItems(rows, list) {
+    rows.forEach(function(row) {
+      var li = el('li');
+      li.appendChild(el('b', '', row[0]));
+      li.appendChild(el('span', '', row[1]));
+      list.appendChild(li);
+    });
+  }
   function renderCard(item, list) {
-    var card = document.createElement('div');
-    card.className = 'card';
-    var title = document.createElement('h3');
-    title.className = 'card-title';
-    title.textContent = item.title;
-    var desc = document.createElement('p');
-    desc.className = 'card-desc';
-    desc.textContent = item.desc;
-    card.appendChild(title);
-    card.appendChild(desc);
-    if (item.title === 'Discord Bot Expansion') {
-      var link = document.createElement('a');
-      link.className = 'card-link';
+    var card = el('div', 'card');
+    card.appendChild(el('h3', 'card-title', item.title));
+    card.appendChild(el('p', 'card-desc', item.desc));
+    if (item.link) {
+      var link = el('a', 'card-link', 'See what is planned for Discord');
       link.href = '#discord-expansion';
-      link.textContent = 'Explore planned Discord features';
       card.appendChild(link);
     }
-    var foot = document.createElement('div');
-    foot.className = 'card-foot';
-    var tag = document.createElement('span');
-    tag.className = 'tag c-' + item.cat;
-    tag.textContent = item.tag;
-    foot.appendChild(tag);
+    var foot = el('div', 'card-foot');
+    foot.appendChild(el('span', 'tag c-' + item.cat, TAG_LABEL[item.cat] || item.tag));
     card.appendChild(foot);
     list.appendChild(card);
   }
 
-  ['current', 'next', 'later'].forEach(function(key) {
-    var items = ITEMS.filter(function(item) { return item.status === key; });
-    document.getElementById('count-' + key).textContent = items.length;
-    document.getElementById('stat-' + key).textContent = items.length;
-    items.forEach(function(item) { renderCard(item, document.getElementById('list-' + key)); });
+  var shippedCount = 0;
+  SHIPPED.forEach(function(group) {
+    var box = el('div', 'ship-group');
+    var head = el('h3', '', group.name);
+    head.appendChild(el('span', 'tag c-' + group.cat, group.items.length + ' live'));
+    box.appendChild(head);
+    var list = el('ul', 'ship-list');
+    listItems(group.items, list);
+    box.appendChild(list);
+    document.getElementById('list-current').appendChild(box);
+    shippedCount += group.items.length;
   });
-  DISCORD_FEATURES.forEach(function(item) { renderCard(item, document.getElementById('list-discord')); });
-  var current = ITEMS.filter(function(item) { return item.status === 'current'; }).length;
-  document.getElementById('progressFill').style.width = Math.round(current / ITEMS.length * 100) + '%';
+  NEXT.forEach(function(item) { renderCard(item, document.getElementById('list-next')); });
+  LATER.forEach(function(item) { renderCard(item, document.getElementById('list-later')); });
+  listItems(DISCORD_PLANNED, document.getElementById('list-discord'));
+
+  var counts = { current: shippedCount, next: NEXT.length, later: LATER.length };
+  Object.keys(counts).forEach(function(key) {
+    document.getElementById('count-' + key).textContent = counts[key];
+    document.getElementById('stat-' + key).textContent = counts[key];
+  });
+  var total = shippedCount + NEXT.length + LATER.length;
+  document.getElementById('progressFill').style.width = Math.round(shippedCount / total * 100) + '%';
 })();
 </script>
 </body>
