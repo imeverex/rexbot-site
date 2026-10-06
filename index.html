@@ -82,8 +82,9 @@ body[data-active="widget"][data-widget-active="wins"] { --accent: var(--rex-blue
 .header-cta.ghost:hover { color: #fff; border-color: var(--faint); filter: none; }
 @media (max-width: 640px) {
   .site-header { padding: 18px 20px; flex-wrap: wrap; }
-  .header-cta.ghost span { display: none; }
+  .header-cta.ghost .long { display: none; }
 }
+@media (min-width: 641px) { .header-cta.ghost .short { display: none; } }
 
 /* ============ HERO ============ */
 .hero { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 44px 24px 8px; text-align: center; }
@@ -299,6 +300,7 @@ a:hover { color: var(--accent-hover); }
 }
 .integration-pills .logo-badge:hover { border-color: var(--faint); transform: translateY(-1px); }
 .integration-pills .logo-badge img { width: 30px; height: 30px; object-fit: contain; }
+@media (max-width: 420px) { .integration-pills { gap: 10px; } .integration-pills .logo-badge { width: 54px; height: 54px; } .integration-pills .logo-badge img { width: 26px; height: 26px; } }
 
 /* ============ ABOUT ============ */
 .about { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 8px 24px 64px; }
@@ -348,6 +350,7 @@ a:hover { color: var(--accent-hover); }
 .social-link.twitch-social:hover { color: #b991ff; background: rgba(145,70,255,0.12); border-color: rgba(145,70,255,0.55); }
 .footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
 .footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
+@media (max-width: 640px) { .footer-col a { padding: 7px 0; margin-bottom: 2px; } }
 .footer-col a:hover { color: var(--text); }
 .footer-bottom { text-align: center; padding-top: 22px; border-top: 1px solid var(--border-soft); color: var(--faint); font-size: 12.5px; }
 .footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
@@ -363,7 +366,7 @@ a:hover { color: var(--accent-hover); }
   <div class="header-actions">
     <a class="header-cta ghost" href="/roadmap.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 3v18h18M7 15l4-5 3 3 5-7"/></svg>
-      <span>See the Roadmap</span>
+      <span class="long">See the Roadmap</span><span class="short">Roadmap</span>
     </a>
     <a class="header-cta" href="/twitch/login">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
