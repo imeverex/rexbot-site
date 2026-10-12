@@ -14,11 +14,11 @@
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 :root {
-  --accent: #00C6FF; --accent-2: #6c8cff; --accent-hover: #33d2ff; --accent-soft: rgba(0,198,255,0.13);
-  --bg: #08090b; --surface: #131417; --surface-2: #101012; --border: #232327; --border-soft: #1c1c1f;
-  --text: #f4f4f6; --muted: #9d9da4; --faint: #5c5c63; --rex-blue: #00C6FF;
-  --twitch: #9146FF; --discord: #5865F2; --widget: #1db954;
-  --twitch-soft: #caa4ff; --discord-soft: #aab2ff; --widget-soft: #7fe8a5;
+  --accent: #00C6FF; --accent-2: #22A2CF; --accent-hover: #64D0FF; --accent-soft: rgba(0,198,255,0.13);
+  --bg: #000000; --surface: #171717; --surface-2: #0A0A0A; --border: #243F4C; --border-soft: #222222;
+  --text: #F2F2F2; --muted: #B8B8B8; --faint: #949494; --rex-blue: #00C6FF;
+  --twitch: #22A2CF; --discord: #00C6FF; --widget: #22A2CF;
+  --twitch-soft: #B8B8B8; --discord-soft: #B8B8B8; --widget-soft: #B8B8B8;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
   --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -78,7 +78,7 @@ main.roadmap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto
   text-transform:uppercase; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft);
   padding:6px 13px 6px 10px; border-radius:999px;
 }
-.eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--widget); box-shadow:0 0 0 3px rgba(29,185,84,0.18); }
+.eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--widget); box-shadow:0 0 0 3px rgba(255,255,255,0.09); }
 h1.rm-title { font-weight:800; font-size:clamp(28px,5vw,40px); letter-spacing:-0.025em; margin:16px 0 8px; color:#fff; }
 h1.rm-title .hl { color: var(--rex-blue); }
 .rm-sub { color: var(--muted); font-size: 15px; max-width: 62ch; margin: 0 0 28px; }
@@ -114,10 +114,10 @@ h1.rm-title .hl { color: var(--rex-blue); }
 .card-desc { color:var(--muted); font-size:12.5px; line-height:1.5; margin:0; }
 .card-foot { margin-top:10px; }
 .tag { font-size:10.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; }
-.tag.c-twitch { color: var(--twitch-soft); background: rgba(145,70,255,0.16); }
-.tag.c-discord { color: var(--discord-soft); background: rgba(88,101,242,0.16); }
-.tag.c-widget { color: var(--widget-soft); background: rgba(29,185,84,0.14); }
-.tag.c-accent { color: #8fe3ff; background: var(--accent-soft); }
+.tag.c-twitch { color: var(--twitch-soft); background: rgba(255,255,255,0.08); }
+.tag.c-discord { color: var(--discord-soft); background: rgba(0,198,255,0.16); }
+.tag.c-widget { color: var(--widget-soft); background: rgba(255,255,255,0.07); }
+.tag.c-accent { color: #64D0FF; background: var(--accent-soft); }
 
 .rm-footnote { margin-top: 26px; color: var(--faint); font-size: 12.5px; }
 .rm-footnote a { color: var(--muted); }
@@ -134,9 +134,9 @@ h1.rm-title .hl { color: var(--rex-blue); }
 .social-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; transition: color 0.16s var(--ease), background 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.16s var(--ease); }
 .social-link svg { width: 17px; height: 17px; }
 .social-link:hover { transform: translateY(-2px); }
-.social-link.instagram:hover { color: #ff5a8a; background: rgba(225,48,108,0.1); border-color: rgba(225,48,108,0.55); }
+.social-link.instagram:hover { color: #F2F2F2; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.275); }
 .social-link.x-social:hover { color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.35); }
-.social-link.twitch-social:hover { color: #b991ff; background: rgba(145,70,255,0.12); border-color: rgba(145,70,255,0.55); }
+.social-link.twitch-social:hover { color: #F2F2F2; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.275); }
 .footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
 .footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
 @media (max-width: 640px) { .footer-col a { padding: 7px 0; margin-bottom: 2px; } }
@@ -145,11 +145,9 @@ h1.rm-title .hl { color: var(--rex-blue); }
 .footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
 </style>
 <script src="/session-nav.js" defer></script>
+<link rel="stylesheet" href="/rex-ui.css">
 </head>
-<body>
-<div class="glow a"></div>
-<div class="glow b"></div>
-
+<body class="rex-ui rex-public">
 <header class="site-header">
   <a class="brand" href="/"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></a>
   <div class="header-actions">
@@ -158,7 +156,7 @@ h1.rm-title .hl { color: var(--rex-blue); }
       <span>Back to home</span>
     </a>
     <a class="header-cta" href="/twitch/login">
-      <svg class="rex-icon" data-rex-icon="chat" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5h-17v14h4v4l5-4h8z"/></svg>
+      <svg class="rex-icon" data-rex-icon="chat" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5h-17v14h4v4l5-4h8z"/></svg>
       Log in / Get started
     </a>
   </div>
@@ -174,7 +172,7 @@ h1.rm-title .hl { color: var(--rex-blue); }
     <p><a href="mailto:support@rexbotapp.com?subject=RexBot%20support" style="color:var(--rex-blue); overflow-wrap:anywhere;">support@rexbotapp.com</a></p>
     <div style="display:flex; flex-wrap:wrap; gap:12px;">
       <a class="header-cta" href="mailto:support@rexbotapp.com?subject=RexBot%20support">Email Everex</a>
-      <a class="header-cta" href="https://discord.com/users/635629862543032321" target="_blank" rel="noopener noreferrer" style="background:#5865f2;">Open my Discord profile</a>
+      <a class="header-cta ghost" href="https://discord.com/users/635629862543032321" target="_blank" rel="noopener noreferrer" >Open my Discord profile</a>
     </div>
     <p style="color:var(--muted); font-size:13px;">Discord opens my profile. Messaging availability depends on Discord privacy settings.</p>
     <p style="color:var(--muted); margin-top:24px;">For bugs, tell me what you expected, what happened, and which feature you were using. Please keep passwords, tokens and private OBS URLs out of your message.</p>
@@ -211,6 +209,7 @@ h1.rm-title .hl { color: var(--rex-blue); }
     </div>
     <div class="footer-col">
       <h4>Support</h4>
+      <a href="https://discord.gg/mBk3PDDfU8" target="_blank" rel="noopener noreferrer">RexBot Discord</a>
       <a href="/contact.html">Contact Everex</a>
       <a href="/help.html">Install help</a>
       <a href="/#faq">FAQ</a>

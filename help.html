@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   :root {
-    --accent: #00D2FF; --accent-dim: rgba(0,210,255,0.15); --bg: #08090c; --card: #14161b; --card-border: #24262e;
-    --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
+    --accent: #00C6FF; --accent-dim: rgba(0,198,255,0.15); --bg: #000000; --card: #171717; --card-border: #243F4C;
+    --text: #F2F2F2; --muted: #B8B8B8; --faint: #949494;
   }
   * { box-sizing: border-box; }
   html { background: var(--bg); scroll-behavior: smooth; }
@@ -26,9 +26,9 @@
     position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(90px); opacity: 0.5;
     animation: drift 22s ease-in-out infinite alternate;
   }
-  .glow.a { width: 480px; height: 480px; background: #00D2FF; top: -180px; left: -140px; }
-  .glow.b { width: 420px; height: 420px; background: #CB753A; opacity: 0.22; top: 120px; right: -160px; animation-delay: -8s; }
-  .glow.c { width: 380px; height: 380px; background: #00D2FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
+  .glow.a { width: 480px; height: 480px; background: #00C6FF; top: -180px; left: -140px; }
+  .glow.b { width: 420px; height: 420px; background: #22A2CF; opacity: 0.22; top: 120px; right: -160px; animation-delay: -8s; }
+  .glow.c { width: 380px; height: 380px; background: #00C6FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
   @keyframes drift {
     from { transform: translate(0, 0) scale(1); }
     to   { transform: translate(30px, -24px) scale(1.08); }
@@ -45,9 +45,9 @@
   }
   nav a.gh:hover { color: var(--text); border-color: var(--muted); }
   nav a.discord-btn {
-    display: flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; font-weight: 700;
-    text-decoration: none; background: #5865F2; padding: 8px 14px; border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(88,101,242,0.3); transition: filter 0.15s ease, transform 0.15s ease;
+    display: flex; align-items: center; gap: 8px; color: #111111; font-size: 13px; font-weight: 700;
+    text-decoration: none; background: #00C6FF; padding: 8px 14px; border-radius: 8px;
+    box-shadow: none; transition: filter 0.15s ease, transform 0.15s ease;
   }
   nav a.discord-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
   nav a.discord-btn svg { width: 15px; height: 15px; flex: none; }
@@ -70,7 +70,7 @@
 
   .eyebrow {
     display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
-    background: var(--accent-dim); border: 1px solid rgba(0,210,255,0.3); padding: 5px 12px; border-radius: 999px;
+    background: var(--accent-dim); border: 1px solid rgba(0,198,255,0.3); padding: 5px 12px; border-radius: 999px;
     letter-spacing: 0.02em; margin-bottom: 18px;
   }
   h1.headline {
@@ -79,31 +79,30 @@
   }
   @media (max-width: 500px) { h1.headline { font-size: 32px; } }
   h1.headline em {
-    font-style: normal; background: linear-gradient(90deg, var(--accent), #7dd8ff);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: normal; color: var(--accent);
   }
   .hero-sub { color: var(--muted); font-size: 16px; max-width: 460px; margin: 0 0 28px; }
 
-  .download-btn {
+  .rex-ui .download-btn {
     display: inline-flex; align-items: center; gap: 10px;
-    background: var(--accent); color: #04141a; font-family: 'Inter', sans-serif; font-weight: 700;
+    background: var(--accent); color: #111111; font-family: 'Inter', sans-serif; font-weight: 700;
     font-size: 16px; padding: 15px 26px; border-radius: 10px; text-decoration: none;
-    box-shadow: 0 8px 30px rgba(0,210,255,0.28); transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: none; transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .download-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(0,210,255,0.4); }
+  .download-btn:hover { transform: translateY(-1px); box-shadow: none; }
   .download-meta { margin-top: 12px; color: var(--faint); font-size: 12.5px; }
   .smartscreen {
-    margin-top: 20px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
+    margin-top: 20px; padding: 14px 16px; background: rgba(0,198,255,0.05); border: 1px solid rgba(0,198,255,0.16);
     border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
   }
   .smartscreen b { color: var(--text); }
   .beta-note {
-    margin-top: 12px; padding: 14px 16px; background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22);
+    margin-top: 12px; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.11);
     border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
   }
   .beta-note b { color: var(--text); }
   .sac-note {
-    margin-top: 12px; padding: 14px 16px; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.16);
+    margin-top: 12px; padding: 14px 16px; background: rgba(0,198,255,0.05); border: 1px solid rgba(0,198,255,0.16);
     border-radius: 10px; font-size: 13px; color: var(--muted); max-width: 480px;
   }
   .sac-note b { color: var(--text); }
@@ -112,12 +111,12 @@
   .mock-frame {
     position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border);
     box-shadow: 0 30px 70px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02);
-    background: #0c0e12;
+    background: #0A0A0A;
   }
   .mock-titlebar {
-    display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #111319; border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #0A0A0A; border-bottom: 1px solid var(--card-border);
   }
-  .mock-titlebar span { width: 9px; height: 9px; border-radius: 50%; background: #333844; }
+  .mock-titlebar span { width: 9px; height: 9px; border-radius: 50%; background: #333333; }
   .mock-scene {
     position: relative; aspect-ratio: 16/10; overflow: hidden;
     background:
@@ -131,11 +130,11 @@
     background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 999px;
     font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #fff;
   }
-  .mock-live .dot { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; animation: pulse 1.6s ease-in-out infinite; }
+  .mock-live .dot { width: 7px; height: 7px; border-radius: 50%; background: #00C6FF; animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
   .mock-cam {
     position: absolute; bottom: 14px; right: 14px; width: 78px; height: 78px; border-radius: 50%;
-    background: linear-gradient(160deg, #2a2f3a, #14161b); border: 2px solid rgba(255,255,255,0.08);
+    background: linear-gradient(160deg, #212121, #171717); border: 2px solid rgba(255,255,255,0.08);
   }
   .mock-widget {
     position: absolute; bottom: 16px; left: 16px; display: flex; align-items: center; gap: 12px;
@@ -185,7 +184,7 @@
     background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 18px;
     transition: transform 0.18s ease, border-color 0.18s ease;
   }
-  .feature:hover { transform: translateY(-3px); border-color: rgba(0,210,255,0.3); }
+  .feature:hover { transform: translateY(-3px); border-color: rgba(0,198,255,0.3); }
   .feature .icon {
     width: 30px; height: 30px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
     display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
@@ -221,17 +220,16 @@
   .qa ol li { margin-bottom: 6px; }
   .callout {
     margin: 14px 0 0; padding: 13px 15px; border-radius: 10px; font-size: 13.5px;
-    background: rgba(203,117,58,0.06); border: 1px solid rgba(203,117,58,0.22); color: var(--muted);
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.11); color: var(--muted);
   }
   .callout b { color: var(--text); }
   .back-link { display: inline-block; margin-top: 8px; font-size: 13.5px; text-decoration: none; }
   @media (max-width: 720px) { .help-wrap { padding-top: 40px; } .help-wrap h1 { font-size: 27px; } }
 </style>
+<link rel="stylesheet" href="/rex-ui.css">
 </head>
-<body>
+<body class="rex-ui rex-public">
 <div class="noise"></div>
-<div class="glow a"></div>
-<div class="glow b"></div>
 <div class="glow c"></div>
 
 <main>

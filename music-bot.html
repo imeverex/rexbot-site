@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   :root {
-    --accent: #5865F2; --accent-dim: rgba(88,101,242,0.15); --bg: #08090c; --card: #14161b; --card-border: #24262e;
-    --text: #f0f4f7; --muted: #8b939c; --faint: #565c66;
+    --accent: #00C6FF; --accent-dim: rgba(0,198,255,0.15); --bg: #000000; --card: #171717; --card-border: #243F4C;
+    --text: #F2F2F2; --muted: #B8B8B8; --faint: #949494;
   }
   * { box-sizing: border-box; }
   html { background: var(--bg); scroll-behavior: smooth; }
@@ -26,9 +26,9 @@
     position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(90px); opacity: 0.5;
     animation: drift 22s ease-in-out infinite alternate;
   }
-  .glow.a { width: 480px; height: 480px; background: #5865F2; top: -180px; left: -140px; }
-  .glow.b { width: 420px; height: 420px; background: #CB753A; opacity: 0.2; top: 120px; right: -160px; animation-delay: -8s; }
-  .glow.c { width: 380px; height: 380px; background: #5865F2; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
+  .glow.a { width: 480px; height: 480px; background: #00C6FF; top: -180px; left: -140px; }
+  .glow.b { width: 420px; height: 420px; background: #22A2CF; opacity: 0.2; top: 120px; right: -160px; animation-delay: -8s; }
+  .glow.c { width: 380px; height: 380px; background: #00C6FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
   @keyframes drift {
     from { transform: translate(0, 0) scale(1); }
     to   { transform: translate(30px, -24px) scale(1.08); }
@@ -48,7 +48,7 @@
   .hero { text-align: center; margin: 56px 0 0; }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
-    background: var(--accent-dim); border: 1px solid rgba(88,101,242,0.35); padding: 5px 12px; border-radius: 999px;
+    background: var(--accent-dim); border: 1px solid rgba(0,198,255,0.35); padding: 5px 12px; border-radius: 999px;
     letter-spacing: 0.02em; margin-bottom: 20px;
   }
   h1.headline {
@@ -57,18 +57,17 @@
   }
   @media (max-width: 500px) { h1.headline { font-size: 32px; } }
   h1.headline em {
-    font-style: normal; background: linear-gradient(90deg, var(--accent), #a4b1ff);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: normal; color: var(--accent);
   }
   .hero-sub { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto 32px; }
 
-  .invite-btn {
+  .rex-ui .invite-btn {
     display: inline-flex; align-items: center; gap: 10px;
-    background: var(--accent); color: #fff; font-family: 'Inter', sans-serif; font-weight: 700;
+    background: var(--accent); color: #111111; font-family: 'Inter', sans-serif; font-weight: 700;
     font-size: 16px; padding: 15px 28px; border-radius: 10px; text-decoration: none;
-    box-shadow: 0 8px 30px rgba(88,101,242,0.35); transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: none; transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .invite-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 38px rgba(88,101,242,0.48); }
+  .invite-btn:hover { transform: translateY(-1px); box-shadow: none; }
   .invite-btn svg { width: 20px; height: 20px; flex: none; }
   .invite-meta { margin-top: 14px; color: var(--faint); font-size: 12.5px; }
 
@@ -106,12 +105,16 @@
   }
   footer img { height: 13px; }
   footer a { color: var(--muted); }
+
+  /* Redesign: left-aligned hero like the other pages; three feature cards across. */
+  .rex-public .hero h1.headline, .rex-public .hero .hero-sub { margin-left: 0; margin-right: 0; }
+  .rex-ui.rex-public .features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 700px) { .rex-ui.rex-public .features { grid-template-columns: 1fr; } }
 </style>
+<link rel="stylesheet" href="/rex-ui.css">
 </head>
-<body>
+<body class="rex-ui rex-public">
 <div class="noise"></div>
-<div class="glow a"></div>
-<div class="glow b"></div>
 <div class="glow c"></div>
 
 <main>
