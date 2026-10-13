@@ -796,8 +796,8 @@
 
 /* RexBot visual system. Brand palette + neutral shades; management UI only. */
 .rex-ui{
- --rex-canvas:#000000;--rex-workspace:#0A0A0A;--rex-card:#171717;--rex-field:#0A0A0A;
- --rex-raised:#212121;--rex-raised-hover:#2B2B2B;--rex-hover:#1F1F1F;--rex-edge:#243F4C;--rex-control-edge:#737373;--rex-control-hover:#8C8C8C;
+ --rex-canvas:#000000;--rex-workspace:#0A0A0A;--rex-card:#141414;--rex-field:#000000;
+ --rex-raised:#1F1F1F;--rex-raised-hover:#292929;--rex-hover:#1A1A1A;--rex-edge:#262626;--rex-control-edge:#737373;--rex-control-hover:#8C8C8C;
  --rex-tab:#0F0F0F;--rex-tab-edge:#222222;--rex-tab-hover:#171717;--rex-tab-hover-edge:#333333;--rex-line:#222222;--rex-blue-edge:#295E75;
  --rex-accent:#00C6FF;--rex-accent-strong:#22A2CF;--rex-selected:#262626;--rex-selected-edge:#3A3A3A;--rex-focus:#64D0FF;
  --rex-ink:#F2F2F2;--rex-secondary:#B8B8B8;--rex-subtle:#949494;--rex-on-selected:#EEF9FF;
