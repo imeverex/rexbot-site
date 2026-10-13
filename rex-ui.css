@@ -892,12 +892,12 @@
 .rex-dashboard aside.sidebar,.rex-ui .site-footer{position:relative;isolation:isolate;overflow:hidden}
 .rex-dashboard aside.sidebar::before,.rex-ui .site-footer::before{
  content:'';position:absolute;top:-40%;bottom:-40%;left:0;width:45%;z-index:-1;pointer-events:none;
- background:radial-gradient(closest-side,#00C6FF1F,#00C6FF0A 55%,transparent);
- animation:rex-glow-drift 22s ease-in-out infinite,rex-glow-pulse 5s ease-in-out infinite alternate;
+ background:radial-gradient(closest-side,#00C6FF12,#00C6FF06 55%,transparent);
+ animation:rex-glow-drift 90s ease-in-out infinite alternate,rex-glow-pulse 12s ease-in-out infinite alternate;
 }
-.rex-ui .site-footer::before{animation-delay:-11s,-2s}
-@keyframes rex-glow-drift{from{transform:translateX(-100%)}to{transform:translateX(230%)}}
-@keyframes rex-glow-pulse{from{opacity:.45}to{opacity:1}}
+.rex-ui .site-footer::before{animation-delay:-45s,-6s}
+@keyframes rex-glow-drift{from{transform:translateX(10%)}to{transform:translateX(120%)}}
+@keyframes rex-glow-pulse{from{opacity:.55}to{opacity:.85}}
 .rex-dashboard .brand{color:var(--rex-ink);font-weight:800;letter-spacing:-.02em}
 .rex-ui .brand .rex,.rex-dashboard .rex-daily-fact strong{color:var(--rex-accent)}
 .rex-dashboard .sidebar :is(.account-row,.sync-pill),.rex-dashboard .rex-daily-fact{color:var(--rex-secondary)}
