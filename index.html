@@ -66,7 +66,7 @@ html{overflow-x:hidden}
 .carousel-wrap>.feature-carousel{margin:0;position:relative}
 /* white lines span exactly the feature card and run 40px in under its edge */
 .art-under{left:calc(-1 * var(--g));top:0;bottom:0;width:calc(var(--g) + 40px);justify-content:space-between;gap:0;--c:#FFFFFF}
-.art-canvas{display:block}.art-kitty{right:calc(-1 * var(--g));width:calc(var(--g) - 24px);display:flex;flex-direction:column;justify-content:space-between}.art-kitty i{display:block;height:9px;background:#00C6FF;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%)}.art-kitty i:nth-child(n+5){background:#FFFFFF}
+.art-canvas{display:block}.art-kitty{right:calc(-1 * var(--g));width:calc(var(--g) - 24px)}.art-kitty i{position:absolute;right:0;height:9px;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%)}
 /* About: aligned to the card */
 .about .art-top{top:36px}
 .about .art-stripes.art-r{top:36px;bottom:36px;justify-content:space-between;gap:0}
@@ -293,7 +293,7 @@ html{overflow-x:hidden}
   const cw=document.documentElement.clientWidth,g=(cw-860)/2,w=Math.min(.76*(g-40),300),dpr=devicePixelRatio||1,pad=Math.round(w*.7);
   document.querySelectorAll('.art-canvas').forEach(cv=>{
    const rex=cv.dataset.art==='rexbot',lr=cv.dataset.art==='rexleft',sec=cv.parentElement,word=rex||lr?'REX':'BOT';
-   const top=(rex?capTop(sec.querySelector('h1')):sec.querySelector('.about-card').getBoundingClientRect().top)-sec.getBoundingClientRect().top;
+   const top=(rex?capTop(sec.querySelector('h1')):sec.querySelector('.about-card').getBoundingClientRect().top)-sec.getBoundingClientRect().top+(lr?Math.round(w*.42):0);
    // the hero REX spans no further than the headline's cap top to the subtitle's bottom
    let ww=w;if(rex){const span=sec.querySelector('p').getBoundingClientRect().bottom-sec.getBoundingClientRect().top-top,k0=ink('REX',w),l0=k0.L+k0.R;if(l0>span)ww=w*span/l0;}
    const K=ink(word,ww),len=K.L+K.R,thick=K.A+K.D;
@@ -316,8 +316,9 @@ html{overflow-x:hidden}
     x0=0;x1=left+uw*fs/100;
     // lines kitty-corner: bottom right, from where REX ends to the card's bottom
     const kt=sec.querySelector('.art-kitty'),card=sec.querySelector('.about-card').getBoundingClientRect(),sTop=sec.getBoundingClientRect().top;
-    if(kt){const bottom=card.bottom-sTop,count=Math.max(4,Math.min(8,Math.floor((bottom-top-len+11)/20))),start=bottom-(count*20-11);
-     kt.replaceChildren(...Array.from({length:count},()=>document.createElement('i')));Object.assign(kt.style,{top:start+'px',height:(bottom-start)+'px'});}
+    if(kt){const P=22,blueW=Math.min(g-80,140),whiteW=Math.min(g-48,190),mk=(y,wd,c)=>{const i=document.createElement('i');Object.assign(i.style,{top:y+'px',width:wd+'px',background:c});return i;};
+     const lines=[];for(let j=0;j<5;j++)lines.push(mk(j*P,blueW,'#00C6FF'));for(let j=0;j<5;j++)lines.push(mk((j+2.5)*P,whiteW,'#FFFFFF'));
+     kt.replaceChildren(...lines);Object.assign(kt.style,{top:(card.bottom-sTop-Math.round(3.2*P))+'px',height:(6.5*P+9)+'px'});}
    }else{parts.push(cc=>vertical(cc,'BOT',ww,0,pad));x0=0;x1=thick;}
    // echo: 1.35x, darker, blurred, shifted toward the content
    const cx=(x0+x1)/2,cy=pad+len/2,shift=(x1-x0)*.45*(rex?-1:1);
