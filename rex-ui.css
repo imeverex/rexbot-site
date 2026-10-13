@@ -799,7 +799,7 @@
  --rex-canvas:#000000;--rex-workspace:#0A0A0A;--rex-card:#171717;--rex-field:#0A0A0A;
  --rex-raised:#212121;--rex-raised-hover:#2B2B2B;--rex-hover:#1F1F1F;--rex-edge:#243F4C;--rex-control-edge:#737373;--rex-control-hover:#8C8C8C;
  --rex-tab:#0F0F0F;--rex-tab-edge:#222222;--rex-tab-hover:#171717;--rex-tab-hover-edge:#333333;--rex-line:#222222;--rex-blue-edge:#295E75;
- --rex-accent:#00C6FF;--rex-accent-strong:#22A2CF;--rex-selected:#243F4C;--rex-selected-edge:#2A7FA1;--rex-focus:#64D0FF;
+ --rex-accent:#00C6FF;--rex-accent-strong:#22A2CF;--rex-selected:#262626;--rex-selected-edge:#3A3A3A;--rex-focus:#64D0FF;
  --rex-ink:#F2F2F2;--rex-secondary:#B8B8B8;--rex-subtle:#949494;--rex-on-selected:#EEF9FF;
  --rex-radius:6px;--rex-slant:-12deg;--rex-shadow:none;--rex-shadow-float:0 12px 32px -12px #000000CC;
  --rex-content-max:1600px;
@@ -899,6 +899,7 @@
 @keyframes rex-glow-drift{from{transform:translateX(10%)}to{transform:translateX(120%)}}
 @keyframes rex-glow-pulse{from{opacity:.55}to{opacity:.85}}
 .rex-dashboard .brand{color:var(--rex-ink);font-weight:800;letter-spacing:-.02em}
+.rex-ui .brand{color:var(--rex-ink)}
 .rex-ui .brand .rex,.rex-dashboard .rex-daily-fact strong{color:var(--rex-accent)}
 .rex-dashboard .sidebar :is(.account-row,.sync-pill),.rex-dashboard .rex-daily-fact{color:var(--rex-secondary)}
 .rex-dashboard .sidebar .sync-pill{--rex-shape-bg:var(--rex-card);--rex-shape-edge:var(--rex-edge);padding-inline:16px}
@@ -946,14 +947,15 @@
 .rex-dashboard .folder-nav>.folder-tools .nav-btn:hover{--rex-shape-bg:var(--rex-hover);color:var(--rex-ink)!important}
 .rex-dashboard .folder-nav>.folder-tools .nav-btn.active,
 .rex-dashboard .folder-nav>.folder-tools .nav-btn.active:is(:hover,:focus-visible){
- --rex-shape-bg:var(--rex-selected);--rex-shape-edge:var(--rex-selected-edge);color:var(--rex-on-selected)!important;font-weight:600;
+ --rex-shape-bg:var(--rex-selected);--rex-shape-edge:transparent;color:var(--rex-on-selected)!important;font-weight:600;
 }
+.rex-dashboard .folder-nav>.folder-tools .nav-btn.active::after{border-bottom:2px solid var(--rex-accent);border-radius:5px 5px 0 0}
 .rex-dashboard .folder-tools .nav-btn svg{display:none}
 
 /* In-page tabs. Overview uses an underline; editor tabs use the subnav pill. */
 .rex-ui :is(.tabs,.input-tabs,.rex-global-preview-tabs) button{background:transparent;border:1px solid transparent;border-radius:5px;color:var(--rex-secondary);box-shadow:none;text-shadow:none}
 .rex-ui :is(.tabs,.input-tabs,.rex-global-preview-tabs) button:hover{background:var(--rex-hover);color:var(--rex-ink)}
-.rex-ui :is(.tabs,.input-tabs,.rex-global-preview-tabs) button[aria-selected=true],.rex-ui .tab-btn.active{background:var(--rex-selected);border-color:var(--rex-selected-edge);color:var(--rex-on-selected);box-shadow:none;text-shadow:none}
+.rex-ui :is(.tabs,.input-tabs,.rex-global-preview-tabs) button[aria-selected=true],.rex-ui .tab-btn.active{background:var(--rex-selected);border-color:var(--rex-selected-edge);color:var(--rex-on-selected);box-shadow:inset 0 -2px var(--rex-accent);text-shadow:none}
 .rex-dashboard .rex-overview-tabs{border-bottom:1px solid var(--rex-edge)}
 .rex-dashboard .rex-overview-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;color:var(--rex-secondary);margin-bottom:-1px;padding:10px 0 12px;box-shadow:none;text-shadow:none}
 .rex-dashboard .rex-overview-tabs button:hover{color:var(--rex-ink)}
@@ -963,6 +965,16 @@
 .rex-ui .rex-scene-toggle{border:1px solid var(--rex-control-edge);border-radius:5px;background:var(--rex-field)}
 .rex-ui .rex-scene-toggle button{background:transparent;color:var(--rex-secondary)}
 .rex-ui .rex-scene-toggle button[aria-pressed=true],.rex-ui .rex-scene-toggle button.active{background:var(--rex-selected);color:var(--rex-on-selected)}
+
+/* First-visit tour: a Rex-blue spotlight over the step's target, the rest of the page dimmed. */
+.rex-tour-spot{position:fixed;z-index:1000;pointer-events:none;border:2px solid var(--rex-accent);border-radius:6px;box-shadow:0 0 0 100vmax #000000B3}
+.rex-tour-card{position:fixed;z-index:1001;box-sizing:border-box;padding:18px 20px 16px;background:var(--rex-card);border:1px solid var(--rex-edge);border-radius:var(--rex-radius);box-shadow:var(--rex-shadow-float);color:var(--rex-ink)}
+.rex-tour-card h2{margin:0 0 6px;font-size:17px;font-weight:650;border:0;padding:0}
+.rex-tour-card p{margin:0;font-size:14px;line-height:1.5;color:var(--rex-secondary)}
+.rex-tour-card .rex-tour-count{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rex-focus)}
+.rex-tour-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:16px}
+.rex-tour-actions span{display:flex;gap:8px}
+.rex-tour-actions .btn{min-height:40px;padding:8px 16px;font-size:13px}
 
 /* Discord, overview and support components */
 .rex-dashboard .rex-server-header h2{border:0;color:var(--rex-ink);font-size:18px}
@@ -983,7 +995,7 @@
 .rex-ui .faq-q{background:transparent;color:var(--rex-ink);border-color:var(--rex-edge);font-weight:600}
 .rex-ui .carousel-tabs button{background:transparent;color:var(--rex-secondary);border-color:transparent;font-weight:600}
 .rex-ui .carousel-tabs button:hover{background:var(--rex-hover);color:var(--rex-ink)}
-.rex-public .carousel-tabs button[aria-selected=true]{background:var(--rex-selected);color:var(--rex-on-selected);border-color:var(--rex-selected-edge)}
+.rex-public .carousel-tabs button[aria-selected=true]{background:var(--rex-selected);color:var(--rex-on-selected);border-color:transparent;box-shadow:inset 0 -2px var(--rex-accent)}
 @media(min-width:1000px){
  .rex-dashboard aside.sidebar{padding-inline:var(--rex-gutter)}
 }
