@@ -796,10 +796,10 @@
 
 /* RexBot visual system. Brand palette + neutral shades; management UI only. */
 .rex-ui{
- --rex-canvas:#000000;--rex-workspace:#0A0A0A;--rex-card:#141414;--rex-field:#000000;
- --rex-raised:#1F1F1F;--rex-raised-hover:#292929;--rex-hover:#1A1A1A;--rex-edge:#262626;--rex-control-edge:#737373;--rex-control-hover:#8C8C8C;
- --rex-tab:#0F0F0F;--rex-tab-edge:#222222;--rex-tab-hover:#171717;--rex-tab-hover-edge:#333333;--rex-line:#222222;--rex-blue-edge:#295E75;
- --rex-accent:#00C6FF;--rex-accent-strong:#22A2CF;--rex-selected:#262626;--rex-selected-edge:#3A3A3A;--rex-focus:#64D0FF;
+ --rex-canvas:#000000;--rex-workspace:#050505;--rex-card:#0D0D0D;--rex-field:#000000;
+ --rex-raised:#181818;--rex-raised-hover:#222222;--rex-hover:#141414;--rex-edge:#1F1F1F;--rex-control-edge:#737373;--rex-control-hover:#8C8C8C;
+ --rex-tab:#0A0A0A;--rex-tab-edge:#1C1C1C;--rex-tab-hover:#121212;--rex-tab-hover-edge:#2E2E2E;--rex-line:#1A1A1A;--rex-blue-edge:#295E75;
+ --rex-accent:#00C6FF;--rex-accent-strong:#22A2CF;--rex-selected:#1C1C1C;--rex-selected-edge:#3A3A3A;--rex-focus:#64D0FF;
  --rex-ink:#F2F2F2;--rex-secondary:#B8B8B8;--rex-subtle:#949494;--rex-on-selected:#EEF9FF;
  --rex-radius:6px;--rex-slant:-12deg;--rex-shadow:none;--rex-shadow-float:0 12px 32px -12px #000000CC;
  --rex-content-max:1600px;
