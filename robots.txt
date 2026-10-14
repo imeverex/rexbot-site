@@ -1,0 +1,23 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /overlay/
+Disallow: /twitch/
+Disallow: /spotify/
+Disallow: /discord/
+Disallow: /session/
+Disallow: /editors
+Disallow: /bot/
+Disallow: /commands
+Disallow: /timers
+Disallow: /settings
+Disallow: /email/
+Disallow: /mod-activity/
+Disallow: /moderation/
+Disallow: /raids/
+Disallow: /setlist/
+Disallow: /requests.json
+Disallow: /analytics.json
+Disallow: /activity.json
+Disallow: /bot-healthz
+
+Sitemap: https://rexbotapp.com/sitemap.xml
