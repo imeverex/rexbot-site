@@ -3,225 +3,113 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Roadmap · RexBot</title>
-<meta name="description" content="What's shipped and what's next for RexBot: the Twitch chat bot, Discord bot, and OBS overlay.">
+<title>RexBot · Roadmap</title>
+<meta name="description" content="What's shipped and what's next for RexBot: the Twitch chat bot, Discord bot and OBS overlays.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rexbotapp.com/roadmap.html">
-<meta property="og:title" content="Roadmap · RexBot">
+<meta property="og:title" content="RexBot · Roadmap">
 <meta property="og:description" content="What's shipped and what's next for RexBot.">
 <meta property="og:image" content="https://rexbotapp.com/rex-mark.png">
 <link rel="icon" href="rex-mark.png">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<style>
-:root {
-  --accent: #00C6FF; --accent-2: #22A2CF; --accent-hover: #64D0FF; --accent-soft: rgba(0,198,255,0.13);
-  --bg: #000000; --surface: #171717; --surface-2: #0A0A0A; --border: #243F4C; --border-soft: #222222;
-  --text: #F2F2F2; --muted: #B8B8B8; --faint: #949494; --rex-blue: #00C6FF;
-  --twitch: #22A2CF; --discord: #00C6FF; --widget: #22A2CF;
-  --twitch-soft: #B8B8B8; --discord-soft: #B8B8B8; --widget-soft: #B8B8B8;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
-  --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
-  --ease: cubic-bezier(0.2, 0, 0, 1);
-}
-* { box-sizing: border-box; }
-html { background: var(--bg); scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 15px;
-  -webkit-font-smoothing: antialiased; position: relative; overflow-x: hidden;
-}
-.glow {
-  position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(120px); opacity: 0.18;
-}
-.glow.a { width: 560px; height: 560px; background: var(--accent); top: -200px; left: -80px; animation: drift-a 22s ease-in-out infinite; }
-.glow.b { width: 480px; height: 480px; background: var(--rex-blue); opacity: 0.08; top: 120px; right: -160px; animation: drift-b 26s ease-in-out infinite; }
-@keyframes drift-a {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(40px, 30px) scale(1.12); }
-  66% { transform: translate(-20px, 50px) scale(0.92); }
-}
-@keyframes drift-b {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  40% { transform: translate(-50px, -30px) scale(1.15); }
-  75% { transform: translate(20px, 20px) scale(0.9); }
-}
-@media (prefers-reduced-motion: reduce) { .glow.a, .glow.b { animation: none; } }
-
-/* ============ HEADER (matches index.html) ============ */
-.site-header {
-  position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; max-width: 1180px; margin: 0 auto; padding: 22px 32px;
-}
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(0,198,255,0.4)); }
-.brand span { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #fff; }
-.brand span .rex { color: var(--rex-blue); }
-.header-actions { display: flex; align-items: center; gap: 10px; }
-.header-cta {
-  display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 650; font-size: 13.5px;
-  text-decoration: none; padding: 9px 18px; border-radius: 999px; white-space: nowrap;
-  background: linear-gradient(100deg, var(--rex-blue), var(--accent-2));
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.2);
-  transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
-}
-.header-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.header-cta.ghost {
-  color: var(--muted); background: transparent; box-shadow: none; border: 1px solid var(--border);
-}
-.header-cta.ghost:hover { color: #fff; border-color: var(--faint); filter: none; }
-@media (max-width: 640px) { .site-header { padding: 18px 20px; flex-wrap: wrap; } }
-
-/* ============ ROADMAP PAGE ============ */
-main.roadmap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 20px 24px 90px; }
-.eyebrow {
-  display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:650; letter-spacing:0.04em;
-  text-transform:uppercase; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft);
-  padding:6px 13px 6px 10px; border-radius:999px;
-}
-.eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--widget); box-shadow:0 0 0 3px rgba(255,255,255,0.09); }
-h1.rm-title { font-weight:800; font-size:clamp(28px,5vw,40px); letter-spacing:-0.025em; margin:16px 0 8px; color:#fff; }
-h1.rm-title .hl { color: var(--rex-blue); }
-.rm-sub { color: var(--muted); font-size: 15px; max-width: 62ch; margin: 0 0 28px; }
-
-.stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
-.stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 18px; flex:1 1 140px; min-width:120px; }
-.stat b { display:block; font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
-.stat span { color:var(--faint); font-size:12px; font-weight:600; letter-spacing:0.02em; text-transform:uppercase; }
-.stat.shipped b { color: var(--widget); }
-.stat.planned b { color: var(--muted); }
-
-.progress-track { height:9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden; margin-bottom:34px; }
-.progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--widget), var(--rex-blue)); }
-
-.board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
-@media (max-width:760px) { .board { grid-template-columns:1fr; } }
-.col { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; }
-.col-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 4px 0; }
-.col-title { font-size:13px; font-weight:700; letter-spacing:0.02em; display:flex; align-items:center; gap:8px; color:#fff; }
-.col-dot { width:8px; height:8px; border-radius:50%; }
-.col[data-col="current"] .col-dot { background: var(--widget); }
-.col[data-col="later"] .col-dot { background: var(--faint); }
-.col[data-col="next"] .col-dot { background: var(--rex-blue); }
-.discord-expansion { margin-top:34px; scroll-margin-top:24px; }
-.discord-expansion h2 { font-size:24px; letter-spacing:-0.02em; margin:0 0 8px; }
-.discord-features { grid-template-columns:repeat(2,minmax(0,1fr)); }
-.card-link { color:var(--discord-soft); font-size:12.5px; display:inline-block; margin-top:10px; }
-@media (max-width:760px) { .discord-features { grid-template-columns:1fr; } }
-.count { font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface-2); border:1px solid var(--border-soft); border-radius:999px; padding:2px 9px; }
-
-.card { background:var(--surface-2); border:1px solid var(--border-soft); border-radius:12px; padding:13px 13px 12px; margin-bottom:9px; }
-.card-title { font-weight:650; font-size:14px; margin:0 0 4px; line-height:1.32; color:#fff; }
-.card-desc { color:var(--muted); font-size:12.5px; line-height:1.5; margin:0; }
-.card-foot { margin-top:10px; }
-.tag { font-size:10.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; }
-.tag.c-twitch { color: var(--twitch-soft); background: rgba(255,255,255,0.08); }
-.tag.c-discord { color: var(--discord-soft); background: rgba(0,198,255,0.16); }
-.tag.c-widget { color: var(--widget-soft); background: rgba(255,255,255,0.07); }
-.tag.c-accent { color: #64D0FF; background: var(--accent-soft); }
-
-.section-title { font-size:15px; }
-.col-dot.ship { background: var(--widget); }
-.ship-groups { columns: 3 300px; column-gap:14px; margin-bottom:28px; }
-.ship-groups .ship-group { break-inside:avoid; margin-bottom:14px; }
-.ship-group { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 16px 6px; }
-.ship-group h3 { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 6px; font-size:14px; color:#fff; }
-.ship-group h3 .tag { font-size:10px; }
-.ship-list { list-style:none; margin:0; padding:0; }
-.ship-list li { padding:9px 0; border-top:1px solid var(--border-soft); }
-.ship-list li:first-child { border-top:none; }
-.ship-list b { display:block; font-size:13.5px; font-weight:650; color:#fff; }
-.ship-list span { display:block; color:var(--muted); font-size:12.5px; line-height:1.5; margin-top:2px; }
-.board-2 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
-.plan .ship-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:24px; }
-.plan .ship-list li:nth-child(2) { border-top:none; }
-@media (max-width:760px) { .board-2, .plan .ship-list { grid-template-columns:1fr; } .plan .ship-list li:nth-child(2) { border-top:1px solid var(--border-soft); } }
-.rm-footnote { margin-top: 26px; color: var(--faint); font-size: 12.5px; }
-.rm-footnote a { color: var(--muted); }
-
-/* ============ FOOTER (matches index.html) ============ */
-.site-footer { position: relative; z-index: 1; border-top: 1px solid var(--border-soft); padding: 48px 24px 26px; margin-top: 40px; }
-.footer-cols { display: flex; gap: 60px; max-width: 1040px; margin: 0 auto 34px; flex-wrap: wrap; }
-.footer-brand { flex: 1 1 240px; min-width: 200px; }
-.footer-brand .brand { margin-bottom: 10px; }
-.footer-brand p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 260px; }
-.social-block { margin-top: 18px; }
-.social-label { display: block; margin-bottom: 9px; color: var(--faint); font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.social-links { display: flex; gap: 8px; }
-.social-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; transition: color 0.16s var(--ease), background 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.16s var(--ease); }
-.social-link svg { width: 17px; height: 17px; }
-.social-link:hover { transform: translateY(-2px); }
-.social-link.instagram:hover { color: #F2F2F2; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.275); }
-.social-link.x-social:hover { color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.35); }
-.social-link.twitch-social:hover { color: #F2F2F2; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.275); }
-.footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
-.footer-col a { display: block; color: var(--muted); font-size: 13.5px; text-decoration: none; margin-bottom: 9px; }
-@media (max-width: 640px) { .footer-col a { padding: 7px 0; margin-bottom: 2px; } }
-.footer-col a:hover { color: var(--text); }
-.footer-bottom { text-align: center; padding-top: 22px; border-top: 1px solid var(--border-soft); color: var(--faint); font-size: 12.5px; }
-.footer-bottom img { height: 11px; opacity: 0.7; vertical-align: -1px; margin: 0 2px; }
-</style>
-<script src="/session-nav.js" defer></script>
 <link rel="stylesheet" href="/rex-ui.css">
+<style>
+body{margin:0;background:var(--rex-canvas);color:var(--rex-ink);font-family:Inter,system-ui,sans-serif}
+.landing-header{display:flex;align-items:center;justify-content:space-between;padding:24px 4vw;border-bottom:1px solid var(--rex-line);gap:20px}
+.landing-links{display:flex;gap:24px;align-items:center;font-size:13px}
+.landing-links a{text-decoration:none;color:var(--rex-secondary)}
+.landing-links .button{color:#111111}
+.rm{max-width:960px;margin:0 auto;padding:72px 20px 40px}
+.eyebrow{font-size:11px;letter-spacing:.18em;color:var(--rex-accent);font-weight:700;text-transform:uppercase}
+.rm h1{font-size:clamp(40px,5vw,72px);line-height:1.05;letter-spacing:-.055em;margin:14px 0 18px;font-weight:800}
+.rm h1 span{color:var(--rex-accent)}
+.rm-lead{color:var(--rex-secondary);font-size:17px;line-height:1.6;max-width:640px;margin:0 0 6px;text-wrap:balance}
+.rm-note{color:var(--rex-subtle);font-size:13px;margin:0 0 40px}
+/* stats: slanted strips with a blue number tab */
+.rm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.rm-stat{--cut:16px;display:flex;align-items:stretch;background:var(--rex-card);clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%)}
+.rm-stat b{display:flex;align-items:center;justify-content:center;min-width:84px;padding:18px 0;background:#00C6FF;color:#111111;font-size:30px;font-weight:900;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%)}
+.rm-stat.dim b{background:#262626;color:var(--rex-ink)}
+.rm-stat span{display:flex;align-items:center;padding:0 22px;font-weight:700;font-size:15px}
+.rm-bar{height:6px;background:#1A1A1A;transform:skewX(-20deg);margin:0 8px 64px}
+.rm-bar i{display:block;height:100%;background:#00C6FF}
+.rm h2{font-size:32px;letter-spacing:-.03em;line-height:1.2;margin:8px 0 22px;display:flex;align-items:center;gap:14px}
+.rm h2 small{font-size:13px;font-weight:800;padding:3px 12px;background:#00C6FF;color:#111111;transform:skewX(-12deg);letter-spacing:.02em}
+/* shipped groups: a strip header, then the items */
+.rm-group{margin-bottom:28px}
+.rm-group-head{--cut:16px;display:flex;align-items:center;gap:16px;background:var(--rex-card);clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%);padding-right:28px}
+.rm-group-head b{display:flex;align-items:center;justify-content:center;min-width:64px;align-self:stretch;padding:14px 0;background:#00C6FF;color:#111111;font-size:20px;font-weight:900;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%)}
+.rm-group-head h3{margin:0;font-size:19px;letter-spacing:-.01em}
+.rm-group-head span{margin-left:auto;color:var(--rex-subtle);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.rm-items{list-style:none;margin:0;padding:18px 0 0 64px;display:grid;grid-template-columns:1fr 1fr;gap:16px 32px}
+.rm-items li{position:relative;padding-left:20px}
+.rm-items li::before{content:"";position:absolute;left:0;top:5px;width:7px;height:12px;background:#00C6FF;transform:skewX(-20deg)}
+.rm-items b{display:block;font-size:15px;margin-bottom:3px}
+.rm-items span{display:block;color:var(--rex-secondary);font-size:14px;line-height:1.55}
+/* up next and later: zigzag strips like the homepage tools */
+.rm-strips{display:flex;flex-direction:column;gap:10px;margin-bottom:64px}
+.rm-strip{--cut:18px;display:grid;grid-template-columns:72px minmax(0,1fr) auto;align-items:center;gap:0 24px;min-height:84px;padding-right:36px;background:var(--rex-card);clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%)}
+.rm-strip:nth-child(odd){margin-right:96px}.rm-strip:nth-child(even){margin-left:96px}
+.rm-strip>b{align-self:stretch;display:flex;align-items:center;justify-content:center;background:#00C6FF;color:#111111;font-size:20px;font-weight:900;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%)}
+.rm-strips.later .rm-strip>b{background:#262626;color:var(--rex-ink)}
+.rm-strip h3{margin:0 0 4px;font-size:17px}
+.rm-strip p{margin:0;color:var(--rex-secondary);font-size:14px;line-height:1.5}
+.rm-strip p a{color:var(--rex-focus)}
+.rm-tag{padding:3px 12px;background:#243F4C;color:#EEF9FF;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transform:skewX(-12deg);white-space:nowrap}
+.rm-discord{padding:32px 36px;background:var(--rex-card);border-left:4px solid #00C6FF;margin-bottom:24px}
+.rm-discord .rm-lead{margin-bottom:24px}
+.rm-discord .rm-items{padding-left:0}
+.rm-foot{color:var(--rex-subtle);font-size:14px}
+.rm-foot a{color:var(--rex-focus)}
+@media(max-width:760px){.landing-header{padding:20px;flex-wrap:wrap}.landing-links{gap:15px}.rm{padding-top:42px}
+ .rm-stats{grid-template-columns:1fr}.rm-items{grid-template-columns:1fr;padding-left:0}
+ .rm-strip,.rm-strip:nth-child(n){margin:0;grid-template-columns:56px minmax(0,1fr);padding:14px 24px 14px 0;--cut:12px}.rm-strip .rm-tag{grid-column:2;justify-self:start;margin-top:8px}
+ .rm-discord{padding:24px 20px}}
+button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12px;text-decoration:none}.brand img{width:38px;height:38px}.brand>span{font-size:26px;font-weight:800;letter-spacing:-.045em;line-height:1}.brand .rex{color:var(--rex-accent)}.landing-links .button{color:#111111}.site-footer{border-top:1px solid var(--rex-line);padding:40px 4vw;color:var(--rex-secondary)}.footer-cols{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}.footer-brand{max-width:290px}.footer-brand img{width:34px}.footer-brand p{font-size:13px}.footer-col{display:flex;flex-direction:column;gap:8px;font-size:13px}.footer-col h4{color:var(--rex-ink);margin:0 0 7px}.footer-col a{text-decoration:none}.footer-bottom{margin-top:30px;font-size:12px;color:var(--rex-subtle)}.button{display:inline-flex;align-items:center;text-decoration:none;padding:12px 19px;background:var(--rex-accent);color:#111111;border-radius:6px;font-weight:650;font-size:13px}.social-block{margin-top:16px}.social-label{display:block;font-size:12px;margin-bottom:10px}.social-links{display:flex;gap:10px}.social-link{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--rex-edge);border-radius:5px}.social-link svg{width:18px;height:18px}.footer-bottom{display:flex;align-items:center;gap:5px}.footer-bottom img{width:20px;height:20px;object-fit:contain}@media(max-width:600px){.footer-cols{gap:25px}}@media(min-width:1240px){.landing-header,.site-footer{position:relative;z-index:1}}@media(min-width:1240px){.site-footer{background-color:var(--rex-canvas)}}
+</style>
 </head>
 <body class="rex-ui rex-public">
-<header class="site-header">
-  <a class="brand" href="/"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></a>
-  <div class="header-actions">
-    <a class="header-cta ghost" href="/">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      <span>Back to home</span>
-    </a>
-    <a class="header-cta" href="/twitch/login">
-      <svg class="rex-icon" data-rex-icon="chat" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5h-17v14h4v4l5-4h8z"/></svg>
-      Log in / Get started
-    </a>
+<header class="landing-header"><a class="brand" href="/" aria-label="RexBot home"><img src="/rex-mark.png" alt=""><span class="rex-wordmark"><span class="rex">REX</span>BOT</span></a><nav class="landing-links" aria-label="Main navigation"><a href="/#about">Our story</a><a href="/contact.html">Contact</a><a class="button primary" href="/twitch/login">Log in / Get started</a></nav></header>
+<main class="rm">
+  <div class="eyebrow">What's shipped, what's next</div>
+  <h1>Rex<span>Bot</span> roadmap</h1>
+  <p class="rm-lead">What's live, what's up next and what's planned for later across Twitch, Discord and your stream.</p>
+  <p class="rm-note">Updated October 9, 2026. Shipped means live right now. Some features need Twitch permissions or a compatible settings file.</p>
+  <div class="rm-stats">
+    <div class="rm-stat"><b id="stat-current">0</b><span>Shipped</span></div>
+    <div class="rm-stat dim"><b id="stat-next">0</b><span>Up next</span></div>
+    <div class="rm-stat dim"><b id="stat-later">0</b><span>Later</span></div>
   </div>
-</header>
-
-<main class="roadmap">
-  <a class="header-cta ghost" href="/contact.html" style="float:right; margin-bottom:16px;">Contact Everex</a>
-  <span class="eyebrow"><span class="dot"></span>what's shipped, what's next</span>
-  <h1 class="rm-title">Rex<span class="hl">Bot</span> roadmap</h1>
-  <p class="rm-sub">What is live, up next, and planned for later across Twitch, Discord, and your stream.</p>
-  <p class="rm-sub" style="font-size:13px; margin-top:-14px;">Updated October 9, 2026. Shipped means live right now; features may require Twitch permissions or a compatible settings file.</p>
-
-  <div class="stats">
-    <div class="stat shipped"><b id="stat-current">0</b><span>Shipped</span></div>
-    <div class="stat planned"><b id="stat-next">0</b><span>Up next</span></div>
-    <div class="stat planned"><b id="stat-later">0</b><span>Later</span></div>
-  </div>
-  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="rm-bar" aria-hidden="true"><i id="progressFill" style="width:0%"></i></div>
 
   <section aria-labelledby="heading-current">
-    <div class="col-head"><h2 class="col-title section-title" id="heading-current"><span class="col-dot ship"></span>SHIPPED</h2><div class="count" id="count-current">0</div></div>
-    <div class="ship-groups" id="list-current"></div>
+    <h2 id="heading-current">Shipped <small id="count-current">0</small></h2>
+    <div id="list-current"></div>
   </section>
 
-  <div class="board board-2">
-    <section class="col" data-col="next" aria-labelledby="heading-next">
-      <div class="col-head"><h2 class="col-title" id="heading-next"><span class="col-dot"></span>UP NEXT</h2><div class="count" id="count-next">0</div></div>
-      <div class="cards" id="list-next"></div>
-    </section>
-    <section class="col" data-col="later" aria-labelledby="heading-later">
-      <div class="col-head"><h2 class="col-title" id="heading-later"><span class="col-dot"></span>LATER</h2><div class="count" id="count-later">0</div></div>
-      <div class="cards" id="list-later"></div>
-    </section>
-  </div>
+  <section aria-labelledby="heading-next" style="margin-top:56px">
+    <h2 id="heading-next">Up next <small id="count-next">0</small></h2>
+    <div class="rm-strips" id="list-next"></div>
+  </section>
 
-  <section class="discord-expansion" id="discord-expansion" aria-labelledby="discord-title">
+  <section aria-labelledby="heading-later">
+    <h2 id="heading-later">Later <small id="count-later">0</small></h2>
+    <div class="rm-strips later" id="list-later"></div>
+  </section>
+
+  <section class="rm-discord" id="discord-expansion" aria-labelledby="discord-title">
     <h2 id="discord-title">Planned for Discord</h2>
-    <p class="rm-sub">What's coming to the Discord side, all set up from your RexBot dashboard. The Discord features already out are under Shipped.</p>
-    <div class="ship-group plan"><ul class="ship-list" id="list-discord"></ul></div>
+    <p class="rm-lead">What's coming to the Discord side, all set up from your RexBot dashboard. The Discord features already out are under Shipped.</p>
+    <ul class="rm-items" id="list-discord"></ul>
   </section>
 
-  <p class="rm-footnote">Spot something wrong, or want a feature bumped up? <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Open an issue on GitHub</a>.</p>
+  <p class="rm-foot">Spot something wrong, or want a feature bumped up? <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank" rel="noopener noreferrer">Open an issue on GitHub</a>.</p>
 </main>
-
 <footer class="site-footer">
   <div class="footer-cols">
     <div class="footer-brand">
       <div class="brand"><img class="brand-logo" src="rex-mark.png" alt=""><span><span class="rex">REX</span>BOT</span></div>
-      <p>Twitch chatbot, Discord bot, and customizable stream widgets. One project, free.</p>
+      <p>Twitch chat bot, Discord music bot, and OBS stream overlays. One project, free.</p>
       <div class="social-block">
         <span class="social-label">Follow RexBot</span>
         <div class="social-links">
@@ -233,53 +121,29 @@ h1.rm-title .hl { color: var(--rex-blue); }
     </div>
     <div class="footer-col">
       <h4>Product</h4>
-      <a href="/#twitch">Twitch Chatbot</a>
-      <a href="/#discord">Discord Bot</a>
-      <a href="/#widget">OBS Widgets</a>
+      <a href="/#features" data-feature-link="twitch">Twitch Chatbot</a>
+      <a href="/#features" data-feature-link="discord">Discord Bot</a>
+      <a href="/#features" data-feature-link="overlays">OBS Widgets</a>
       <a href="/roadmap.html">Roadmap</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
+      <a href="/#about">About</a>
       <a href="https://everexmedia.ca" target="_blank">everex</a>
       <a href="https://github.com/imeverex/rexbot-site" target="_blank">Source on GitHub</a>
+      <a href="https://ko-fi.com/everex" target="_blank" rel="noopener noreferrer">Ko-fi</a>
     </div>
     <div class="footer-col">
       <h4>Support</h4>
-      <a href="https://discord.gg/mBk3PDDfU8" target="_blank" rel="noopener noreferrer">RexBot Discord</a>
       <a href="/contact.html">Contact Everex</a>
       <a href="/help.html">Install help</a>
       <a href="/#faq">FAQ</a>
-      <a href="https://github.com/imeverex/rexbot-site/issues" target="_blank">Report a bug</a>
-      <a href="https://ko-fi.com/everex" target="_blank">Ko-fi</a>
+      <a href="https://discord.gg/mBk3PDDfU8" target="_blank" rel="noopener noreferrer">RexBot Discord</a>
     </div>
   </div>
-  <div class="footer-bottom">&copy; 2026 RexBot · by <img src="everex-mark.png" alt="">everex</div>
+  <div class="footer-bottom">&copy; 2026 RexBot · by <img src="everex-mark.png" alt="">everex · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a></div>
 </footer>
-
 <script>
-// rex-mark.png ships on a flat light-gray square (made for light UIs) --
-// key it out to transparent client-side, same trick used on the dashboard.
-(function keyLogoTransparent() {
-  function process(img) {
-    try {
-      const c = document.createElement('canvas');
-      c.width = img.naturalWidth; c.height = img.naturalHeight;
-      const ctx = c.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      const frame = ctx.getImageData(0, 0, c.width, c.height);
-      const px = frame.data;
-      for (let i = 0; i < px.length; i += 4) {
-        if (px[i] > 235 && px[i+1] > 235 && px[i+2] > 235) px[i+3] = 0;
-      }
-      ctx.putImageData(frame, 0, 0);
-      img.src = c.toDataURL();
-    } catch (e) {}
-  }
-  document.querySelectorAll('img.brand-logo').forEach(img => {
-    if (img.complete) process(img); else img.addEventListener('load', () => process(img));
-  });
-})();
-
 (function(){
   var SHIPPED = [
   {
@@ -511,59 +375,21 @@ h1.rm-title .hl { color: var(--rex-blue); }
   ]
 ];
   var TAG_LABEL = { twitch: 'Twitch', widget: 'Stream', discord: 'Discord', accent: 'RexBot' };
-
-  function el(tag, cls, text) {
-    var node = document.createElement(tag);
-    if (cls) node.className = cls;
-    if (text) node.textContent = text;
-    return node;
-  }
-  function listItems(rows, list) {
-    rows.forEach(function(row) {
-      var li = el('li');
-      li.appendChild(el('b', '', row[0]));
-      li.appendChild(el('span', '', row[1]));
-      list.appendChild(li);
-    });
-  }
-  function renderCard(item, list) {
-    var card = el('div', 'card');
-    card.appendChild(el('h3', 'card-title', item.title));
-    card.appendChild(el('p', 'card-desc', item.desc));
-    if (item.link) {
-      var link = el('a', 'card-link', 'See what is planned for Discord');
-      link.href = '#discord-expansion';
-      card.appendChild(link);
-    }
-    var foot = el('div', 'card-foot');
-    foot.appendChild(el('span', 'tag c-' + item.cat, TAG_LABEL[item.cat] || item.tag));
-    card.appendChild(foot);
-    list.appendChild(card);
-  }
-
-  var shippedCount = 0;
-  SHIPPED.forEach(function(group) {
-    var box = el('div', 'ship-group');
-    var head = el('h3', '', group.name);
-    head.appendChild(el('span', 'tag c-' + group.cat, group.items.length + ' live'));
-    box.appendChild(head);
-    var list = el('ul', 'ship-list');
-    listItems(group.items, list);
-    box.appendChild(list);
-    document.getElementById('list-current').appendChild(box);
-    shippedCount += group.items.length;
-  });
-  NEXT.forEach(function(item) { renderCard(item, document.getElementById('list-next')); });
-  LATER.forEach(function(item) { renderCard(item, document.getElementById('list-later')); });
-  listItems(DISCORD_PLANNED, document.getElementById('list-discord'));
-
-  var counts = { current: shippedCount, next: NEXT.length, later: LATER.length };
-  Object.keys(counts).forEach(function(key) {
-    document.getElementById('count-' + key).textContent = counts[key];
-    document.getElementById('stat-' + key).textContent = counts[key];
-  });
-  var total = shippedCount + NEXT.length + LATER.length;
-  document.getElementById('progressFill').style.width = Math.round(shippedCount / total * 100) + '%';
+  function el(tag, cls, text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+  function listItems(rows, list){rows.forEach(function(r){var li=el('li');li.appendChild(el('b','',r[0]));li.appendChild(el('span','',r[1]));list.appendChild(li);});}
+  function strips(items, list){items.forEach(function(it,i){var s=el('div','rm-strip');s.appendChild(el('b','',String(i+1).padStart(2,'0')));
+    var body=el('div');body.appendChild(el('h3','',it.title));var p=el('p','',it.desc);
+    if(it.link){p.appendChild(document.createTextNode(' '));var a=el('a','','See what is planned for Discord');a.href='#discord-expansion';p.appendChild(a);}
+    body.appendChild(p);s.appendChild(body);s.appendChild(el('span','rm-tag',TAG_LABEL[it.cat]||it.tag));list.appendChild(s);});}
+  var shipped=0,box=document.getElementById('list-current');
+  SHIPPED.forEach(function(g){var wrap=el('div','rm-group'),head=el('div','rm-group-head');
+    head.appendChild(el('b','',String(g.items.length)));head.appendChild(el('h3','',g.name));head.appendChild(el('span','',(TAG_LABEL[g.cat]||'')+' · live'));
+    wrap.appendChild(head);var ul=el('ul','rm-items');listItems(g.items,ul);wrap.appendChild(ul);box.appendChild(wrap);shipped+=g.items.length;});
+  strips(NEXT,document.getElementById('list-next'));strips(LATER,document.getElementById('list-later'));
+  listItems(DISCORD_PLANNED,document.getElementById('list-discord'));
+  var counts={current:shipped,next:NEXT.length,later:LATER.length};
+  Object.keys(counts).forEach(function(k){document.getElementById('count-'+k).textContent=counts[k];document.getElementById('stat-'+k).textContent=counts[k];});
+  document.getElementById('progressFill').style.width=Math.round(shipped/(shipped+NEXT.length+LATER.length)*100)+'%';
 })();
 </script>
 </body>
