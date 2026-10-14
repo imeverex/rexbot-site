@@ -1020,7 +1020,7 @@
 .rex-dashboard .platform-card:has(.platform-twitch){--brand:145,70,255;--word:"TWITCH"}
 .rex-dashboard .platform-card:has(.platform-discord){--brand:88,101,242;--word:"DISCORD"}
 .rex-dashboard .platform-card:has(.platform-music){--brand:30,215,96;--word:"SPOTIFY"}
-.rex-dashboard .overview-status-grid .platform-card::before{content:var(--word);position:absolute;right:-6px;bottom:-30px;font:900 68px/1 Inter,system-ui,sans-serif;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(var(--brand),.4);white-space:nowrap;pointer-events:none}
+.rex-dashboard .overview-status-grid .platform-card::before{content:var(--word);position:absolute;right:18px;bottom:14px;font:900 48px/1 Inter,system-ui,sans-serif;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(var(--brand),.3);white-space:nowrap;pointer-events:none}
 .rex-dashboard .overview-status-grid .platform-card::after{content:"";display:block!important;position:absolute;left:24px;bottom:0;width:72px;height:5px;background:#00C6FF;transform:skewX(-35deg);transform-origin:bottom left;transition:width .25s cubic-bezier(.2,0,0,1)}
 .rex-dashboard .overview-status-grid .platform-card:hover{border-color:rgba(var(--brand),.5)}
 .rex-dashboard .overview-status-grid .platform-card:hover::after{width:120px}
