@@ -288,8 +288,8 @@ html{overflow-x:hidden}
  const flipped=(c,text,size,inkRight,inkTop)=>{const k=ink(text,size);c.save();c.translate(inkRight-k.L,inkTop+k.D);c.rotate(Math.PI);c.font=FONT(size);c.letterSpacing=(-.02*size)+'px';c.fillText(text,0,0);c.restore();};
  // upright text, positioned by its ink box
  const upright=(c,text,size,inkLeft,inkTop)=>{const k=ink(text,size);c.font=FONT(size);c.letterSpacing=(-.02*size)+'px';c.fillText(text,inkLeft+k.L,inkTop+k.A);};
- const P=22,stripes=(el,n,off,blueW,whiteW)=>{const mk=(y,wd,c)=>{const i=document.createElement('i');Object.assign(i.style,{top:y+'px',width:wd+'px',background:c});return i;};
-  const L=[];for(let j=0;j<n;j++)L.push(mk(j*P,blueW,'#00C6FF'));for(let j=0;j<n;j++)L.push(mk((j+off)*P,whiteW,'#FFFFFF'));el.replaceChildren(...L);el.style.height=((n-1+off)*P+9)+'px';};
+ const P=22,stripes=(el,n,off,blueW,whiteW,c1='#00C6FF',c2='#FFFFFF')=>{const mk=(y,wd,c)=>{const i=document.createElement('i');Object.assign(i.style,{top:y+'px',width:wd+'px',background:c});return i;};
+  const L=[];for(let j=0;j<n;j++)L.push(mk(j*P,blueW,c1));for(let j=0;j<n;j++)L.push(mk((j+off)*P,whiteW,c2));el.replaceChildren(...L);el.style.height=((n-1+off)*P+9)+'px';};
  const capTop=el=>{const cs=getComputedStyle(el),fs=parseFloat(cs.fontSize),lh=parseFloat(cs.lineHeight)||fs*1.2;ctx0.font=`${cs.fontWeight} ${fs}px Inter`;const m=ctx0.measureText('Y');
   return el.getBoundingClientRect().top+(lh-(m.fontBoundingBoxAscent+m.fontBoundingBoxDescent))/2+(m.fontBoundingBoxAscent-m.actualBoundingBoxAscent);};
  const pageTop=el=>el.getBoundingClientRect().top+scrollY;let Q={};
@@ -336,7 +336,7 @@ html{overflow-x:hidden}
    c.fillStyle=rex||lr?'#00C6FF':'#FFFFFF';if(rex||lr){parts[0](c);c.fillStyle='#FFFFFF';parts.slice(1).forEach(f=>f(c));}else parts.forEach(f=>f(c));
   });
   const t2=document.querySelector('.more-features .art-kitty');let linesEnd=0;
-  if(t2&&Q.echoEnd){stripes(t2,10,5.5,Math.min(g-80,120),Math.min(g-48,170));const y=Q.echoEnd+90;t2.style.top=(y-pageTop(t2.parentElement))+'px';linesEnd=y+t2.offsetHeight;}
+  if(t2&&Q.echoEnd){stripes(t2,10,5.5,Math.min(g-80,120),Math.min(g-48,170),'#FFFFFF','#00C6FF');const y=Q.echoEnd+90;t2.style.top=(y-pageTop(t2.parentElement))+'px';linesEnd=y+t2.offsetHeight;}
   if(Q.heroEcho){const h=Q.heroEcho,y=linesEnd+110,foot=pageTop(document.querySelector('.site-footer'));h.ec.style.display=linesEnd&&y+parseFloat(h.ec.style.height)-2*h.pad<foot?'':'none';h.ec.style.top=(y-h.pad-pageTop(h.sec))+'px';}
  }
  let t;const redraw=()=>{clearTimeout(t);t=setTimeout(draw,60);};
