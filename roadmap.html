@@ -18,7 +18,7 @@ body{margin:0;background:var(--rex-canvas);color:var(--rex-ink);font-family:Inte
 .landing-header{display:flex;align-items:center;justify-content:space-between;padding:24px 4vw;border-bottom:1px solid var(--rex-line);gap:20px}
 .landing-links{display:flex;gap:24px;align-items:center;font-size:13px}
 .landing-links a{text-decoration:none;color:var(--rex-secondary)}
-.landing-links .button{color:#111111}
+.landing-links .button{color:#111111}.landing-links a[aria-current]{color:var(--rex-ink)}
 .rm{max-width:960px;margin:0 auto;padding:72px 20px 40px}
 .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--rex-accent);font-weight:700;text-transform:uppercase}
 .rm h1{font-size:clamp(40px,5vw,72px);line-height:1.05;letter-spacing:-.055em;margin:14px 0 18px;font-weight:800}
@@ -69,7 +69,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
 </style>
 </head>
 <body class="rex-ui rex-public">
-<header class="landing-header"><a class="brand" href="/" aria-label="RexBot home"><img src="/rex-mark.png" alt=""><span class="rex-wordmark"><span class="rex">REX</span>BOT</span></a><nav class="landing-links" aria-label="Main navigation"><a href="/#about">Our story</a><a href="/contact.html">Contact</a><a class="button primary" href="/twitch/login">Log in / Get started</a></nav></header>
+<header class="landing-header"><a class="brand" href="/" aria-label="RexBot home"><img src="/rex-mark.png" alt=""><span class="rex-wordmark"><span class="rex">REX</span>BOT</span></a><nav class="landing-links" aria-label="Main navigation"><a href="/#about">Our story</a><a href="/roadmap.html" aria-current="page">Roadmap</a><a href="/contact.html">Contact</a><a class="button primary" href="/twitch/login">Log in / Get started</a></nav></header>
 <main class="rm">
   <div class="eyebrow">What's shipped, what's next</div>
   <h1>Rex<span>Bot</span> roadmap</h1>
