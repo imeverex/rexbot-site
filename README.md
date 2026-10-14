@@ -9,3 +9,7 @@ OAuth callbacks, private overlay links and API endpoints out of it.
 
 `robots.txt` advertises the sitemap and asks crawlers to avoid dashboard, login,
 overlay and internal API routes. Application authentication still controls access.
+
+`api/analytics-consent.js` selects the dashboard analytics notice mode from Vercel's
+country/province headers. It returns only `requireOptIn`, never location or IP data,
+and must not be cached across visitors. Unknown locations keep opt-in.
