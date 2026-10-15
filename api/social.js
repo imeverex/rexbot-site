@@ -11,7 +11,7 @@
 //        card   the original dark branded card (uses h, a, s, f)
 //        meme   white caption on top (h), Rex on a gameplay shot, outlined punchline (a)
 //        chat   fake Twitch chat: m=user:msg|user:msg  (h = optional caption, RexBot gets a BOT badge)
-//        pop    solid colour block, giant left-aligned text (h, a, s), c=blue|purple|mint|orange|black
+//        pop    solid colour block, giant left-aligned text (h, a, s), c=blue|twitch|discord|spotify|black (real brand colours only)
 //        notes  monospace patch notes / receipt on paper: h = title, m = items separated by |
 //        shot   real product screenshot: img=chat|discord|overlay, h = headline, s = subline
 //        step   carousel slide: n = step number, h = title, s = body
@@ -85,18 +85,32 @@ const lines = (t) => String(t || '').split('|').map((x) => x.trim()).filter(Bool
 const mimeOf = (name) => (name.endsWith('.png') ? 'image/png' : name.endsWith('.svg') ? 'image/svg+xml' : 'image/jpeg');
 const dataUri = async (name) => toDataUri(await asset(name), mimeOf(name));
 
+// Only real brand colours: Rex blue, Twitch purple, Discord blurple, Spotify green, black.
 const POP = {
   blue: { bg: C.blue, ink: '#04121a', hi: '#ffffff' },
-  purple: { bg: C.twitch, ink: '#ffffff', hi: '#0b0b10' },
-  mint: { bg: '#2ee6a6', ink: '#04140e', hi: '#ffffff' },
-  orange: { bg: '#ff8a1f', ink: '#1a0b00', hi: '#ffffff' },
+  twitch: { bg: C.twitch, ink: '#ffffff', hi: '#0b0b10' },
+  discord: { bg: C.discord, ink: '#ffffff', hi: '#0b0b10' },
+  spotify: { bg: C.widget, ink: '#000000', hi: '#ffffff' },
   black: { bg: '#000000', ink: '#ffffff', hi: C.blue },
 };
+POP.purple = POP.twitch; // old name
+
+// Largest font size (px) at which these lines, wrapped to `width`, fit in `height`.
+// cw = average glyph width as a fraction of font size, lh = line height.
+function fit(textLines, { width, height, max, min, cw = 0.6, lh = 1.1 }) {
+  for (let size = max; size > min; size -= 2) {
+    const rows = textLines.reduce((n, l) => n + Math.max(1, Math.ceil((l.length * cw * size) / width)), 0);
+    const longestWord = Math.max(...textLines.flatMap((l) => l.split(/\s+/)).map((w) => w.length), 1);
+    if (rows * size * lh <= height && longestWord * cw * size <= width) return size;
+  }
+  return min;
+}
+
 const CHAT_COLORS = ['#ff6b6b', '#b388ff', '#2ee6a6', '#ffb347', '#5ec8ff', '#ff79c6', '#f1fa8c'];
 const SHOTS = {
   chat: { file: 'shots/chat.jpg', bg: C.twitch, label: 'Twitch chatbot' },
   discord: { file: 'shots/discord.jpg', bg: C.discord, label: 'Discord bot' },
-  overlay: { file: 'shots/overlay.jpg', bg: '#1db954', label: 'OBS overlays' },
+  overlay: { file: 'shots/overlay.jpg', bg: C.blue, label: 'OBS overlays' },
 };
 
 // Small "2/5" pill, plus a swipe hint on the first slide of a carousel.
@@ -110,8 +124,10 @@ function pagePill(page, dark) {
   );
 }
 
-async function render(req) {
-  const q = new URL(req.url).searchParams;
+// Builds the element tree and fonts for a request URL. Exported so scripts/check-social.mjs can
+// test every template for overlapping or clipped text.
+export async function buildTree(url) {
+  const q = new URL(url).searchParams;
   const headline = (q.get('h') || 'One login. Three tools.').slice(0, 160);
   const accent = (q.get('a') || '').slice(0, 80);
   const sub = (q.get('s') || '').slice(0, 220);
@@ -130,17 +146,23 @@ async function render(req) {
   const ctx = { q, headline, accent, sub, feature, page, msgs, W, H, logo };
   const builders = { card: cardTemplate, meme: memeTemplate, chat: chatTemplate, pop: popTemplate, notes: notesTemplate, shot: shotTemplate, step: stepTemplate };
   const tree = await (builders[template] || cardTemplate)(ctx);
+  const fonts = [
+    { name: 'Inter', data: f500, weight: 500, style: 'normal' },
+    { name: 'Inter', data: f700, weight: 700, style: 'normal' },
+    { name: 'Inter', data: f800, weight: 800, style: 'normal' },
+    { name: 'Mono', data: mono, weight: 700, style: 'normal' },
+  ];
+  return { tree, fonts, W, H };
+}
 
-  const svg = await satori(tree, {
-    width: W, height: H,
-    fonts: [
-      { name: 'Inter', data: f500, weight: 500, style: 'normal' },
-      { name: 'Inter', data: f700, weight: 700, style: 'normal' },
-      { name: 'Inter', data: f800, weight: 800, style: 'normal' },
-      { name: 'Mono', data: mono, weight: 700, style: 'normal' },
-    ],
-  });
-  const png = new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+export async function renderPng(tree, fonts, W, H) {
+  const svg = await satori(tree, { width: W, height: H, fonts });
+  return new Resvg(svg, { fitTo: { mode: 'width', value: W } }).render().asPng();
+}
+
+async function render(req) {
+  const { tree, fonts, W, H } = await buildTree(req.url);
+  const png = await renderPng(tree, fonts, W, H);
   return new Response(png, {
     headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000, immutable' },
   });
@@ -200,13 +222,13 @@ async function cardTemplate({ headline, accent, sub, feature, page, W, H, logo }
 async function memeTemplate({ headline, accent, page, W, H }) {
   const [scene, rex] = await Promise.all([dataUri('scene.jpg'), dataUri('rex-full.png')]);
   const top = lines(headline);
-  const topLen = top.join(' ').length;
-  const topSize = topLen > 90 ? 50 : topLen > 55 ? 58 : 68;
   const capH = Math.round(H * 0.34);
   const picH = H - capH;
-  const bottom = lines(accent);
-  const bLen = bottom.join(' ').length;
-  const bSize = bLen > 40 ? 64 : 84;
+  const topSize = fit(top, { width: W - 128, height: capH - 80, max: 72, min: 36, cw: 0.55, lh: 1.18 });
+  const bottom = lines(accent).slice(0, 2);
+  const bandH = 220; // punchline zone at the bottom of the picture; Rex stays above it
+  const bSize = fit(bottom, { width: W - 100, height: bandH - 40, max: 88, min: 44, cw: 0.68, lh: 1.05 });
+  const rexH = picH - bandH - 30, rexW = Math.round(rexH * 900 / 678);
   return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: '#ffffff', fontFamily: 'Inter', position: 'relative' },
     h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', height: capH, padding: '40px 64px', gap: 6 },
       ...top.map((l) => h('div', { display: 'flex', fontSize: topSize, fontWeight: 700, color: '#0a0a0a', lineHeight: 1.18, letterSpacing: -0.5 }, l)),
@@ -214,8 +236,8 @@ async function memeTemplate({ headline, accent, page, W, H }) {
     h('div', { display: 'flex', position: 'relative', width: W, height: picH, overflow: 'hidden' },
       img(scene, W, picH, { objectFit: 'cover', position: 'absolute', top: 0, left: 0, filter: 'saturate(0.8)' }),
       h('div', { display: 'flex', position: 'absolute', top: 0, left: 0, width: W, height: picH, background: 'linear-gradient(180deg, #00000010 0%, #00000070 100%)' }),
-      img(rex, 820, 618, { position: 'absolute', left: 130, top: Math.round(picH * 0.06) }),
-      h('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'absolute', left: 0, bottom: 40, width: W, padding: '0 50px' },
+      img(rex, rexW, rexH, { position: 'absolute', left: Math.round((W - rexW) / 2), top: 20 }),
+      h('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', left: 0, bottom: 0, width: W, height: bandH, padding: '0 50px' },
         ...bottom.map((l) => h('div', {
           display: 'flex', textAlign: 'center', fontSize: bSize, fontWeight: 800, color: '#ffffff', textTransform: 'uppercase',
           lineHeight: 1.05, letterSpacing: -1, WebkitTextStroke: '5px #000000', textShadow: '0 6px 0 #000000',
@@ -237,16 +259,24 @@ async function chatTemplate({ headline, msgs, page, W, H, logo }) {
   const colorOf = (u) => (/^rexbot$/i.test(u) ? C.blue : CHAT_COLORS[users.indexOf(u) % CHAT_COLORS.length]);
   const cap = lines(headline);
   const showCap = cap.length && cap.join('') !== 'One login. Three tools.';
-  const fs = rows.length > 10 ? 34 : rows.length > 6 ? 40 : 48;
+  const capSize = showCap ? fit(cap, { width: W - 120, height: 200, max: 56, min: 34, cw: 0.56, lh: 1.12 }) : 0;
+  const capH = showCap ? 92 + cap.reduce((n, l) => n + Math.ceil((l.length * 0.56 * capSize) / (W - 120)), 0) * capSize * 1.12 : 0;
+  // Fit the messages into the panel: shrink the type first, then drop the oldest messages (like a real chat scrolling).
+  const room = H - capH - 86 - 122 - 56 - 70;
+  const rowW = W - 96 - 38;
+  const height = (list, fs) => list.reduce((t, r) => t + Math.ceil(((r.user.length + 2 + r.text.length + (/^rexbot$/i.test(r.user) ? 5 : 0)) * 0.58 * fs) / rowW) * fs * 1.3 + (/^rexbot$/i.test(r.user) ? 20 : 0), 0) + 18 * (list.length - 1);
+  let fs = 48;
+  while (fs > 30 && height(rows, fs) > room) fs -= 2;
+  while (rows.length > 1 && height(rows, fs) > room) rows.shift();
   return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: '#0e0e10', fontFamily: 'Inter', color: '#efeff1', position: 'relative' },
     showCap ? h('div', { display: 'flex', flexDirection: 'column', padding: '56px 60px 36px', background: '#ffffff', gap: 4 },
-      ...cap.map((l) => h('div', { display: 'flex', fontSize: 56, fontWeight: 800, color: '#0a0a0a', lineHeight: 1.12, letterSpacing: -1 }, l))) : null,
+      ...cap.map((l) => h('div', { display: 'flex', fontSize: capSize, fontWeight: 800, color: '#0a0a0a', lineHeight: 1.12, letterSpacing: -1 }, l))) : null,
     h('div', { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '26px 48px', borderBottom: '2px solid #2a2a2e', background: '#18181b' },
       h('div', { display: 'flex', fontSize: 28, fontWeight: 700, letterSpacing: 2, color: '#adadb8' }, 'STREAM CHAT'),
       h('div', { display: 'flex', alignItems: 'center', gap: 10, fontSize: 26, fontWeight: 700, color: '#ff4f4f' },
         h('div', { display: 'flex', width: 16, height: 16, borderRadius: 16, background: '#ff4f4f' }), 'LIVE'),
     ),
-    h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', flex: 1, padding: '28px 48px', gap: 18, background: '#18181b' },
+    h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', flex: 1, padding: '28px 48px', gap: 18, background: '#18181b', overflow: 'hidden' },
       ...rows.map((r) => {
         const bot = /^rexbot$/i.test(r.user);
         return h('div', { display: 'flex', flexWrap: 'wrap', alignItems: 'center', fontSize: fs, fontWeight: 500, lineHeight: 1.3,
@@ -271,18 +301,23 @@ async function chatTemplate({ headline, msgs, page, W, H, logo }) {
 async function popTemplate({ q, headline, accent, sub, page, W, H }) {
   const pal = POP[(q.get('c') || 'blue').toLowerCase()] || POP.blue;
   const rex = await dataUri('rex-full.png');
-  const all = lines(headline).concat(lines(accent));
-  const longest = Math.max(...all.map((l) => l.length), 1);
-  const size = Math.max(84, Math.min(170, Math.floor(1700 / longest)));
-  return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: pal.bg, fontFamily: 'Inter', color: pal.ink, position: 'relative', overflow: 'hidden', padding: '64px 64px' },
-    img(rex, 900, 678, { position: 'absolute', right: -250, bottom: -110, opacity: 0.95 }),
-    h('div', { display: 'flex', fontSize: 34, fontWeight: 800, letterSpacing: 6 }, 'REXBOT'),
-    h('div', { display: 'flex', flexDirection: 'column', marginTop: 70 },
-      ...lines(headline).map((l) => h('div', { display: 'flex', fontSize: size, fontWeight: 800, lineHeight: 0.98, letterSpacing: -6, textTransform: 'uppercase' }, l)),
-      ...lines(accent).map((l) => h('div', { display: 'flex', fontSize: size, fontWeight: 800, lineHeight: 0.98, letterSpacing: -6, textTransform: 'uppercase', color: pal.hi }, l)),
+  const head = lines(headline), acc = lines(accent);
+  const subSize = 36;
+  const subH = sub ? Math.max(1, Math.ceil((sub.length * 0.55 * subSize) / (W - 128))) * subSize * 1.3 + 36 : 0;
+  // Fixed zones: 64 pad + 40 header + 50 gap | text | Rex (400 tall) + 64 pad. Text gets what's left.
+  const rexH = 400, rexW = Math.round(rexH * 900 / 678);
+  const textH = H - 64 - 40 - 50 - rexH - 64 - subH;
+  const size = fit(head.concat(acc), { width: W - 128, height: textH, max: 170, min: 56, cw: 0.66, lh: 1.0 });
+  const line = (l, color) => h('div', { display: 'flex', fontSize: size, fontWeight: 800, lineHeight: 1.0, letterSpacing: -4, textTransform: 'uppercase', color }, l);
+  return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: pal.bg, fontFamily: 'Inter', color: pal.ink, position: 'relative', overflow: 'hidden', padding: '64px 64px 0' },
+    h('div', { display: 'flex', fontSize: 34, fontWeight: 800, letterSpacing: 6, height: 40 }, 'REXBOT'),
+    h('div', { display: 'flex', flexDirection: 'column', marginTop: 50, height: textH, overflow: 'hidden' },
+      ...head.map((l) => line(l, pal.ink)), ...acc.map((l) => line(l, pal.hi))),
+    sub ? h('div', { display: 'flex', fontSize: subSize, fontWeight: 700, lineHeight: 1.3, marginTop: 36, width: W - 128 }, sub) : null,
+    h('div', { display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'space-between', marginRight: -64 - 120 },
+      h('div', { display: 'flex', fontSize: 30, fontWeight: 800, marginBottom: 56 }, 'rexbotapp.com'),
+      img(rex, rexW, rexH, { marginBottom: -30 }),
     ),
-    sub ? h('div', { display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.3, marginTop: 44, maxWidth: 640 }, sub) : null,
-    h('div', { display: 'flex', position: 'absolute', left: 64, bottom: 56, fontSize: 30, fontWeight: 800 }, 'rexbotapp.com'),
     pagePill(page, pal.ink === '#ffffff'),
   );
 }
@@ -290,16 +325,26 @@ async function popTemplate({ q, headline, accent, sub, page, W, H }) {
 // ---------- notes: monospace patch notes on paper ----------
 async function notesTemplate({ headline, sub, msgs, page, W, H, logo }) {
   const items = lines(msgs).slice(0, 10);
-  const fs = items.length > 7 ? 32 : items.length > 5 ? 38 : 44;
+  const title = lines(headline);
+  const paperW = W - 160 - 120;
+  const tSize = fit(title, { width: paperW, height: 150, max: 54, min: 30, cw: 0.62, lh: 1.15 });
+  const titleH = title.reduce((n, l) => n + Math.ceil((l.length * 0.62 * tSize) / paperW), 0) * tSize * 1.15;
+  const subH = sub ? Math.ceil((sub.length * 0.62 * 28) / paperW) * 28 * 1.2 + 12 : 0;
+  // Paper height minus logo row, title block, gaps and footer = room for the list.
+  const room = H - 140 - 128 - 54 - 34 - titleH - subH - 26 - 44 - 60 - 30;
+  const listH = (list, f) => list.reduce((t, it) => t + Math.ceil((it.length * 0.62 * f) / (paperW - f * 0.62 - 18)) * f * 1.3, 0) + Math.round(f * 0.7) * (list.length - 1);
+  let fs = 44;
+  while (fs > 24 && listH(items, fs) > room) fs -= 2;
+  while (items.length > 1 && listH(items, fs) > room) items.pop();
   return h('div', { width: W, height: H, display: 'flex', background: '#2b2b2b', fontFamily: 'Mono', position: 'relative', padding: '70px 80px' },
     h('div', { display: 'flex', flexDirection: 'column', flex: 1, background: '#f4f1e8', color: '#151515', padding: '64px 60px', boxShadow: '0 30px 60px #00000080', transform: 'rotate(-1.2deg)' },
       h('div', { display: 'flex', alignItems: 'center', gap: 18, fontSize: 26, color: '#6b6b6b' },
         img(logo, 54, 54), 'REXBOT // OFFICIAL DOCUMENT'),
       h('div', { display: 'flex', flexDirection: 'column', marginTop: 34, paddingBottom: 26, borderBottom: '4px dashed #151515' },
-        ...lines(headline).map((l) => h('div', { display: 'flex', fontSize: 54, lineHeight: 1.15, letterSpacing: -1 }, l)),
+        ...title.map((l) => h('div', { display: 'flex', fontSize: tSize, lineHeight: 1.15, letterSpacing: -1 }, l)),
         sub ? h('div', { display: 'flex', fontSize: 28, color: '#6b6b6b', marginTop: 12 }, sub) : null,
       ),
-      h('div', { display: 'flex', flexDirection: 'column', gap: items.length > 7 ? 22 : 34, marginTop: 44, flex: 1 },
+      h('div', { display: 'flex', flexDirection: 'column', gap: Math.round(fs * 0.7), marginTop: 44, flex: 1 },
         ...items.map((it) => h('div', { display: 'flex', fontSize: fs, lineHeight: 1.3 },
           h('span', { color: '#0090bb', marginRight: 18 }, '-'), h('span', {}, it))),
       ),
@@ -314,15 +359,22 @@ async function notesTemplate({ headline, sub, msgs, page, W, H, logo }) {
 async function shotTemplate({ q, headline, sub, page, W, H }) {
   const s = SHOTS[(q.get('img') || 'chat').toLowerCase()] || SHOTS.chat;
   const shot = await dataUri(s.file);
-  const shotW = W - 120;
+  const head = lines(headline);
+  const hSize = fit(head, { width: W - 120, height: 230, max: 70, min: 40, cw: 0.56, lh: 1.05 });
+  const headH = Math.max(1, head.reduce((n, l) => n + Math.ceil((l.length * 0.56 * hSize) / (W - 120)), 0)) * hSize * 1.05;
+  const subH = sub ? Math.ceil((sub.length * 0.5 * 32) / (W - 120)) * 32 * 1.35 + 18 : 0;
+  // Everything above and below the screenshot is measured, so the screenshot gets only the space that's left.
+  const ratio = (s.file.includes('overlay') ? 904 : s.file.includes('discord') ? 1090 : 1038) / 1120;
+  const roomH = H - 72 - 34 - 16 - headH - subH - 30 - 46 - 56 - 20;
+  const shotW = Math.min(W - 120, Math.floor(roomH / ratio));
   return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: `linear-gradient(165deg, ${s.bg} 0%, #0b0b0f 70%)`, fontFamily: 'Inter', color: '#ffffff', position: 'relative', padding: '72px 60px 56px' },
     h('div', { display: 'flex', fontSize: 28, fontWeight: 800, letterSpacing: 4, color: '#ffffffb3' }, s.label.toUpperCase()),
     h('div', { display: 'flex', flexDirection: 'column', marginTop: 16 },
-      ...lines(headline).map((l) => h('div', { display: 'flex', fontSize: 70, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2.5 }, l))),
+      ...head.map((l) => h('div', { display: 'flex', fontSize: hSize, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2.5 }, l))),
     sub ? h('div', { display: 'flex', fontSize: 32, fontWeight: 500, color: '#ffffffcc', marginTop: 18, lineHeight: 1.35 }, sub) : null,
     h('div', { display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 30 },
       h('div', { display: 'flex', borderRadius: 22, overflow: 'hidden', border: '3px solid #ffffff26', boxShadow: '0 40px 80px #000000a0' },
-        img(shot, shotW, Math.round(shotW * (s.file.includes('overlay') ? 904 : s.file.includes('discord') ? 1090 : 1038) / 1120), { objectFit: 'cover' })),
+        img(shot, shotW, Math.round(shotW * ratio), { objectFit: 'cover' })),
     ),
     h('div', { display: 'flex', justifyContent: 'space-between', fontSize: 26, fontWeight: 700, color: '#ffffff99', marginTop: 20 },
       h('span', {}, 'rexbotapp.com'), h('span', {}, 'Free for streamers')),
@@ -333,11 +385,14 @@ async function shotTemplate({ q, headline, sub, page, W, H }) {
 // ---------- step: carousel slide ----------
 async function stepTemplate({ q, headline, sub, page, W, H, logo }) {
   const n = String(q.get('n') || '1').slice(0, 3);
+  const head = lines(headline);
+  const tSize = fit(head, { width: W - 160, height: 330, max: 80, min: 44, cw: 0.56, lh: 1.05 });
+  const sSize = sub ? fit([sub], { width: W - 160, height: 300, max: 40, min: 26, cw: 0.5, lh: 1.4 }) : 40;
   return h('div', { width: W, height: H, display: 'flex', flexDirection: 'column', background: '#f4f4f6', fontFamily: 'Inter', color: '#0a0a0a', position: 'relative', padding: '80px 80px 64px' },
     h('div', { display: 'flex', fontSize: 340, fontWeight: 800, lineHeight: 0.9, letterSpacing: -16, color: C.blue }, n.padStart(2, '0')),
     h('div', { display: 'flex', flexDirection: 'column', marginTop: 50 },
-      ...lines(headline).map((l) => h('div', { display: 'flex', fontSize: 80, fontWeight: 800, lineHeight: 1.05, letterSpacing: -3 }, l))),
-    sub ? h('div', { display: 'flex', fontSize: 40, fontWeight: 500, color: '#3a3a40', marginTop: 34, lineHeight: 1.4 }, sub) : null,
+      ...head.map((l) => h('div', { display: 'flex', fontSize: tSize, fontWeight: 800, lineHeight: 1.05, letterSpacing: -3 }, l))),
+    sub ? h('div', { display: 'flex', fontSize: sSize, fontWeight: 500, color: '#3a3a40', marginTop: 34, lineHeight: 1.4 }, sub) : null,
     h('div', { display: 'flex', flex: 1 }),
     h('div', { display: 'flex', alignItems: 'center', gap: 16, fontSize: 30, fontWeight: 800 },
       img(logo, 60, 60), h('span', { color: C.blue }, 'REX'), h('span', { marginLeft: -16 }, 'BOT'),
