@@ -18,6 +18,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/invite", "destination": "/partner-invite.html" },
     { "source": "/partner", "destination": "/partner-invite.html" },
     { "source": "/editors", "destination": "https://rextwitchbot-production.up.railway.app/editors" },
     { "source": "/editors.json", "destination": "https://rextwitchbot-production.up.railway.app/editors.json" },
