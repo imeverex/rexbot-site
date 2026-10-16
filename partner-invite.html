@@ -28,7 +28,7 @@
   <style>
     *{box-sizing:border-box}body{margin:0;background:#000;color:#f2f2f2;font:16px/1.65 Inter,system-ui,sans-serif}
     main{width:min(780px,100%);padding:32px 22px 54px;margin:auto}.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:22px;letter-spacing:-.04em;font-weight:800;color:#f2f2f2}.brand img{width:38px;height:38px;object-fit:contain}.brand em{color:#00c6ff;font-style:normal}
-    h1{font-size:clamp(28px,6vw,42px);letter-spacing:-.045em;line-height:1.1;margin:30px 0 22px}p{color:#b8b8b8;margin:0 0 16px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 6px}button,a.download{font:650 13px/1.4 Inter,system-ui,sans-serif;min-height:44px;padding:12px 17px;border:1px solid #383838;border-radius:0;background:#111;color:#f2f2f2;cursor:pointer;text-decoration:none}button.primary{background:#00c6ff;color:#000;border-color:#00c6ff}button:hover,a.download:hover{filter:brightness(1.12)}button:focus-visible,a:focus-visible{outline:2px solid #64d0ff;outline-offset:3px}#copyStatus{min-height:24px;font-size:12px;color:#b8b8b8;margin-bottom:18px}.poster{display:block;width:100%;height:auto;border:1px solid #1f1f1f}.note{font-size:12px;color:#949494;margin-top:18px}
+    h1{font-size:clamp(28px,6vw,42px);letter-spacing:-.045em;line-height:1.1;margin:30px 0 22px}p{color:#b8b8b8;margin:0 0 16px}a:focus-visible{outline:2px solid #64d0ff;outline-offset:3px}.poster{display:block;width:100%;height:auto;margin-top:28px;border:1px solid #1f1f1f}.note{font-size:12px;color:#949494;margin-top:18px}
   </style>
 </head>
 <body>
@@ -40,31 +40,8 @@
       <p>Basically, a small RexBot promo on your stream and an occasional chat message, in exchange for featuring your channel on the website and giving you some promotion on socials.</p>
       <p>The details are in the image. Message me back if you’re interested!</p>
     </div>
-    <div class="actions">
-      <button class="primary" type="button" id="copyLink">Copy share link</button>
-      <button type="button" id="copyMessage">Copy text + image link</button>
-      <a class="download" href="/partner-invite.png" download="rexbot-partner-invite.png">Download image</a>
-    </div>
-    <p id="copyStatus" role="status" aria-live="polite"></p>
     <img class="poster" src="/partner-invite.png" width="1546" height="2000" alt="RexBot Community Partner overview. A small on-screen promo and hourly chat message in exchange for a featured website profile, social spotlights and setup help. A 60-day trial, no exclusivity or follower minimum, and 24 hours' notice to leave. Message me back if you're interested!">
     <p class="note">A proposed community partnership.</p>
   </main>
-  <script>
-    const shareLink = 'https://rexbotapp.com/partner';
-    async function copy(value, success) {
-      const status = document.getElementById('copyStatus');
-      try {
-        await navigator.clipboard.writeText(value);
-        status.textContent = success;
-      } catch (_) {
-        status.textContent = 'Select and copy: ' + value;
-      }
-    }
-    document.getElementById('copyLink').addEventListener('click', () => copy(shareLink, 'Link copied. Paste it into Discord.'));
-    document.getElementById('copyMessage').addEventListener('click', () => {
-      const message = [...document.querySelectorAll('#inviteMessage p')].map(p => p.textContent).join('\n\n');
-      copy(message + '\n\nhttps://rexbotapp.com/partner-invite.png', 'Message and image link copied. Paste them into Discord.');
-    });
-  </script>
 </body>
 </html>
