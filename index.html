@@ -218,16 +218,16 @@ html{overflow-x:hidden}
   </div>
   <!-- Confirmed partners only. Keep this crew to a maximum of five profiles. -->
   <ul class="partner-grid">
-    <li><a class="partner-card" href="https://www.twitch.tv/kinneticenergy" target="_blank" rel="noopener noreferrer" aria-label="Visit KinneticEnergy on Twitch (opens in a new tab)">
-      <span class="partner-stream"><img src="/partners/kinneticenergy-stream.jpg" alt="A moment from KinneticEnergy's Battlefield 6 stream" width="640" height="360" loading="lazy"></span>
+    <li><a class="partner-card" data-partner="kinneticenergy" href="https://www.twitch.tv/kinneticenergy" target="_blank" rel="noopener noreferrer" aria-label="Visit KinneticEnergy on Twitch (opens in a new tab)">
+      <span class="partner-stream"><span class="partner-live" role="status" hidden>Live now</span><img src="/partners/kinneticenergy-stream.jpg" alt="A moment from KinneticEnergy's Battlefield 6 stream" width="640" height="360" loading="lazy"></span>
       <span class="partner-body"><span class="partner-avatar" aria-hidden="true"><img src="/partners/kinneticenergy-avatar.jpg" alt="" width="80" height="80" loading="lazy"></span>
-      <span class="partner-info"><span class="partner-label">Community partner</span><h3>KinneticEnergy</h3><span class="partner-handle">twitch.tv/kinneticenergy</span><span class="partner-visit"><img src="/logos/twitch.png" alt="" width="18" height="18">Visit channel <span aria-hidden="true">&#8599;</span></span></span>
+      <span class="partner-info"><span class="partner-label">Community partner</span><h3>KinneticEnergy</h3><span class="partner-handle">twitch.tv/kinneticenergy</span><span class="partner-visit"><img src="/logos/twitch.png" alt="" width="18" height="18"><span class="partner-visit-copy">Visit channel</span> <span aria-hidden="true">&#8599;</span></span></span>
       <span class="partner-number" aria-hidden="true">01</span></span>
     </a></li>
-    <li><a class="partner-card" href="https://www.twitch.tv/ganknspank72" target="_blank" rel="noopener noreferrer" aria-label="Visit GankNSpank72 on Twitch (opens in a new tab)">
-      <span class="partner-stream"><img src="/partners/ganknspank72-stream.jpg" alt="A moment from GankNSpank72's Battlefield 6 stream" width="640" height="360" loading="lazy"></span>
+    <li><a class="partner-card" data-partner="ganknspank72" href="https://www.twitch.tv/ganknspank72" target="_blank" rel="noopener noreferrer" aria-label="Visit GankNSpank72 on Twitch (opens in a new tab)">
+      <span class="partner-stream"><span class="partner-live" role="status" hidden>Live now</span><img src="/partners/ganknspank72-stream.jpg" alt="A moment from GankNSpank72's Battlefield 6 stream" width="640" height="360" loading="lazy"></span>
       <span class="partner-body"><span class="partner-avatar" aria-hidden="true"><img src="/partners/ganknspank72-avatar.png" alt="" width="80" height="80" loading="lazy"></span>
-      <span class="partner-info"><span class="partner-label">Community partner</span><h3>GankNSpank72</h3><span class="partner-handle">twitch.tv/ganknspank72</span><span class="partner-visit"><img src="/logos/twitch.png" alt="" width="18" height="18">Visit channel <span aria-hidden="true">&#8599;</span></span></span>
+      <span class="partner-info"><span class="partner-label">Community partner</span><h3>GankNSpank72</h3><span class="partner-handle">twitch.tv/ganknspank72</span><span class="partner-visit"><img src="/logos/twitch.png" alt="" width="18" height="18"><span class="partner-visit-copy">Visit channel</span> <span aria-hidden="true">&#8599;</span></span></span>
       <span class="partner-number" aria-hidden="true">02</span></span>
     </a></li>
   </ul>
@@ -463,4 +463,4 @@ function run(){S.forEach(([t,f])=>setTimeout(f,t*1000));setTimeout(run,23000)}ru
 const seq=["w","w","wa","wa","w","wd","wd","w"," w","w","ws","s"];let n=0;
 setInterval(()=>{const cur=seq[n++%seq.length];Object.entries(keys).forEach(([k,el])=>el.classList.toggle("on",cur.includes(k)));
  mouse.l.classList.toggle("on",Math.random()<.45);mouse.r.classList.toggle("on",n%9===0)},260)})()
-</script><script>(()=>{const v=document.querySelector(".ov-video"),slide=document.getElementById("feature-overlays");if(!v||!slide||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const sync=()=>{if(slide.hidden)v.pause();else v.play().catch(()=>{})};new MutationObserver(sync).observe(slide,{attributes:true,attributeFilter:["hidden"]});sync()})()</script></body></html>
+</script><script>(()=>{const v=document.querySelector(".ov-video"),slide=document.getElementById("feature-overlays");if(!v||!slide||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const sync=()=>{if(slide.hidden)v.pause();else v.play().catch(()=>{})};new MutationObserver(sync).observe(slide,{attributes:true,attributeFilter:["hidden"]});sync()})()</script><script src="/partners.js" defer></script></body></html>
