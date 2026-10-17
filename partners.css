@@ -36,5 +36,5 @@
 @media(prefers-reduced-motion:reduce){.partner-card{transition:none}}
 
 /* Frame the supplied screenshots inside the card, excluding phone UI and side bars. */
-.partner-card[data-partner="smoottoochill"] .partner-avatar img{object-position:50% 38.7%;transform:scale(2)}
+.partner-card[data-partner="smoottoochill"] .partner-avatar img{height:auto;aspect-ratio:1;object-position:50% 38.7%;transform:scale(2)}
 .partner-card[data-partner="smoottoochill"] .partner-stream img{transform:translateX(-4.2%) scale(1.25)}
