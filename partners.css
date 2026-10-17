@@ -4,6 +4,7 @@
 .partners .eyebrow{margin:0 0 12px}
 .partners .section-title{margin:0;line-height:1.1}
 .partners-intro{max-width:440px;margin:0;color:var(--rex-secondary);font-size:15px;line-height:1.7}
+.partners-swipe-hint{display:none}
 .partner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;list-style:none;margin:0;padding:0}
 .partner-grid>li{min-width:0}
 .partner-card{position:relative;display:flex;flex-direction:column;height:100%;border:1px solid var(--rex-edge);background:var(--rex-card);color:var(--rex-ink);text-decoration:none;transition:border-color .18s,background .18s}
@@ -30,6 +31,9 @@
 .partners-footer a{color:var(--rex-accent);text-underline-offset:4px}
 @media(min-width:1200px){.partner-grid:has(>li:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}.partner-grid:has(>li:nth-child(3)) .partner-body{gap:16px;padding-right:20px;padding-left:20px}}
 @media(max-width:1000px){.partners-heading{display:block}.partners-intro{margin-top:18px;max-width:560px}.partner-body{display:block;padding:0 22px 26px}.partner-info{padding-top:20px}}
-@media(max-width:650px){.partners{padding:44px 0 48px}.partner-grid{grid-template-columns:1fr;gap:22px}.partner-body{display:flex;gap:16px;padding-right:18px;padding-left:18px}.partner-avatar{flex-basis:70px;width:70px;height:70px;margin-top:-25px}.partner-card h3{font-size:24px}.partner-label{font-size:9px}.partner-handle{font-size:11px}.partners-footer{display:block}.partners-footer a{display:inline-block;margin-top:8px}}
+@media(max-width:650px){.partners{padding:44px 0 48px}.partners-swipe-hint{display:block;margin:0 0 10px;color:var(--rex-secondary);font-size:12px}.partner-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:88%;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:0;padding-bottom:14px;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:var(--rex-accent) var(--rex-canvas)}.partner-grid>li{scroll-snap-align:start}.partner-card:focus-visible{outline-offset:-4px}.partner-body{display:flex;gap:16px;padding-right:18px;padding-left:18px}.partner-avatar{flex-basis:70px;width:70px;height:70px;margin-top:-25px}.partner-card h3{font-size:24px}.partner-label{font-size:9px}.partner-handle{font-size:11px}.partners-footer{display:block}.partners-footer a{display:inline-block;margin-top:8px}}
 @media(max-width:360px){.partner-body{display:block}.partner-info{padding-top:18px}}
 @media(prefers-reduced-motion:reduce){.partner-card{transition:none}}
+
+/* Branded fallback until the confirmed partner channel images are available. */
+.partner-stream--brand img{object-fit:contain;padding:24px}
