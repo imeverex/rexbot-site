@@ -13,6 +13,15 @@
 .partner-live[hidden]{display:none!important}
 .partner-live::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
 .partner-stream img{display:block;width:100%;height:100%;object-fit:cover}
+/* Live player: beside the card link (an iframe can't sit inside a link), laid over the stream area. */
+.partner-grid>li.has-player{position:relative;grid-column:span 2}
+.has-player .partner-stream{aspect-ratio:auto;height:var(--player-h)}
+.partner-player{position:absolute;top:1px;left:1px;right:1px;height:var(--player-h);background:#000}
+.partner-player:has(>.partner-play){background:transparent}
+.partner-player iframe{display:block;width:100%;height:100%;border:0}
+.partner-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;background:#000a;color:#fff;font-size:15px;font-weight:800;letter-spacing:.02em}
+.partner-play:hover,.partner-play:focus-visible{background:#000c;outline:3px solid var(--rex-accent);outline-offset:-3px}
+.partner-info>.partner-live{position:static;margin-bottom:12px;box-shadow:none}
 .partner-body{position:relative;display:block;align-items:flex-start;gap:22px;width:100%;padding:0 28px 28px;border-top:2px solid var(--rex-accent)}
 .partner-card:hover{border-color:var(--rex-accent);background:var(--rex-workspace)}
 .partner-card:focus-visible{outline:3px solid var(--rex-accent);outline-offset:5px}

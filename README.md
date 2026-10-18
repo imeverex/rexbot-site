@@ -22,7 +22,18 @@ its files in `partners/`; styles are scoped in `partners.css`. Only list confirm
 partners and use their approved public profile and stream imagery. Keep images
 local so visitors do not need to load Twitch embeds or tracking to view the cards.
 Use a stream still, not an advertisement, and do not imply that a saved still is
-live. The two initial channel links are KinneticEnergy and GankNSpank72.
+live.
+
+While a partner is confirmed live, `partners.js` plays their stream muted in the
+card through Twitch's official player (`player.twitch.tv`, `parent` set to the
+page's host). Twitch requires the player to be at least 400x300 and uncovered, so
+the live card spans two grid columns, the player sits beside the card link rather
+than inside it, the Live now badge moves into the card text, and the phone swipe
+carousel keeps the still and the Twitch link. The player autoplays only where
+`/api/analytics-consent` reports no opt-in is needed (the US and Canada outside
+Quebec) and the visitor has not asked for reduced motion; everywhere else the card
+shows a Watch here button and Twitch loads only when it is pressed. The player is
+removed as soon as the partner is no longer confirmed live. The two initial channel links are KinneticEnergy and GankNSpank72.
 
 `partners.js` checks `/partners/status.json` every minute while the page is
 visible. The same-origin rewrite forwards to the bot's fixed partner allowlist
