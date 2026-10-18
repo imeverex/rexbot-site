@@ -6,6 +6,7 @@
   let expiry;
   let inFlight;
   const hide = () => cards.forEach(card => {
+    stopPlayer(card);
     card.querySelector('.partner-live').hidden = true;
     card.querySelector('.partner-visit-copy').textContent = 'Visit channel';
     card.setAttribute('aria-label', `Visit ${card.querySelector('h3').textContent} on Twitch (opens in a new tab)`);
@@ -26,6 +27,7 @@
       if (inFlight !== controller || document.hidden) return;
       cards.forEach(card => {
         const live = data.partners?.[card.dataset.partner] === true;
+        if (live) showPlayer(card); else stopPlayer(card);
         card.querySelector('.partner-live').hidden = !live;
         card.querySelector('.partner-visit-copy').textContent = live ? 'Watch live' : 'Visit channel';
         card.setAttribute('aria-label', `${live ? 'Watch' : 'Visit'} ${card.querySelector('h3').textContent}${live ? ' live' : ''} on Twitch (opens in a new tab)`);
@@ -42,6 +44,67 @@
       }
     }
   }
+  // Live partners play muted in the card through Twitch's official player.
+  // Twitch requires the player to be at least 400x300 and uncovered, so it
+  // sits beside the card link (not inside it), the Live badge moves out from
+  // under it, and narrow cards (phones) keep the still and the Twitch link.
+  // It autoplays only where the site may start third-party tracking without
+  // asking first (see /api/analytics-consent); elsewhere, or with reduced
+  // motion, visitors press Watch here to load it.
+  const MIN_W = 400, MIN_H = 300;
+  let autoplay;
+  const mayAutoplay = () => autoplay ??= matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? Promise.resolve(false)
+    : fetch('/api/analytics-consent', {credentials: 'omit', cache: 'no-store'})
+      .then(r => r.ok ? r.json() : {requireOptIn: true}).then(d => d.requireOptIn === false).catch(() => false);
+  const playerSize = card => {
+    const w = card.querySelector('.partner-stream').getBoundingClientRect().width;
+    return w >= MIN_W ? Math.max(MIN_H, Math.round(w * 9 / 16)) : 0;
+  };
+  function embed(box, card) {
+    const frame = document.createElement('iframe');
+    frame.src = `https://player.twitch.tv/?channel=${encodeURIComponent(card.dataset.partner)}&parent=${encodeURIComponent(location.hostname)}&muted=true&autoplay=true`;
+    frame.title = `${card.querySelector('h3').textContent} live on Twitch`;
+    frame.allow = 'autoplay; fullscreen; picture-in-picture';
+    frame.allowFullscreen = true;
+    box.replaceChildren(frame);
+  }
+  async function showPlayer(card) {
+    // A live card spans two grid columns (CSS), then is measured; the swipe
+    // carousel on phones never gets a player.
+    const li = card.parentElement, playing = li.querySelector('.partner-player');
+    li.classList.add('has-player');
+    const height = matchMedia('(min-width: 651px)').matches ? playerSize(card) : 0;
+    if (!height) return stopPlayer(card);
+    li.style.setProperty('--player-h', height + 'px');
+    if (playing) return;
+    const box = document.createElement('div');
+    box.className = 'partner-player';
+    li.append(box);
+    card.querySelector('.partner-info').prepend(card.querySelector('.partner-live'));
+    if (await mayAutoplay()) { if (box.isConnected) embed(box, card); return; }
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'partner-play';
+    button.innerHTML = '<span aria-hidden="true">&#9654;</span> Watch here';
+    button.setAttribute('aria-label', `Watch ${card.querySelector('h3').textContent} live here (loads Twitch's player)`);
+    button.addEventListener('click', () => embed(box, card));
+    if (box.isConnected) box.replaceChildren(button);
+  }
+  function stopPlayer(card) {
+    const li = card.parentElement;
+    li.querySelector('.partner-player')?.remove();
+    li.classList.remove('has-player');
+    li.style.removeProperty('--player-h');
+    card.querySelector('.partner-stream').prepend(card.querySelector('.partner-live'));
+  }
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => cards.forEach(card => {
+      if (!card.querySelector('.partner-live').hidden) showPlayer(card);
+    }), 200);
+  });
   document.addEventListener('visibilitychange', refresh);
   window.addEventListener('pagehide', () => {clearTimeout(timer); clearTimeout(expiry); inFlight?.abort(); hide();});
   window.addEventListener('pageshow', refresh);
