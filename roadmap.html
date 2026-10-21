@@ -77,7 +77,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
   <div class="eyebrow">What's shipped, what's next</div>
   <h1><span>REX</span>BOT ROADMAP</h1>
   <p class="rm-lead">What's live, what's up next and what's planned for later across Twitch, Discord and your stream.</p>
-  <p class="rm-note">Updated October 9, 2026. Shipped means live right now. Some features need Twitch permissions or a compatible settings file.</p>
+  <p class="rm-note">Updated October 21, 2026. Shipped means live right now. Some features need Twitch permissions or a compatible settings file.</p>
   <div class="rm-stats">
     <div class="rm-stat"><b id="stat-current">0</b><span>Shipped</span></div>
     <div class="rm-stat dim"><b id="stat-next">0</b><span>Up next</span></div>
@@ -172,6 +172,14 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
       [
         "Raid suggestions",
         "Live channels worth raiding, with favorites, friends and follows first, and the reason for each."
+      ],
+      [
+        "Chat Currency",
+        "Your own named currency that viewers earn while watching. They check it with !balance and bet it on !flip, !slots and !roulette."
+      ],
+      [
+        "Twitch Rewards",
+        "Make channel point rewards from the dashboard that post in chat, give out your chat currency or request a song. If Rex can't do it, the viewer gets their points back."
       ],
       [
         "Meteor Strike",
@@ -304,12 +312,6 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
   }
 ];
   var LATER = [
-  {
-    "title": "Loyalty and currencies",
-    "desc": "Reward your community with points and custom currencies.",
-    "cat": "twitch",
-    "tag": "twitch"
-  },
   {
     "title": "Giveaways and polls",
     "desc": "Run community giveaways and collect viewer votes.",
