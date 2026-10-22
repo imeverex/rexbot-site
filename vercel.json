@@ -36,7 +36,7 @@
     },
     {
       "source": "/dashboard",
-      "destination": "https://rextwitchbot-production.up.railway.app/dashboard"
+      "destination": "/api/dashboard"
     },
     {
       "source": "/commands",
