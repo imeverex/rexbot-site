@@ -10,14 +10,14 @@
   bar.id = 'rexStatusNotice';
   bar.setAttribute('role', 'status');
   bar.style.cssText = 'position:relative;z-index:1000;display:flex;gap:12px;align-items:center;justify-content:center;' +
-    'padding:10px 44px 10px 16px;background:#2A1A0C;border-bottom:2px solid #C8733A;color:#F4E6DA;' +
+    'padding:10px 44px 10px 16px;background:#C62828;border-bottom:2px solid #8E1414;color:#FFFFFF;' +
     'font:500 14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center;';
   var text = document.createElement('span');
   text.textContent = NOTICE + ' ';
   var a = document.createElement('a');
   a.href = LINK; a.target = '_blank'; a.rel = 'noopener noreferrer';
   a.textContent = 'Railway status';
-  a.style.cssText = 'color:#FFB37A;text-decoration:underline;white-space:nowrap;';
+  a.style.cssText = 'color:#FFFFFF;font-weight:700;text-decoration:underline;white-space:nowrap;';
   text.appendChild(a);
   var close = document.createElement('button');
   close.type = 'button'; close.setAttribute('aria-label', 'Hide this notice'); close.textContent = '×';
