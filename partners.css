@@ -47,3 +47,9 @@
 /* Frame the supplied screenshots inside the card, excluding phone UI and side bars. */
 .partner-card[data-partner="smoottoochill"] .partner-avatar img{height:auto;aspect-ratio:1;object-position:50% 38.7%;transform:scale(2)}
 .partner-card[data-partner="smoottoochill"] .partner-stream img{transform:translateX(-4.2%) scale(1.25)}
+
+/* Crop the supplied channel screenshot in CSS, preserving the original pixels.
+   Banner source: x=10..453, y=0..415; avatar source: x=48..108, y=436..496.
+   The banner excludes Twitch's offline panel, and the avatar excludes channel UI. */
+.partner-card[data-partner="m3rlyn_n"] .partner-stream img{position:absolute;left:-2.257%;top:50%;width:140.406%;max-width:none;height:auto;transform:translateY(-40.135%)}
+.partner-card[data-partner="m3rlyn_n"] .partner-avatar img{position:absolute;left:-80%;top:-726.667%;width:1036.667%;max-width:none;height:auto}

@@ -19,7 +19,9 @@ and must not be cached across visitors. Unknown locations keep opt-in.
 The homepage `#partners` section features confirmed community partners, with a
 maximum of five profiles. Add or remove the whole list item in `index.html` and
 its files in `partners/`; styles are scoped in `partners.css`. Only list confirmed
-partners and use their approved public profile and stream imagery. Keep images
+partners and use their approved public profile and stream imagery. M3rlyn_n's card
+uses the supplied channel screenshot, cropped in CSS to show the wizard artwork
+and profile avatar without Twitch's offline panel or follower count. Keep images
 local so visitors do not need to load Twitch embeds or tracking to view the cards.
 Use a stream still, not an advertisement, and do not imply that a saved still is
 live.
