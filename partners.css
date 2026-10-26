@@ -71,7 +71,7 @@
 .partner-details dt{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rex-blue);margin-bottom:8px}
 .partner-details dd{margin:0;color:var(--rex-ink);font-size:14px;line-height:1.5}
 .partner-games{display:flex;flex-wrap:wrap;gap:7px}
-.partner-games span{border:1px solid var(--rex-edge);padding:5px 9px;font-size:12px;background:var(--rex-card);color:var(--rex-blue)}
+.partner-games span{border:1px solid var(--rex-edge);padding:5px 9px;font-size:12px;background:var(--rex-card)}
 @media(min-width:1001px){.partner-grid>li{grid-template-columns:minmax(402px,1fr) minmax(0,1fr);min-height:470px}}
 
 /* The channel card and profile copy form one continuous partner panel. */
