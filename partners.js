@@ -5,24 +5,54 @@
   if (!spotlight) return;
   const slides = [...spotlight.children];
   if (!slides.length) return;
-  let index = 0, timer;
+  let index = 0, timer, raf;
   let hovering = spotlight.matches(':hover');
   const focused = () => spotlight.contains(document.activeElement);
+  const CYCLE = 15000;
+  const bar = section.querySelector('.partners-cycle-bar');
+  let cycleStart = 0;
   section.setAttribute('aria-roledescription', 'carousel');
   slides.forEach((slide, i) => {
     slide.setAttribute('aria-roledescription', 'slide');
     slide.setAttribute('role', 'group');
     slide.setAttribute('aria-label', `${i + 1} of ${slides.length}`);
   });
+  function shouldRun() {
+    return slides.length > 1 && !hovering && !focused() && !document.hidden;
+  }
+  function startProgress() {
+    stopProgress();
+    if (!bar || !shouldRun()) return;
+    cycleStart = Date.now();
+    if (bar) bar.style.width = '0%';
+    raf = requestAnimationFrame(drawProgress);
+  }
+  function stopProgress() {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }
+  function drawProgress() {
+    if (!bar) return;
+    const elapsed = Math.min(Date.now() - cycleStart, CYCLE);
+    bar.style.width = `${(elapsed / CYCLE) * 100}%`;
+    if (elapsed < CYCLE && shouldRun()) raf = requestAnimationFrame(drawProgress);
+  }
+  function resetProgress() {
+    stopProgress();
+    cycleStart = Date.now();
+    if (bar) bar.style.width = '0%';
+    if (shouldRun()) startProgress();
+  }
   function schedule() {
     clearTimeout(timer);
-    if (slides.length > 1 && !hovering && !focused() && !document.hidden) {
+    if (shouldRun()) {
       timer = setTimeout(() => {
         index = (index + 1) % slides.length;
         slides.forEach((slide, i) => {slide.hidden = i !== index;});
         section.dispatchEvent(new Event('partnerchange'));
-        schedule();
-      }, 15000);
+      }, CYCLE);
+      startProgress();
+    } else {
+      stopProgress();
     }
   }
   spotlight.addEventListener('pointerenter', event => {
@@ -35,6 +65,7 @@
   document.addEventListener('visibilitychange', schedule);
   window.addEventListener('pagehide', () => clearTimeout(timer));
   window.addEventListener('pageshow', schedule);
+  section.addEventListener('partnerchange', resetProgress);
   schedule();
 })();
 // Only show a live claim while a recent, successful Twitch check confirms it.

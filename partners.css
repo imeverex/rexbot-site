@@ -5,6 +5,10 @@
 .partners .section-title{margin:0;line-height:1.1}
 .partners-intro{max-width:440px;margin:0;color:var(--rex-secondary);font-size:15px;line-height:1.7}
 
+/* 15-second cycle progress bar toward the next partner card. */
+.partners-cycle{position:relative;height:3px;background:var(--rex-edge);margin:22px 0 0;border-radius:2px;overflow:hidden}
+.partners-cycle-bar{position:absolute;inset:0;width:0%;background:var(--rex-blue);transition:none}
+
 .partner-grid{list-style:none;margin:0;padding:0}
 .partner-grid>li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
 .partner-grid>li[hidden]{display:none!important}
