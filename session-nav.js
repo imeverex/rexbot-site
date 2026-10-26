@@ -4,7 +4,9 @@
   let authenticated = false;
   let checking = false;
   function updateLinks() {
-    document.querySelectorAll('a[href="/twitch/login"]').forEach(link => {
+    document.querySelectorAll('a[href]').forEach(link => {
+      const url = new URL(link.getAttribute('href'), location.href);
+      if (url.origin !== location.origin || url.pathname !== '/twitch/login') return;
       const node = link.querySelector('span') || [...link.childNodes].find(child => child.nodeType === Node.TEXT_NODE && child.textContent.trim());
       if (!node) return;
       if (!originals.has(link)) originals.set(link, {node, text:node.textContent});
@@ -14,7 +16,8 @@
     });
     if (!authenticated) {
       for (const [link, original] of originals) {
-        if (link.getAttribute('href') !== '/dashboard') continue;
+        const url = new URL(link.getAttribute('href'), location.href);
+        if (url.origin !== location.origin || url.pathname !== '/dashboard') continue;
         link.href = '/twitch/login';
         if (original.node.textContent !== original.text) original.node.textContent = original.text;
       }
