@@ -25,7 +25,10 @@
     const back = document.querySelector('[data-contact-back]');
     if (back) {
       const href = authenticated ? '/dashboard#contact' : '/';
-      if (back.getAttribute('href') !== href) back.href = href;
+      const current = new URL(back.getAttribute('href'), location.href);
+      const target = new URL(href, location.href);
+      // Referral tags may be added independently; compare destinations without stripping them.
+      if (current.origin !== target.origin || current.pathname !== target.pathname || current.hash !== target.hash) back.href = href;
       back.querySelector('span').textContent = authenticated ? 'Back to dashboard' : 'Back to home';
     }
   }
