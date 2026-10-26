@@ -1,3 +1,42 @@
+// Rotate every 15 seconds. Hover and keyboard focus hold the current partner.
+(() => {
+  const section = document.querySelector('#partners');
+  const spotlight = section?.querySelector('.partner-grid');
+  if (!spotlight) return;
+  const slides = [...spotlight.children];
+  if (!slides.length) return;
+  let index = 0, timer;
+  let hovering = spotlight.matches(':hover');
+  const focused = () => spotlight.contains(document.activeElement);
+  section.setAttribute('aria-roledescription', 'carousel');
+  slides.forEach((slide, i) => {
+    slide.setAttribute('aria-roledescription', 'slide');
+    slide.setAttribute('role', 'group');
+    slide.setAttribute('aria-label', `${i + 1} of ${slides.length}`);
+  });
+  function schedule() {
+    clearTimeout(timer);
+    if (slides.length > 1 && !hovering && !focused() && !document.hidden) {
+      timer = setTimeout(() => {
+        index = (index + 1) % slides.length;
+        slides.forEach((slide, i) => {slide.hidden = i !== index;});
+        section.dispatchEvent(new Event('partnerchange'));
+        schedule();
+      }, 15000);
+    }
+  }
+  spotlight.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {hovering = true; schedule();}
+  });
+  spotlight.addEventListener('pointerleave', () => {hovering = false; schedule();});
+  spotlight.addEventListener('pointercancel', () => {hovering = false; schedule();});
+  spotlight.addEventListener('focusin', schedule);
+  spotlight.addEventListener('focusout', () => queueMicrotask(schedule));
+  document.addEventListener('visibilitychange', schedule);
+  window.addEventListener('pagehide', () => clearTimeout(timer));
+  window.addEventListener('pageshow', schedule);
+  schedule();
+})();
 // Only show a live claim while a recent, successful Twitch check confirms it.
 (() => {
   const cards = [...document.querySelectorAll('.partner-card[data-partner]')];
@@ -70,8 +109,8 @@
     box.replaceChildren(frame);
   }
   async function showPlayer(card) {
-    // A live card spans two grid columns (CSS), then is measured; the swipe
-    // carousel on phones never gets a player.
+    // Only the visible spotlight may load a player. Narrow cards keep the still.
+    if (card.closest('li').hidden) return stopPlayer(card);
     const li = card.parentElement, playing = li.querySelector('.partner-player');
     li.classList.add('has-player');
     const height = matchMedia('(min-width: 651px)').matches ? playerSize(card) : 0;
@@ -98,6 +137,9 @@
     li.style.removeProperty('--player-h');
     card.querySelector('.partner-stream').prepend(card.querySelector('.partner-live'));
   }
+  document.querySelector('#partners').addEventListener('partnerchange', () => cards.forEach(card => {
+    if (!card.querySelector('.partner-live').hidden) showPlayer(card); else stopPlayer(card);
+  }));
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
