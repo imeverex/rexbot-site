@@ -8,7 +8,7 @@
   let index = 0, timer, raf;
   let hovering = spotlight.matches(':hover');
   const focused = () => spotlight.contains(document.activeElement);
-  const CYCLE = 15000;
+  const CYCLE = 8000;
   const bar = section.querySelector('.partners-cycle-bar');
   let cycleStart = 0;
   section.setAttribute('aria-roledescription', 'carousel');

@@ -19,7 +19,7 @@
 .partner-bio-source{display:block;margin-top:20px;color:var(--rex-subtle);font-size:11px}
 
 .partner-grid>li{min-width:0}
-.partner-card{position:relative;display:flex;flex-direction:column;height:100%;border:1px solid var(--rex-edge);background:var(--rex-card);color:var(--rex-ink);text-decoration:none;transition:border-color .18s,background .18s}
+.partner-card{position:relative;display:flex;flex-direction:column;height:100%;border:1px solid var(--rex-edge);background:var(--rex-card);color:var(--rex-ink);text-decoration:none;transition:border-color .6s,background .6s,color .6s}
 .partner-stream{position:relative;display:block;width:100%;aspect-ratio:2.4;overflow:hidden;background:var(--rex-canvas)}
 .partner-live{position:absolute;z-index:1;top:12px;left:12px;display:inline-flex;align-items:center;gap:7px;padding:7px 10px;background:#c91023;color:#fff;font-size:11px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;border-radius:3px;box-shadow:0 2px 8px #0006}
 .partner-live[hidden]{display:none!important}
@@ -41,7 +41,7 @@
 .partner-avatar img{display:block;width:100%;height:100%;object-fit:cover}
 .partner-info{display:block;min-width:0;padding-top:24px}
 .partner-label{display:block;margin-bottom:8px;color:var(--rex-blue);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
-.partner-card h3{margin:0 0 5px;font-size:clamp(20px,2.2vw,30px);font-weight:800;line-height:1.2;letter-spacing:-.045em;overflow-wrap:anywhere}
+.partner-card h3{margin:0 0 5px;font-size:clamp(20px,2.2vw,30px);font-weight:800;line-height:1.2;letter-spacing:-.045em;overflow-wrap:anywhere;color:var(--rex-blue)}
 .partner-handle{display:block;color:var(--rex-secondary);font-size:12px;overflow-wrap:anywhere}
 .partner-visit{display:flex;align-items:center;gap:9px;margin-top:22px;font-size:13px;font-weight:700;color:var(--rex-accent)}
 .partner-visit img{object-fit:contain}
@@ -68,10 +68,10 @@
 /* Profile facts stay beside the bio and wrap naturally on narrow screens. */
 .partner-details{margin:24px 0 0;display:grid;gap:18px}
 .partner-details>div{min-width:0}
-.partner-details dt{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rex-secondary);margin-bottom:8px}
+.partner-details dt{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rex-blue);margin-bottom:8px}
 .partner-details dd{margin:0;color:var(--rex-ink);font-size:14px;line-height:1.5}
 .partner-games{display:flex;flex-wrap:wrap;gap:7px}
-.partner-games span{border:1px solid var(--rex-edge);padding:5px 9px;font-size:12px;background:var(--rex-card)}
+.partner-games span{border:1px solid var(--rex-edge);padding:5px 9px;font-size:12px;background:var(--rex-card);color:var(--rex-blue)}
 @media(min-width:1001px){.partner-grid>li{grid-template-columns:minmax(402px,1fr) minmax(0,1fr);min-height:470px}}
 
 /* The channel card and profile copy form one continuous partner panel. */
