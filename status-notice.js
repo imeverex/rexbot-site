@@ -1,9 +1,7 @@
 // Site-wide service notice, shown on the public pages and (through
 // api/dashboard.js) on the dashboard. To take it down, empty NOTICE.
 (function () {
-  var NOTICE = 'Following the recent security breach at our hosting provider, Railway, we took extra precautions to protect RexBot and our community. ' +
-    'RexBot and your data were not affected. As part of these precautions, you may need to reconnect some services in your dashboard. ' +
-    'Thank you for your patience and continued support. \u2014 Everex';
+  var NOTICE = '';
   if (!NOTICE || document.getElementById('rexStatusNotice')) return;
   var bar = document.createElement('div');
   bar.id = 'rexStatusNotice';
