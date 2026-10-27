@@ -1,4 +1,4 @@
-// Rotate every 15 seconds. Hover and keyboard focus hold the current partner.
+// Rotate automatically. Hover and keyboard focus hold the current partner.
 (() => {
   const section = document.querySelector('#partners');
   const spotlight = section?.querySelector('.partner-grid');
@@ -49,6 +49,7 @@
         index = (index + 1) % slides.length;
         slides.forEach((slide, i) => {slide.hidden = i !== index;});
         section.dispatchEvent(new Event('partnerchange'));
+        schedule();
       }, CYCLE);
       startProgress();
     } else {
