@@ -1,73 +1,91 @@
-// Rotate automatically. Hover and keyboard focus hold the current partner.
+// One controller owns the visible profile, indicator and eight-second cycle.
 (() => {
   const section = document.querySelector('#partners');
   const spotlight = section?.querySelector('.partner-grid');
   if (!spotlight) return;
   const slides = [...spotlight.children];
   if (!slides.length) return;
-  let index = 0, timer, raf;
-  let hovering = spotlight.matches(':hover');
-  const focused = () => spotlight.contains(document.activeElement);
-  const CYCLE = 8000;
+  const navigation = section.querySelector('.partner-dots');
   const bar = section.querySelector('.partners-cycle-bar');
-  let cycleStart = 0;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const CYCLE = 8000;
+  let index = 0, timer, raf, cycleStart = 0;
+  let hovering = spotlight.matches(':hover'), suspended = false;
+  const dots = [];
   section.setAttribute('aria-roledescription', 'carousel');
   slides.forEach((slide, i) => {
+    slide.id = `partner-slide-${i + 1}`;
     slide.setAttribute('aria-roledescription', 'slide');
     slide.setAttribute('role', 'group');
     slide.setAttribute('aria-label', `${i + 1} of ${slides.length}`);
+    if (!navigation) return;
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'partner-dot';
+    dot.setAttribute('aria-label', `Show ${slide.querySelector('h3').textContent}`);
+    dot.setAttribute('aria-controls', slide.id);
+    dot.addEventListener('click', () => show(i));
+    dot.addEventListener('keydown', event => {
+      let next;
+      if (event.key === 'ArrowRight') next = (i + 1) % slides.length;
+      else if (event.key === 'ArrowLeft') next = (i + slides.length - 1) % slides.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = slides.length - 1;
+      else return;
+      event.preventDefault();
+      dots[next].focus();
+      show(next);
+    });
+    dots.push(dot);
   });
+  if (navigation) {
+    navigation.replaceChildren(...dots);
+    navigation.hidden = slides.length < 2;
+  }
   function shouldRun() {
-    return slides.length > 1 && !hovering && !focused() && !document.hidden;
+    return slides.length > 1 && !hovering && !section.contains(document.activeElement)
+      && !document.hidden && !suspended && !reducedMotion.matches;
   }
-  function startProgress() {
-    stopProgress();
+  function stop() {
+    clearTimeout(timer);
+    cancelAnimationFrame(raf);
+  }
+  function progress() {
     if (!bar || !shouldRun()) return;
-    cycleStart = Date.now();
-    if (bar) bar.style.width = '0%';
-    raf = requestAnimationFrame(drawProgress);
-  }
-  function stopProgress() {
-    if (raf) { cancelAnimationFrame(raf); raf = 0; }
-  }
-  function drawProgress() {
-    if (!bar) return;
     const elapsed = Math.min(Date.now() - cycleStart, CYCLE);
-    bar.style.width = `${(elapsed / CYCLE) * 100}%`;
-    if (elapsed < CYCLE && shouldRun()) raf = requestAnimationFrame(drawProgress);
-  }
-  function resetProgress() {
-    stopProgress();
-    cycleStart = Date.now();
-    if (bar) bar.style.width = '0%';
-    if (shouldRun()) startProgress();
+    bar.style.width = `${elapsed / CYCLE * 100}%`;
+    if (elapsed < CYCLE) raf = requestAnimationFrame(progress);
   }
   function schedule() {
-    clearTimeout(timer);
-    if (shouldRun()) {
-      timer = setTimeout(() => {
-        index = (index + 1) % slides.length;
-        slides.forEach((slide, i) => {slide.hidden = i !== index;});
-        section.dispatchEvent(new Event('partnerchange'));
-        schedule();
-      }, CYCLE);
-      startProgress();
-    } else {
-      stopProgress();
-    }
+    stop();
+    if (bar) bar.style.width = '0%';
+    if (!shouldRun()) return;
+    cycleStart = Date.now();
+    timer = setTimeout(() => show((index + 1) % slides.length), CYCLE);
+    if (bar) raf = requestAnimationFrame(progress);
+  }
+  function show(next) {
+    index = next;
+    slides.forEach((slide, i) => { slide.hidden = i !== index; });
+    dots.forEach((dot, i) => {
+      if (i === index) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+    section.dispatchEvent(new Event('partnerchange'));
+    schedule();
   }
   spotlight.addEventListener('pointerenter', event => {
-    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {hovering = true; schedule();}
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') { hovering = true; schedule(); }
   });
-  spotlight.addEventListener('pointerleave', () => {hovering = false; schedule();});
-  spotlight.addEventListener('pointercancel', () => {hovering = false; schedule();});
-  spotlight.addEventListener('focusin', schedule);
-  spotlight.addEventListener('focusout', () => queueMicrotask(schedule));
+  spotlight.addEventListener('pointerleave', () => { hovering = false; schedule(); });
+  spotlight.addEventListener('pointercancel', () => { hovering = false; schedule(); });
+  section.addEventListener('focusin', schedule);
+  section.addEventListener('focusout', () => queueMicrotask(schedule));
   document.addEventListener('visibilitychange', schedule);
-  window.addEventListener('pagehide', () => clearTimeout(timer));
-  window.addEventListener('pageshow', schedule);
-  section.addEventListener('partnerchange', resetProgress);
-  schedule();
+  reducedMotion.addEventListener('change', schedule);
+  window.addEventListener('pagehide', () => { suspended = true; stop(); });
+  window.addEventListener('pageshow', () => { suspended = false; schedule(); });
+  show(0);
 })();
 // Only show a live claim while a recent, successful Twitch check confirms it.
 (() => {
@@ -183,73 +201,4 @@
   window.addEventListener('pagehide', () => {clearTimeout(timer); clearTimeout(expiry); inFlight?.abort(); hide();});
   window.addEventListener('pageshow', refresh);
   refresh();
-});
-
-// Partner carousel: dots underneath + smooth slide transition when swapping
-(() => {
-  const section = document.querySelector('#partners');
-  const track = document.querySelector('.partner-track');
-  const slides = [...track.querySelectorAll('.partner-slide')];
-  const dots = [...document.querySelectorAll('.partner-dot')];
-  let index = 0;
-  let timer, raf;
-  const CYCLE = 8000;
-  const bar = section.querySelector('.partners-cycle-bar');
-  let cycleStart = 0;
-
-  if (!track || !slides.length) return;
-
-  function update() {
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach((dot, i) => {
-      const selected = i === index;
-      dot.setAttribute('aria-selected', String(selected));
-      if (i < slides.length) dot.disabled = selected;
-    });
-    startProgress();
-  }
-
-  function goTo(i) {
-    index = Math.max(0, Math.min(slides.length - 1, i));
-    update();
-  }
-
-  dots.forEach((dot, i) => {
-    const hasSlide = i < slides.length;
-    if (!hasSlide) dot.disabled = true;
-    dot.addEventListener('click', () => { if (hasSlide) goTo(i); });
-  });
-
-  update();
-
-  function shouldRun() {
-    return slides.length > 1 && !document.hidden;
-  }
-  function startProgress() {
-    stopProgress();
-    if (!bar || !shouldRun()) return;
-    cycleStart = Date.now();
-    bar.style.width = '0%';
-    raf = requestAnimationFrame(drawProgress);
-  }
-  function stopProgress() {
-    if (raf) { cancelAnimationFrame(raf); raf = 0; }
-  }
-  function drawProgress() {
-    if (!bar) return;
-    const elapsed = Math.min(Date.now() - cycleStart, CYCLE);
-    bar.style.width = `${(elapsed / CYCLE) * 100}%`;
-    if (elapsed < CYCLE && shouldRun()) raf = requestAnimationFrame(drawProgress);
-  }
-  function nextSlide() {
-    index = (index + 1) % slides.length;
-    update();
-  }
-  let autoTimer = setInterval(nextSlide, CYCLE);
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { stopProgress(); clearInterval(autoTimer); }
-    else { autoTimer = setInterval(nextSlide, CYCLE); startProgress(); }
-  });
-  window.addEventListener('pagehide', () => { stopProgress(); clearInterval(autoTimer); });
-  window.addEventListener('pageshow', () => { autoTimer = setInterval(nextSlide, CYCLE); startProgress(); });
 })();
