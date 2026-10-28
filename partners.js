@@ -9,6 +9,11 @@
   const bar = section.querySelector('.partners-cycle-bar');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const CYCLE = 8000;
+  const previous = section.querySelector('.partner-prev');
+  const next = section.querySelector('.partner-next');
+  const pause = section.querySelector('.partner-pause');
+  const position = section.querySelector('.partner-position');
+  let userPaused = reducedMotion.matches;
   let index = 0, timer, raf, cycleStart = 0;
   let hovering = spotlight.matches(':hover'), suspended = false;
   const dots = [];
@@ -22,6 +27,7 @@
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.className = 'partner-dot';
+    dot.textContent = slide.querySelector('h3').textContent;
     dot.setAttribute('aria-label', `Show ${slide.querySelector('h3').textContent}`);
     dot.setAttribute('aria-controls', slide.id);
     dot.addEventListener('click', () => show(i));
@@ -43,8 +49,8 @@
     navigation.hidden = slides.length < 2;
   }
   function shouldRun() {
-    return slides.length > 1 && !hovering && !section.contains(document.activeElement)
-      && !document.hidden && !suspended && !reducedMotion.matches;
+    return slides.length > 1 && !hovering && !(section.contains(document.activeElement) && document.activeElement !== pause)
+      && !document.hidden && !suspended && !userPaused;
   }
   function stop() {
     clearTimeout(timer);
@@ -71,6 +77,7 @@
       if (i === index) dot.setAttribute('aria-current', 'true');
       else dot.removeAttribute('aria-current');
     });
+    if (position) position.textContent = `${index + 1} / ${slides.length}`;
     section.dispatchEvent(new Event('partnerchange'));
     schedule();
   }
@@ -82,7 +89,16 @@
   section.addEventListener('focusin', schedule);
   section.addEventListener('focusout', () => queueMicrotask(schedule));
   document.addEventListener('visibilitychange', schedule);
-  reducedMotion.addEventListener('change', schedule);
+  function updatePause() {
+    if (!pause) return;
+    pause.textContent = userPaused ? 'Play rotation' : 'Pause rotation';
+    pause.setAttribute('aria-label', userPaused ? 'Play automatic partner rotation' : 'Pause automatic partner rotation');
+  }
+  previous?.addEventListener('click', () => show((index + slides.length - 1) % slides.length));
+  next?.addEventListener('click', () => show((index + 1) % slides.length));
+  pause?.addEventListener('click', () => { userPaused = !userPaused; updatePause(); schedule(); });
+  reducedMotion.addEventListener('change', () => { userPaused = reducedMotion.matches; updatePause(); schedule(); });
+  updatePause();
   window.addEventListener('pagehide', () => { suspended = true; stop(); });
   window.addEventListener('pageshow', () => { suspended = false; schedule(); });
   show(0);
@@ -96,9 +112,9 @@
   let inFlight;
   const hide = () => cards.forEach(card => {
     stopPlayer(card);
-    card.querySelector('.partner-live').hidden = true;
-    card.querySelector('.partner-visit-copy').textContent = 'Visit channel';
-    card.setAttribute('aria-label', `Visit ${card.querySelector('h3').textContent} on Twitch (opens in a new tab)`);
+    card.closest('li').querySelector('.partner-live').hidden = true;
+    card.closest('li').querySelector('.partner-visit-copy').textContent = 'Visit channel';
+    card.setAttribute('aria-label', `Visit ${card.closest('li').querySelector('h3').textContent} on Twitch (opens in a new tab)`);
   });
   async function refresh() {
     clearTimeout(timer);
@@ -117,9 +133,9 @@
       cards.forEach(card => {
         const live = data.partners?.[card.dataset.partner] === true;
         if (live) showPlayer(card); else stopPlayer(card);
-        card.querySelector('.partner-live').hidden = !live;
-        card.querySelector('.partner-visit-copy').textContent = live ? 'Watch live' : 'Visit channel';
-        card.setAttribute('aria-label', `${live ? 'Watch' : 'Visit'} ${card.querySelector('h3').textContent}${live ? ' live' : ''} on Twitch (opens in a new tab)`);
+        card.closest('li').querySelector('.partner-live').hidden = !live;
+        card.closest('li').querySelector('.partner-visit-copy').textContent = live ? 'Watch live' : 'Visit channel';
+        card.setAttribute('aria-label', `${live ? 'Watch' : 'Visit'} ${card.closest('li').querySelector('h3').textContent}${live ? ' live' : ''} on Twitch (opens in a new tab)`);
       });
       clearTimeout(expiry);
       expiry = setTimeout(hide, Math.max(0, (120 - age) * 1000));
@@ -153,7 +169,7 @@
   function embed(box, card) {
     const frame = document.createElement('iframe');
     frame.src = `https://player.twitch.tv/?channel=${encodeURIComponent(card.dataset.partner)}&parent=${encodeURIComponent(location.hostname)}&muted=true&autoplay=true`;
-    frame.title = `${card.querySelector('h3').textContent} live on Twitch`;
+    frame.title = `${card.closest('li').querySelector('h3').textContent} live on Twitch`;
     frame.allow = 'autoplay; fullscreen; picture-in-picture';
     frame.allowFullscreen = true;
     box.replaceChildren(frame);
@@ -170,13 +186,13 @@
     const box = document.createElement('div');
     box.className = 'partner-player';
     li.append(box);
-    card.querySelector('.partner-info').prepend(card.querySelector('.partner-live'));
+    card.closest('li').querySelector('.partner-info').prepend(card.closest('li').querySelector('.partner-live'));
     if (await mayAutoplay()) { if (box.isConnected) embed(box, card); return; }
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'partner-play';
     button.innerHTML = '<span aria-hidden="true">&#9654;</span> Watch here';
-    button.setAttribute('aria-label', `Watch ${card.querySelector('h3').textContent} live here (loads Twitch's player)`);
+    button.setAttribute('aria-label', `Watch ${card.closest('li').querySelector('h3').textContent} live here (loads Twitch's player)`);
     button.addEventListener('click', () => embed(box, card));
     if (box.isConnected) box.replaceChildren(button);
   }
@@ -185,16 +201,16 @@
     li.querySelector('.partner-player')?.remove();
     li.classList.remove('has-player');
     li.style.removeProperty('--player-h');
-    card.querySelector('.partner-stream').prepend(card.querySelector('.partner-live'));
+    card.querySelector('.partner-stream').prepend(card.closest('li').querySelector('.partner-live'));
   }
   document.querySelector('#partners').addEventListener('partnerchange', () => cards.forEach(card => {
-    if (!card.querySelector('.partner-live').hidden) showPlayer(card); else stopPlayer(card);
+    if (!card.closest('li').querySelector('.partner-live').hidden) showPlayer(card); else stopPlayer(card);
   }));
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => cards.forEach(card => {
-      if (!card.querySelector('.partner-live').hidden) showPlayer(card);
+      if (!card.closest('li').querySelector('.partner-live').hidden) showPlayer(card);
     }), 200);
   });
   document.addEventListener('visibilitychange', refresh);
