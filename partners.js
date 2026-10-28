@@ -16,6 +16,13 @@
   let userPaused = reducedMotion.matches;
   let index = 0, timer, raf, cycleStart = 0;
   let hovering = spotlight.matches(':hover'), suspended = false;
+  let initialized = false, transitionRun = 0, animations = [], outgoing;
+  function finishTransition() {
+    ++transitionRun;
+    animations.forEach(animation => animation.cancel()); animations = [];
+    outgoing?.remove(); outgoing = null;
+    spotlight.style.removeProperty('overflow');
+  }
   const dots = [];
   section.setAttribute('aria-roledescription', 'carousel');
   slides.forEach((slide, i) => {
@@ -23,6 +30,7 @@
     slide.setAttribute('aria-roledescription', 'slide');
     slide.setAttribute('role', 'group');
     slide.setAttribute('aria-label', `${i + 1} of ${slides.length}`);
+    slide.querySelectorAll('img').forEach(image => { image.loading = 'eager'; image.decoding = 'async'; });
     if (!navigation) return;
     const dot = document.createElement('button');
     dot.type = 'button';
@@ -71,6 +79,19 @@
     if (bar) raf = requestAnimationFrame(progress);
   }
   function show(next) {
+    const old = slides[index], oldHeight = spotlight.getBoundingClientRect().height;
+    const animate = initialized && next !== index && !reducedMotion.matches && !!spotlight.animate;
+    finishTransition();
+    if (animate) {
+      outgoing = old.cloneNode(true);
+      outgoing.classList.add('partner-snapshot');
+      outgoing.hidden = true; outgoing.inert = true;
+      outgoing.setAttribute('aria-hidden', 'true');
+      outgoing.removeAttribute('id');
+      outgoing.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+      outgoing.querySelectorAll('.partner-player').forEach(player => player.remove());
+      outgoing.style.height = oldHeight + 'px';
+    }
     index = next;
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
     dots.forEach((dot, i) => {
@@ -79,6 +100,21 @@
     });
     if (position) position.textContent = `${index + 1} / ${slides.length}`;
     section.dispatchEvent(new Event('partnerchange'));
+    if (animate) {
+      const height = spotlight.getBoundingClientRect().height;
+      spotlight.append(outgoing); spotlight.style.overflow = 'hidden';
+      const timing = {duration:420, easing:'cubic-bezier(.22,.61,.36,1)'};
+      animations = [
+        outgoing.animate([{opacity:1},{opacity:0}], timing),
+        slides[index].animate([{opacity:0},{opacity:1}], timing),
+        spotlight.animate([{height:oldHeight+'px'},{height:height+'px'}], timing),
+      ];
+      const run = transitionRun;
+      Promise.all(animations.map(animation => animation.finished)).then(() => {
+        if (run === transitionRun) finishTransition();
+      }).catch(() => {});
+    }
+    initialized = true;
     schedule();
   }
   spotlight.addEventListener('pointerenter', event => {
@@ -97,9 +133,9 @@
   previous?.addEventListener('click', () => show((index + slides.length - 1) % slides.length));
   next?.addEventListener('click', () => show((index + 1) % slides.length));
   pause?.addEventListener('click', () => { userPaused = !userPaused; updatePause(); schedule(); });
-  reducedMotion.addEventListener('change', () => { userPaused = reducedMotion.matches; updatePause(); schedule(); });
+  reducedMotion.addEventListener('change', () => { finishTransition(); userPaused = reducedMotion.matches; updatePause(); schedule(); });
   updatePause();
-  window.addEventListener('pagehide', () => { suspended = true; stop(); });
+  window.addEventListener('pagehide', () => { suspended = true; stop(); finishTransition(); });
   window.addEventListener('pageshow', () => { suspended = false; schedule(); });
   show(0);
 })();

@@ -12,9 +12,10 @@
 .partner-dot[aria-current="true"]{color:var(--rex-blue);border-color:var(--rex-blue);background:#00c6ff12}
 .partner-dot[aria-current="true"]::before{background:var(--rex-blue);box-shadow:0 0 7px #00c6ff55}
 .partner-dot:focus-visible,.partner-toolbar button:focus-visible,.partner-visit:focus-visible{outline:2px solid var(--rex-blue);outline-offset:3px}
-.partner-grid{list-style:none;margin:0;padding:0}
+.partner-grid{position:relative;list-style:none;margin:0;padding:0}
 .partner-grid>li{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);min-width:0;min-height:300px;border:1px solid var(--rex-edge);background:var(--rex-card)}
 .partner-grid>li[hidden]{display:none!important}
+.partner-grid>li.partner-snapshot[hidden]{display:grid!important;position:absolute;inset:0 0 auto;z-index:1;pointer-events:none;user-select:none}
 .partner-visual{position:relative;min-width:0;min-height:300px;border-right:1px solid var(--rex-edge);background:#050708}
 .partner-card{display:block;height:100%;color:var(--rex-ink);text-decoration:none}
 .partner-card:focus-visible{outline:3px solid var(--rex-blue);outline-offset:-3px}
@@ -62,7 +63,6 @@
 @media(max-width:900px){.partner-grid>li{grid-template-columns:minmax(0,1fr)}.partner-visual{border-right:0;border-bottom:1px solid var(--rex-edge);min-height:0}.partner-stream{height:auto;min-height:0;aspect-ratio:16/9}.partner-stream>img{position:absolute}.has-player .partner-stream{height:var(--player-h);aspect-ratio:auto}.partner-player{height:var(--player-h)}.partner-bio{gap:16px}.partner-visit{margin-top:0}}
 @media(max-width:650px){.partners{padding:36px 0 40px}.partners-heading{margin-bottom:18px}.partners-intro{font-size:13px}.partner-dot{flex:1 1 calc(33.333% - 6px);min-width:0;padding:9px 5px;font-size:10px;gap:5px}.partner-bio{padding:18px}.partner-avatar{flex-basis:44px;width:44px;height:44px}.partner-bio h3{font-size:23px}.partner-toolbar{gap:12px}.partner-toolbar button{min-width:40px;min-height:40px}.partners-footer{justify-content:flex-start}.partner-visit{min-height:42px}}
 @media(max-width:360px){.partner-dot{flex-basis:calc(50% - 6px);font-size:11px}.partner-toolbar{gap:8px}.partner-pagination{gap:5px}.partner-toolbar .partner-pause{font-size:10px}}
-@media(prefers-reduced-motion:no-preference){.partner-grid>li:not([hidden]){animation:partner-reveal .2s ease-out}@keyframes partner-reveal{from{opacity:.5}to{opacity:1}}}
 @media(prefers-reduced-motion:reduce){.partner-dot{transition:none}}
 /* Preserve the supplied channel crops, including screenshot-based avatars. */
 .partner-bio:has(.partner-handle) .partner-avatar img{object-fit:cover}
