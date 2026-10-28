@@ -187,12 +187,15 @@
 
 // Partner carousel: dots underneath + smooth slide transition when swapping
 (() => {
+  const section = document.querySelector('#partners');
   const track = document.querySelector('.partner-track');
   const slides = [...track.querySelectorAll('.partner-slide')];
   const dots = [...document.querySelectorAll('.partner-dot')];
-  const prev = document.querySelector('.partner-prev');
-  const next = document.querySelector('.partner-next');
   let index = 0;
+  let timer, raf;
+  const CYCLE = 8000;
+  const bar = section.querySelector('.partners-cycle-bar');
+  let cycleStart = 0;
 
   if (!track || !slides.length) return;
 
@@ -203,8 +206,7 @@
       dot.setAttribute('aria-selected', String(selected));
       if (i < slides.length) dot.disabled = selected;
     });
-    prev.disabled = index === 0;
-    next.disabled = index === slides.length - 1;
+    startProgress();
   }
 
   function goTo(i) {
@@ -212,8 +214,6 @@
     update();
   }
 
-  prev.addEventListener('click', () => goTo(index - 1));
-  next.addEventListener('click', () => goTo(index + 1));
   dots.forEach((dot, i) => {
     const hasSlide = i < slides.length;
     if (!hasSlide) dot.disabled = true;
@@ -222,9 +222,34 @@
 
   update();
 
-  let timer = setInterval(() => goTo((index + 1) % slides.length), 4000);
-  track.addEventListener('mouseenter', () => clearInterval(timer));
-  track.addEventListener('mouseleave', () => {
-    timer = setInterval(() => goTo((index + 1) % slides.length), 4000);
+  function shouldRun() {
+    return slides.length > 1 && !document.hidden;
+  }
+  function startProgress() {
+    stopProgress();
+    if (!bar || !shouldRun()) return;
+    cycleStart = Date.now();
+    bar.style.width = '0%';
+    raf = requestAnimationFrame(drawProgress);
+  }
+  function stopProgress() {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }
+  function drawProgress() {
+    if (!bar) return;
+    const elapsed = Math.min(Date.now() - cycleStart, CYCLE);
+    bar.style.width = `${(elapsed / CYCLE) * 100}%`;
+    if (elapsed < CYCLE && shouldRun()) raf = requestAnimationFrame(drawProgress);
+  }
+  function nextSlide() {
+    index = (index + 1) % slides.length;
+    update();
+  }
+  let autoTimer = setInterval(nextSlide, CYCLE);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { stopProgress(); clearInterval(autoTimer); }
+    else { autoTimer = setInterval(nextSlide, CYCLE); startProgress(); }
   });
+  window.addEventListener('pagehide', () => { stopProgress(); clearInterval(autoTimer); });
+  window.addEventListener('pageshow', () => { autoTimer = setInterval(nextSlide, CYCLE); startProgress(); });
 })();

@@ -5,12 +5,10 @@
 .partners .section-title{margin:0;line-height:1.1}
 .partners-intro{max-width:440px;margin:0;color:var(--rex-secondary);font-size:15px;line-height:1.7}
 .partners-swipe-hint{display:none}
-.partner-carousel{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 24px}
+.partners-cycle{position:relative;height:3px;background:var(--rex-edge);margin:22px 0 0;border-radius:2px;overflow:hidden}
+.partners-cycle-bar{position:absolute;inset:0;width:0%;background:var(--rex-blue);transition:none}
 .partner-track{display:flex;transition:transform .5s cubic-bezier(.2,0,0,1);list-style:none;margin:0;padding:0;overflow:hidden;width:100%}
-.partner-slide{flex:0 0 auto;width:100%;max-width:560px}
-.partner-nav{width:44px;height:44px;border:1px solid var(--rex-edge);background:var(--rex-card);color:var(--rex-ink);border-radius:8px;cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s}
-.partner-nav:hover{border-color:var(--rex-accent);background:var(--rex-selected)}
-.partner-nav:disabled{opacity:.4;cursor:default;pointer-events:none}
+.partner-slide{flex:0 0 auto;width:100%;max-width:560px;margin:0 auto}
 .partner-dots{display:flex;justify-content:center;gap:8px;margin-top:16px}
 .partner-dot{width:10px;height:10px;border-radius:50%;border:0;background:var(--rex-edge);cursor:pointer;padding:0;transition:background .18s,transform .18s}
 .partner-dot:hover:not(:disabled){background:var(--rex-secondary)}
