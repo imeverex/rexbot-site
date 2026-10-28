@@ -183,4 +183,48 @@
   window.addEventListener('pagehide', () => {clearTimeout(timer); clearTimeout(expiry); inFlight?.abort(); hide();});
   window.addEventListener('pageshow', refresh);
   refresh();
+});
+
+// Partner carousel: dots underneath + smooth slide transition when swapping
+(() => {
+  const track = document.querySelector('.partner-track');
+  const slides = [...track.querySelectorAll('.partner-slide')];
+  const dots = [...document.querySelectorAll('.partner-dot')];
+  const prev = document.querySelector('.partner-prev');
+  const next = document.querySelector('.partner-next');
+  let index = 0;
+
+  if (!track || !slides.length) return;
+
+  function update() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((dot, i) => {
+      const selected = i === index;
+      dot.setAttribute('aria-selected', String(selected));
+      if (i < slides.length) dot.disabled = selected;
+    });
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+  }
+
+  function goTo(i) {
+    index = Math.max(0, Math.min(slides.length - 1, i));
+    update();
+  }
+
+  prev.addEventListener('click', () => goTo(index - 1));
+  next.addEventListener('click', () => goTo(index + 1));
+  dots.forEach((dot, i) => {
+    const hasSlide = i < slides.length;
+    if (!hasSlide) dot.disabled = true;
+    dot.addEventListener('click', () => { if (hasSlide) goTo(i); });
+  });
+
+  update();
+
+  let timer = setInterval(() => goTo((index + 1) % slides.length), 4000);
+  track.addEventListener('mouseenter', () => clearInterval(timer));
+  track.addEventListener('mouseleave', () => {
+    timer = setInterval(() => goTo((index + 1) % slides.length), 4000);
+  });
 })();
