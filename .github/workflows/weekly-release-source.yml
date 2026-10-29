@@ -1,0 +1,24 @@
+name: Weekly release source
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: weekly-release-source
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send signed weekly source snapshot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_INGEST_SECRET: ${{ secrets.RELEASE_INGEST_SECRET }}
+          RELEASE_INGEST_URL: https://rexbotapp.com/overlay/releases/source-snapshot
+        run: python3 tools/weekly_release_source.py
