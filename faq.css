@@ -1,10 +1,9 @@
 .rex-ui.rex-public #faq{padding-top:48px;padding-bottom:64px}
 .rex-ui.rex-public #faq>h2{font-size:clamp(28px,3vw,36px);line-height:1.2;margin-bottom:28px}
 .rex-ui.rex-public #faq .faq-list{display:grid;gap:12px;max-width:960px;border:0}
-.rex-ui.rex-public #faq .faq-item{--cut:18px;position:relative;isolation:isolate;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%);background:#295e75!important;border:0;border-radius:0!important;box-shadow:none;overflow:hidden;transition:background .18s}
-.rex-ui.rex-public #faq .faq-item::before{content:'';position:absolute;inset:1px;z-index:-1;background:#151515;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%);transition:background .18s}
-.rex-ui.rex-public #faq .faq-item:is(:hover,:focus-within,.open){background:#00c6ff!important}
-.rex-ui.rex-public #faq .faq-item:is(:hover,:focus-within,.open)::before{background:#10212a}
+.rex-ui.rex-public #faq .faq-item{--cut:18px;position:relative;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%);background:#151515!important;border:0;border-radius:0!important;box-shadow:none;overflow:hidden;transition:background .18s}
+.rex-ui.rex-public #faq .faq-item::before{content:none}
+.rex-ui.rex-public #faq .faq-item:is(:hover,:focus-within,.open){background:#202020!important}
 .rex-ui.rex-public #faq .faq-q{position:relative;background:transparent;color:#f2f2f2;min-height:76px;padding:22px 36px;text-align:left;gap:24px;font-size:19px;line-height:1.5;font-weight:650;cursor:pointer;transition:color .18s}
 .rex-ui.rex-public #faq .faq-q:hover{background:transparent;color:#64d0ff}
 .rex-ui.rex-public #faq .faq-q:focus-visible{outline:2px solid #64d0ff!important;outline-offset:-3px!important}
