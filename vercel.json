@@ -26,6 +26,9 @@
     { "source": "/editors/:path*", "destination": "https://rextwitchbot-production.up.railway.app/editors/:path*" },
     { "source": "/session/:path*", "destination": "https://rextwitchbot-production.up.railway.app/session/:path*" },
     { "source": "/bot/auth", "destination": "https://rextwitchbot-production.up.railway.app/bot/auth" },
+    { "source": "/g/:path*", "destination": "https://rextwitchbot-production.up.railway.app/g/:path*" },
+    { "source": "/viewer/:path*", "destination": "https://rextwitchbot-production.up.railway.app/viewer/:path*" },
+    { "source": "/giveaways/:path*", "destination": "https://rextwitchbot-production.up.railway.app/giveaways/:path*" },
     {
       "source": "/analytics.json",
       "destination": "https://rextwitchbot-production.up.railway.app/analytics.json"
