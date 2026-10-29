@@ -73,6 +73,10 @@ html{overflow-x:hidden}
 /* white lines span exactly the feature card and run 40px in under its edge */
 .art-under{left:calc(-1 * var(--g));top:0;bottom:0;width:calc(var(--g) + 40px);justify-content:space-between;gap:0;--c:#FFFFFF}
 .art-canvas{display:block}.art-kitty{right:calc(-1 * var(--g));width:calc(var(--g) - 24px)}.art-kitty{overflow:hidden}.art-kitty img{position:absolute;top:0;left:0;height:100%;width:auto;max-width:none}.art-kitty i{position:absolute;right:0;height:9px;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%)}.art-kitty.left{right:auto;left:calc(-1 * var(--g))}.art-kitty.left i{right:auto;left:0;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 100%,0 100%)}.art-kitty.left img{left:auto;right:0;transform:scaleX(-1)}.more-features{position:relative}
+/* Larger bars stay in the outer gutters instead of reaching into the content. */
+.art-kitty,.art-kitty.left{display:flex;flex-direction:column;gap:4px;width:min(calc(var(--g) - 80px),320px)}
+.art-kitty i,.art-kitty.left i{position:relative;inset:auto;flex:1 1 0;min-height:0;height:auto;width:var(--line-width);background:var(--c);align-self:flex-end;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%)}
+.art-kitty.left i{align-self:flex-start;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%)}
 /* About: aligned to the card */
 .about .art-top{top:36px}
 .about .art-stripes.art-r{top:36px;bottom:36px;justify-content:space-between;gap:0}
@@ -235,7 +239,7 @@ html{overflow-x:hidden}
       <div class="partner-bio"><div class="partner-identity"><span class="partner-avatar" aria-hidden="true"><img src="/partners/smoottoochill-avatar.jpg" alt="" width="80" height="80" loading="lazy"></span><div class="partner-info"><h3>Smoottoochill</h3><span class="partner-handle">twitch.tv/smoottoochill</span></div></div><p>Meet Smoot: a former US Navy sailor and full-time streamer. Expect shooters, positive energy, and a community built around gaming, connecting, and bringing out the best in each other.</p><dl class="partner-details"><div><dt>On stream</dt><dd class="partner-games"><span>Just Chatting</span><span>Call of Duty: Modern Warfare 4</span><span>Battlefield 6</span></dd></div><div hidden><dt>Dinosaur I could beat in a 1v1</dt><dd>Coming soon</dd></div></dl><a class="partner-visit" href="https://www.twitch.tv/smoottoochill" target="_blank" rel="noopener noreferrer"><img src="/logos/twitch.png" alt="" width="18" height="18"><span class="partner-visit-copy">Visit channel</span><span aria-hidden="true">&#8599;</span></a></div>
     </li>
     <li id="partner-slide-4" aria-label="4 of 6" hidden><div class="partner-visual"><a class="partner-card" data-partner="m3rlyn_n" href="https://www.twitch.tv/m3rlyn_n/" target="_blank" rel="noopener noreferrer" aria-label="Visit M3rlyn_n on Twitch (opens in a new tab)">
-      <span class="partner-stream"><span class="partner-live" role="status" hidden>Live now</span><img src="/partners/m3rlyn_n-channel.png" alt="M3rlyn_n's dark fantasy wizard artwork with emerald-green magic" width="622" height="517" loading="lazy"></span>
+      <span class="partner-stream"><span class="partner-live" role="status" hidden>Live now</span><img src="/partners/m3rlyn_n-stream.jpg" alt="A saved moment from M3rlyn_n's Twitch stream" width="1280" height="720" loading="lazy"></span>
     </a></div>
       <div class="partner-bio"><div class="partner-identity"><span class="partner-avatar" aria-hidden="true"><img src="/partners/m3rlyn_n-channel.png" alt="" width="622" height="517" loading="lazy"></span><div class="partner-info"><h3>M3rlyn_n</h3><span class="partner-handle">twitch.tv/m3rlyn_n</span></div></div><p>I play Battlefield and talk about pew pews!</p><dl class="partner-details"><div><dt>On stream</dt><dd class="partner-games"><span>Battlefield 6</span><span>Star Wars: The Old Republic</span></dd></div><div hidden><dt>Dinosaur I could beat in a 1v1</dt><dd>Coming soon</dd></div></dl><a class="partner-visit" href="https://www.twitch.tv/m3rlyn_n/" target="_blank" rel="noopener noreferrer"><img src="/logos/twitch.png" alt="" width="18" height="18"><span class="partner-visit-copy">Visit channel</span><span aria-hidden="true">&#8599;</span></a></div>
     </li>
@@ -252,7 +256,7 @@ html{overflow-x:hidden}
   </ul>
 
   <div class="partner-toolbar">
-    <div class="partner-pagination"><button type="button" class="partner-prev" aria-label="Previous partner"><span aria-hidden="true">&#8592;</span></button><span class="partner-position" aria-live="off">1 / 6</span><button type="button" class="partner-next" aria-label="Next partner"><span aria-hidden="true">&#8594;</span></button></div>
+    <div class="partner-pagination"><span class="partner-position" aria-live="off">1 / 6</span></div>
     <button type="button" class="partner-pause" aria-label="Pause automatic partner rotation">Pause rotation</button>
     <div class="partners-cycle" aria-hidden="true"><span class="partners-cycle-bar"></span></div>
   </div>
@@ -343,7 +347,11 @@ html{overflow-x:hidden}
  const flipped=(c,text,size,inkRight,inkTop)=>{const k=ink(text,size);c.save();c.translate(inkRight-k.L,inkTop+k.D);c.rotate(Math.PI);c.font=FONT(size);c.letterSpacing=(-.02*size)+'px';c.fillText(text,0,0);c.restore();};
  // upright text, positioned by its ink box
  const upright=(c,text,size,inkLeft,inkTop)=>{const k=ink(text,size);c.font=FONT(size);c.letterSpacing=(-.02*size)+'px';c.fillText(text,inkLeft+k.L,inkTop+k.A);};
- const P=22,LINES_H=250,stripes=el=>{const img=new Image();img.src='/lines.svg';img.alt='';el.replaceChildren(img);el.style.height=LINES_H+'px';};
+ const P=22,LINES_H=360,stripes=el=>{
+  const lengths=[70,94,85,82,79,90,76,100,96];
+  el.replaceChildren(...lengths.flatMap(width=>[0,1].map(white=>{const bar=document.createElement('i');bar.style.setProperty('--line-width',Math.min(100,width+white*3)+'%');bar.style.setProperty('--c',white?'#FFFFFF':'#00C6FF');return bar;})));
+  el.style.height=LINES_H+'px';
+ };
  const capTop=el=>{const cs=getComputedStyle(el),fs=parseFloat(cs.fontSize),lh=parseFloat(cs.lineHeight)||fs*1.2;ctx0.font=`${cs.fontWeight} ${fs}px Inter`;const m=ctx0.measureText('Y');
   return el.getBoundingClientRect().top+(lh-(m.fontBoundingBoxAscent+m.fontBoundingBoxDescent))/2+(m.fontBoundingBoxAscent-m.actualBoundingBoxAscent);};
  const pageTop=el=>el.getBoundingClientRect().top+scrollY;let Q={};

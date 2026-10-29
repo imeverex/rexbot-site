@@ -68,5 +68,5 @@
 .partner-bio:has(.partner-handle) .partner-avatar img{object-fit:cover}
 .partner-grid>li:has(.partner-card[data-partner="smoottoochill"]) .partner-avatar img{height:auto;aspect-ratio:1;object-position:50% 38.7%;transform:scale(2)}
 .partner-card[data-partner="smoottoochill"] .partner-stream>img{transform:translateX(-4.2%) scale(1.25)}
-.partner-card[data-partner="m3rlyn_n"] .partner-stream>img{left:-2.257%;top:50%;width:140.406%;max-width:none;height:auto;transform:translateY(-40.135%)}
+
 .partner-grid>li:has(.partner-card[data-partner="m3rlyn_n"]) .partner-avatar img{position:absolute;left:-80%;top:-726.667%;width:1036.667%;max-width:none;height:auto}
