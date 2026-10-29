@@ -5,23 +5,43 @@
   if (!spotlight) return;
   const slides = [...spotlight.children];
   if (!slides.length) return;
+  const stage = document.createElement('div');
+  stage.className = 'partner-stage';
+  spotlight.before(stage); stage.append(spotlight);
   const navigation = section.querySelector('.partner-dots');
   const bar = section.querySelector('.partners-cycle-bar');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const CYCLE = 8000;
-  const previous = section.querySelector('.partner-prev');
-  const next = section.querySelector('.partner-next');
+  function sideControl(side, label) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'partner-side partner-side-' + side;
+    button.setAttribute('aria-label', label); button.setAttribute('aria-controls', spotlight.id);
+    stage.append(button); return button;
+  }
+  const previous = sideControl('previous', 'Show previous partner');
+  const next = sideControl('next', 'Show next partner');
   const pause = section.querySelector('.partner-pause');
   const position = section.querySelector('.partner-position');
   let userPaused = reducedMotion.matches;
   let index = 0, timer, raf, cycleStart = 0;
-  let hovering = spotlight.matches(':hover'), suspended = false;
-  let initialized = false, transitionRun = 0, animations = [], outgoing;
+  let hovering = stage.matches(':hover'), suspended = false;
+  let initialized = false, transitionRun = 0, animations = [];
   function finishTransition() {
     ++transitionRun;
     animations.forEach(animation => animation.cancel()); animations = [];
-    outgoing?.remove(); outgoing = null;
-    spotlight.style.removeProperty('overflow');
+    spotlight.querySelectorAll('.partner-departing').forEach(node => node.remove());
+    spotlight.style.removeProperty('height');
+  }
+  function preview(slide, side) {
+    const copy = slide.cloneNode(true);
+    copy.className = 'partner-neighbor partner-neighbor-' + side;
+    copy.hidden = true; copy.inert = true; copy.setAttribute('aria-hidden', 'true');
+    copy.removeAttribute('id');
+    copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+    copy.querySelectorAll('.partner-player').forEach(node => node.remove());
+    copy.querySelectorAll('.has-player').forEach(node => {node.classList.remove('has-player'); node.style.removeProperty('--player-h');});
+    copy.querySelectorAll('a,button,input,select,textarea').forEach(node => node.setAttribute('tabindex', '-1'));
+    return copy;
   }
   const dots = [];
   section.setAttribute('aria-roledescription', 'carousel');
@@ -79,19 +99,11 @@
     if (bar) raf = requestAnimationFrame(progress);
   }
   function show(next) {
-    const old = slides[index], oldHeight = spotlight.getBoundingClientRect().height;
+    const oldIndex = index, oldHeight = spotlight.getBoundingClientRect().height;
     const animate = initialized && next !== index && !reducedMotion.matches && !!spotlight.animate;
+    const direction = next === (index + slides.length - 1) % slides.length ? -1 : 1;
     finishTransition();
-    if (animate) {
-      outgoing = old.cloneNode(true);
-      outgoing.classList.add('partner-snapshot');
-      outgoing.hidden = true; outgoing.inert = true;
-      outgoing.setAttribute('aria-hidden', 'true');
-      outgoing.removeAttribute('id');
-      outgoing.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-      outgoing.querySelectorAll('.partner-player').forEach(player => player.remove());
-      outgoing.style.height = oldHeight + 'px';
-    }
+    spotlight.querySelectorAll('.partner-neighbor').forEach(node => node.remove());
     index = next;
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
     dots.forEach((dot, i) => {
@@ -100,13 +112,24 @@
     });
     if (position) position.textContent = `${index + 1} / ${slides.length}`;
     section.dispatchEvent(new Event('partnerchange'));
+    const left = preview(slides[(index + slides.length - 1) % slides.length], 'previous');
+    const right = preview(slides[(index + 1) % slides.length], 'next');
+    spotlight.append(left, right);
     if (animate) {
       const height = spotlight.getBoundingClientRect().height;
-      spotlight.append(outgoing); spotlight.style.overflow = 'hidden';
-      const timing = {duration:420, easing:'cubic-bezier(.22,.61,.36,1)'};
+      const step = spotlight.getBoundingClientRect().width * .78 + 24;
+      const center = {transform:'translateX(0) scale(1)', opacity:1, filter:'blur(0px)'};
+      const side = n => ({transform:`translateX(${n * step}px) scale(.86)`, opacity:.24, filter:'blur(3px)'});
+      const far = n => ({transform:`translateX(${n * step * 2}px) scale(.74)`, opacity:0, filter:'blur(5px)'});
+      const timing = {duration:650, easing:'cubic-bezier(.22,.61,.36,1)'};
+      const trailingIndex = (oldIndex - direction + slides.length) % slides.length;
+      const departing = preview(slides[trailingIndex], direction > 0 ? 'previous' : 'next');
+      departing.classList.add('partner-departing'); spotlight.append(departing);
       animations = [
-        outgoing.animate([{opacity:1},{opacity:0}], timing),
-        slides[index].animate([{opacity:0},{opacity:1}], timing),
+        slides[index].animate([side(direction), center], timing),
+        (direction > 0 ? left : right).animate([center, side(-direction)], timing),
+        (direction > 0 ? right : left).animate([far(direction), side(direction)], timing),
+        departing.animate([side(-direction), far(-direction)], timing),
         spotlight.animate([{height:oldHeight+'px'},{height:height+'px'}], timing),
       ];
       const run = transitionRun;
@@ -117,11 +140,11 @@
     initialized = true;
     schedule();
   }
-  spotlight.addEventListener('pointerenter', event => {
+  stage.addEventListener('pointerenter', event => {
     if (event.pointerType === 'mouse' || event.pointerType === 'pen') { hovering = true; schedule(); }
   });
-  spotlight.addEventListener('pointerleave', () => { hovering = false; schedule(); });
-  spotlight.addEventListener('pointercancel', () => { hovering = false; schedule(); });
+  stage.addEventListener('pointerleave', () => { hovering = false; schedule(); });
+  stage.addEventListener('pointercancel', () => { hovering = false; schedule(); });
   section.addEventListener('focusin', schedule);
   section.addEventListener('focusout', () => queueMicrotask(schedule));
   document.addEventListener('visibilitychange', schedule);
@@ -141,7 +164,7 @@
 })();
 // Only show a live claim while a recent, successful Twitch check confirms it.
 (() => {
-  const cards = [...document.querySelectorAll('.partner-card[data-partner]')];
+  const cards = [...document.querySelectorAll('.partner-card[data-partner]')].filter(card => !card.closest('.partner-neighbor'));
   if (!cards.length) return;
   let timer;
   let expiry;

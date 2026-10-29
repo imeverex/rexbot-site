@@ -70,3 +70,14 @@
 .partner-card[data-partner="smoottoochill"] .partner-stream>img{transform:translateX(-4.2%) scale(1.25)}
 
 .partner-grid>li:has(.partner-card[data-partner="m3rlyn_n"]) .partner-avatar img{position:absolute;left:-80%;top:-726.667%;width:1036.667%;max-width:none;height:auto}
+
+/* Center spotlight with subdued previews of its circular neighbours. */
+.partner-stage{--partner-card-width:min(860px,calc(100% - 160px));position:relative;width:min(1600px,calc(100vw - 24px));left:50%;transform:translateX(-50%);overflow:hidden;padding:26px 0;isolation:isolate;background:var(--rex-canvas)}
+.partner-stage .partner-grid{width:var(--partner-card-width);margin:0 auto}
+.partner-stage .partner-grid>li:not([hidden]){position:relative;z-index:2}
+.partner-stage .partner-grid>.partner-neighbor[hidden]{display:grid!important;position:absolute;top:0;left:0;width:100%;z-index:0;opacity:.24;filter:blur(3px);pointer-events:none;user-select:none;transform:translateX(calc(-78% - 24px)) scale(.86);transform-origin:center center}
+.partner-stage .partner-grid>.partner-neighbor-next[hidden]{transform:translateX(calc(78% + 24px)) scale(.86)}
+.partner-side{position:absolute;top:0;bottom:0;width:calc((100% - var(--partner-card-width))/2);z-index:3;border:0;background:transparent;cursor:pointer;padding:0}
+.partner-side-previous{left:0}.partner-side-next{right:0}
+.partner-side:focus-visible{outline:2px solid var(--rex-blue);outline-offset:-8px;background:#00c6ff08}
+@media(max-width:650px){.partner-stage{--partner-card-width:calc(100% - 88px);width:calc(100vw - 12px);padding:16px 0}.partner-stage .partner-bio{padding:16px;gap:14px}.partner-stage .partner-bio h3{font-size:22px}}
