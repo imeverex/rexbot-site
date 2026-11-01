@@ -77,7 +77,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
   <div class="eyebrow">What's shipped, what's next</div>
   <h1><span>REX</span>BOT ROADMAP</h1>
   <p class="rm-lead">What's live, what's up next and what's planned for later across Twitch, Discord and your stream.</p>
-  <p class="rm-note">Updated October 27, 2026. Shipped means live right now. Some features need Twitch permissions, a connected account or the Windows input helper.</p>
+  <p class="rm-note">Updated November 1, 2026. Shipped means live right now. Some features need Twitch permissions, a connected account or the Windows input helper.</p>
   <div class="rm-stats">
     <div class="rm-stat"><b id="stat-current">0</b><span>Shipped</span></div>
     <div class="rm-stat dim"><b id="stat-next">0</b><span>Up next</span></div>
@@ -194,6 +194,10 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
         "Count returning viewers through !checkin or a channel point reward. Choose every use, once per stream or once per calendar day."
       ],
       [
+        "Giveaways",
+        "Run giveaways with a public entry page where viewers sign in with Twitch, or let them enter with a chat keyword. Paid entries in chat currency, timers, chat reminders, a claim timer and a fair draw, plus an OBS overlay that spins a name wheel for the winner."
+      ],
+      [
         "Time and follow age",
         "!time shows your local time and compares it with a viewer’s city. !followage shows how long someone has followed your channel, with the required Twitch permissions."
       ],
@@ -245,7 +249,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
     "items": [
       [
         "Alerts",
-        "Follows, subs, gifts, raids and Bits, with a shared upload library, per-alert sounds and volume, and PNG, GIF, JPG, WebP or WebM visuals up to 5 MB. Recent alert history includes replay."
+        "Follows, subs, gifts, raids and Bits, with a shared upload library, per-alert sounds and volume, and PNG, GIF, JPG, WebP or WebM visuals up to 5 MB. Pick a motion preset and text animation per alert, add sparkle effects, and size or fade your artwork. Recent alert history includes replay, and alerts keep arriving through Rex restarts."
       ],
       [
         "Goals",
@@ -277,7 +281,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
       ],
       [
         "Shared themes and design presets",
-        "Use one Global Overlay Theme across compatible widgets, or customize them separately. Browse preset folders with live previews, fonts, frames and animated designs."
+        "Use one Global Overlay Theme across compatible widgets, or customize them separately. Browse preset folders with live previews, fonts, SVG frames and animated designs."
       ],
       [
         "Flight stick overlay",
@@ -290,6 +294,14 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
       [
         "OBS Guardian",
         "An OBS dock for checking Rex browser-source connections and recovering sources that need attention."
+      ],
+      [
+        "Controller overlay",
+        "A gamepad for OBS that lights up as you press, with optional rear paddles and your own button mapping. Uses the Windows input helper; controller input stays local."
+      ],
+      [
+        "Webcam frame",
+        "A transparent, resizable frame for your webcam that matches your overlay theme."
       ]
     ]
   },
@@ -316,6 +328,14 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
       [
         "Server stats",
         "Joins, leaves and growth for your linked servers."
+      ],
+      [
+        "Twitch role syncing",
+        "Give members Discord roles for following, subscribing, VIP or mod status on your Twitch channel. Members link their Twitch account once through Discord."
+      ],
+      [
+        "Discord auto-moderation",
+        "Opt-in protections with exemptions, limits and an optional private log channel."
       ]
     ]
   },
@@ -338,6 +358,10 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
       [
         "Community partners",
         "Meet the community partners in the homepage spotlight, with live stream previews and partner signup links."
+      ],
+      [
+        "Weekly release notes",
+        "Every Monday, Rex posts what's new in the dashboard and the RexBot Discord."
       ]
     ]
   }
@@ -345,7 +369,7 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
   var NEXT = [
   {
     "title": "Discord Bot Expansion",
-    "desc": "Discord moderation, custom commands, Twitch role syncing and more, all in the dashboard.",
+    "desc": "Twitch role syncing and auto-moderation are live. Next up: mod commands, custom commands and more, all in the dashboard.",
     "cat": "discord",
     "tag": "discord",
     "link": true
@@ -353,8 +377,8 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
 ];
   var LATER = [
   {
-    "title": "Giveaways and polls",
-    "desc": "Run community giveaways and collect viewer votes.",
+    "title": "Polls",
+    "desc": "Collect viewer votes from chat and show results on stream.",
     "cat": "accent",
     "tag": "rexbot"
   },
@@ -383,20 +407,12 @@ button{font:inherit;cursor:pointer}.brand{display:flex;align-items:center;gap:12
     "/nowplaying, /remove, /clear, /shuffle, /loop and /volume."
   ],
   [
-    "Discord moderation",
+    "Discord mod commands",
     "Warnings, timeouts, kicks, bans, purge, slowmode and a mod log."
   ],
   [
     "Custom commands and auto-responses",
     "Your own Discord commands and automatic replies."
-  ],
-  [
-    "Viewer account linking",
-    "Let community members link their Twitch and Discord accounts."
-  ],
-  [
-    "Twitch role syncing",
-    "Subscriber, follower, VIP and moderator roles in Discord, where Twitch allows it."
   ],
   [
     "Server activity log",
