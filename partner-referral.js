@@ -3,7 +3,7 @@
   const ref = new URL(location.href).searchParams.get('ref')?.trim().toLowerCase();
   if (!ref || !/^[a-z0-9_]{1,25}$/.test(ref)) return;
   const pages = new Set(['/', '/index.html', '/contact.html', '/help.html', '/music-bot.html',
-    '/roadmap.html', '/privacy.html', '/terms.html', '/partner-invite.html', '/invite', '/partner', '/twitch/login', '/dashboard']);
+    '/roadmap.html', '/privacy.html', '/terms.html', '/partner-invite.html', '/invite', '/partner', '/partners/apply', '/twitch/login', '/dashboard']);
   function carry() {
     document.querySelectorAll('a[href]').forEach(link => {
       const url = new URL(link.getAttribute('href'), location.href);
