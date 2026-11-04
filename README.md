@@ -37,6 +37,12 @@ Quebec) and the visitor has not asked for reduced motion; everywhere else the ca
 shows a Watch here button and Twitch loads only when it is pressed. The player is
 removed as soon as the partner is no longer confirmed live. The two initial channel links are KinneticEnergy and GankNSpank72.
 
+Applications: the homepage link and the dashboard's "Ask about partnering" button
+open `/partners/apply`, which Vercel rewrites to the bot (`rextwitchbot`,
+`partner_applications.py`). Applicants sign in with Twitch, are scored against the
+partner requirements, and appear in the Super Admin panel and the private Discord
+review channel. Only list a partner on the homepage after approving them there.
+
 `partners.js` checks `/partners/status.json` every minute while the page is
 visible. The same-origin rewrite forwards to the bot's fixed partner allowlist
 in `partner_live.py`; update that list when changing partners. Twitch status is

@@ -20,6 +20,7 @@
   "rewrites": [
     { "source": "/site-analytics.js", "destination": "https://rextwitchbot-production.up.railway.app/site-analytics.js" },
     { "source": "/partners/status.json", "destination": "https://rextwitchbot-production.up.railway.app/partners/status.json" },
+    { "source": "/partners/apply", "destination": "https://rextwitchbot-production.up.railway.app/partners/apply" },
     { "source": "/invite", "destination": "/partner-invite.html" },
     { "source": "/partner", "destination": "/partner-invite.html" },
     { "source": "/editors", "destination": "https://rextwitchbot-production.up.railway.app/editors" },
