@@ -3,7 +3,7 @@ Download page for Rex Now Playing Widget by everex
 
 ## Search discovery
 
-`sitemap.xml` lists the seven public pages using absolute `https://rexbotapp.com` URLs.
+`sitemap.xml` lists the eight public pages using absolute `https://rexbotapp.com` URLs.
 When adding or removing public pages, update that list. Keep authenticated routes,
 OAuth callbacks, private overlay links and API endpoints out of it.
 
@@ -41,7 +41,9 @@ Applications: the homepage link and the dashboard's "Ask about partnering" butto
 open `/partners/apply`, which Vercel rewrites to the bot (`rextwitchbot`,
 `partner_applications.py`). Applicants sign in with Twitch, are scored against the
 partner requirements, and appear in the Super Admin panel and the private Discord
-review channel. Only list a partner on the homepage after approving them there.
+review channel. Only list a partner on the homepage after approving them there. The terms applicants
+agree to live in `partner-guidelines.html`; keep it in step with the form's requirements
+(`partner_applications.py` in the bot).
 
 `partners.js` checks `/partners/status.json` every minute while the page is
 visible. The same-origin rewrite forwards to the bot's fixed partner allowlist
