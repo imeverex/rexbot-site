@@ -783,7 +783,8 @@ if (PLAY) {
   const fit = () => {
     const bar = $('play-bar').getBoundingClientRect().height;
     cfg.floor = Math.max(0.3, (bar + 44) / innerHeight);
-    cfg.band = innerWidth < 700 ? [0.2, 0.8] : [0.08, 0.92];
+    const m = Math.min(0.45, 0.75 * innerHeight * cfg.size / 10 / innerWidth + 0.02);   // keep the whole cow on screen
+    cfg.band = [m, 1 - m];
     document.body.style.setProperty('--floor', cfg.floor * 100 + '%');
     layout();
   };
