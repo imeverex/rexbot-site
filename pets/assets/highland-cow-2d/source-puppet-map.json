@@ -29,8 +29,8 @@
       "bbox": [
         367,
         366,
-        443,
-        451
+        445,
+        460
       ]
     },
     "leg_front_far_lower": {
@@ -42,7 +42,7 @@
       "hidden": false,
       "bbox": [
         354,
-        426,
+        419,
         456,
         516
       ]
@@ -55,10 +55,10 @@
       "parent": "torso",
       "hidden": false,
       "bbox": [
-        443,
+        439,
         384,
-        484,
-        445
+        492,
+        449
       ]
     },
     "leg_back_far_lower": {
@@ -69,9 +69,9 @@
       "parent": "leg_back_far_upper",
       "hidden": false,
       "bbox": [
-        439,
-        415,
-        492,
+        442,
+        426,
+        483,
         494
       ]
     },
@@ -83,10 +83,10 @@
       "parent": "torso",
       "hidden": false,
       "bbox": [
-        269,
+        268,
         360,
-        350,
-        446
+        353,
+        451
       ]
     },
     "leg_front_near_lower": {
@@ -98,7 +98,7 @@
       "hidden": false,
       "bbox": [
         254,
-        417,
+        408,
         353,
         506
       ]
@@ -111,10 +111,10 @@
       "parent": "torso",
       "hidden": false,
       "bbox": [
-        521,
+        518,
         357,
-        601,
-        447
+        604,
+        450
       ]
     },
     "leg_back_near_lower": {
@@ -126,7 +126,7 @@
       "hidden": false,
       "bbox": [
         511,
-        416,
+        406,
         609,
         504
       ]
@@ -952,6 +952,18 @@
         "slivers_removed": 0,
         "hidden_outline_px": 0,
         "seam_px": 0
+      },
+      "leg_front_far_joint": {
+        "cap_radius_px": 37.0
+      },
+      "leg_back_far_joint": {
+        "cap_radius_px": 19.0
+      },
+      "leg_front_near_joint": {
+        "cap_radius_px": 39.5
+      },
+      "leg_back_near_joint": {
+        "cap_radius_px": 40.5
       }
     }
   }
