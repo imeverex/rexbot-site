@@ -1,0 +1,825 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Rex Pets playground</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  canvas { display: block; }
+  .tag, .fx { position: fixed; left: 0; top: 0; pointer-events: none; white-space: nowrap; }
+  .tag { transform: translate(-50%, -100%); font: 800 15px/1 system-ui, sans-serif; color: #fff;
+         text-shadow: 0 1px 2px #000, 0 0 6px #000a; }
+  .fx { font-size: 26px; animation: rise 1.4s ease-out forwards; }
+  @keyframes rise { from { opacity: 1; transform: translate(-50%, 0) scale(.6); }
+                    25% { transform: translate(-50%, -12px) scale(1); }
+                    to { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
+
+  /* bench only */
+  body.bench { background: var(--bg, #1b1d22); font: 13px/1.4 system-ui, sans-serif; color: #e8e8ea; }
+  body.bench.checker { --bg: repeating-conic-gradient(#2a2c31 0 25%, #222428 0 50%) 0 0/32px 32px; }
+  body.bench.green { --bg: #00b140; }
+  body.bench.game { --bg: linear-gradient(#5b7fa8, #a9c3d6 55%, #4d5e3a 56%, #2f3a24); }
+  #panel { position: fixed; top: 12px; left: 12px; width: 300px; max-height: calc(100% - 24px); overflow: auto;
+           background: #0f1013ee; border: 1px solid #2c2e34; border-radius: 8px; padding: 12px; }
+  #panel h3 { margin: 14px 0 6px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #8b8f98; }
+  #panel h3:first-child { margin-top: 0; }
+  #drop { border: 1px dashed #4a4e57; border-radius: 6px; padding: 14px; text-align: center; cursor: pointer; }
+  #drop.over { border-color: #7fd6e5; background: #7fd6e51a; }
+  .btns { display: flex; flex-wrap: wrap; gap: 4px; }
+  .btns button { background: #23262c; color: inherit; border: 1px solid #343842; border-radius: 4px;
+                 padding: 4px 8px; font: inherit; cursor: pointer; }
+  .btns button:hover { border-color: #7fd6e5; }
+  .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .row label { flex: 1; }
+  .ok { color: #6fdc8c; } .bad { color: #ff7a7a; } .dim { color: #6b6f78; }
+  .chips span { display: inline-block; margin: 0 4px 4px 0; padding: 1px 6px; border-radius: 3px; background: #23262c; }
+  input[type=range] { width: 120px; }
+
+  /* public playground */
+  body.play { background: radial-gradient(120% 80% at 50% 100%, #10161b 0, #050505 60%); color: #f2f2f2;
+              font: 14px/1.4 Inter, system-ui, sans-serif; }
+  body.play::after { content: ''; position: fixed; left: 0; right: 0; bottom: 0; height: var(--floor, 30%);
+                     background: linear-gradient(#0d1114, #070809); border-top: 1px solid #1f1f1f; z-index: -1; }
+  #play-top { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+  #play-top a { color: #b8b8b8; text-decoration: none; } #play-top a:hover { color: #64d0ff; }
+  #play-top b { font-size: 16px; } #play-top .sub { color: #949494; }
+  #play-top input { margin-left: auto; background: #000; color: inherit; border: 1px solid #737373; border-radius: 6px;
+                    padding: 6px 10px; font: inherit; width: 140px; }
+  #play-bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px 16px; display: flex; flex-wrap: wrap;
+              gap: 10px 18px; justify-content: center; }
+  #play-bar .grp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  #play-bar .grp > span { color: #949494; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin-right: 2px; }
+  #play-bar button, #play-bar select { background: #181818; color: #f2f2f2; border: 1px solid #1f1f1f; border-radius: 6px;
+              padding: 7px 11px; font: inherit; cursor: pointer; }
+  #play-bar button:hover { background: #222; border-color: #3a3a3a; }
+  #play-bar button.on { border-color: #00c6ff; color: #eef9ff; }
+  #play-bar button.main { background: #00c6ff; color: #000; border-color: #00c6ff; font-weight: 600; }
+  #play-bar button.main:hover { background: #64d0ff; }
+  #play-hint { position: fixed; left: 0; right: 0; text-align: center; padding: 0 16px; top: calc(100% - var(--floor, 30%) + 14px);
+               color: #949494; font-size: 12px; pointer-events: none; }
+  @media (max-width: 700px) { #play-top .sub, #play-hint, #play-bar .grp > span { display: none; } #play-top input { width: 110px; }
+    #play-bar { gap: 8px; padding: 10px; } #play-bar button, #play-bar select { padding: 6px 9px; font-size: 13px; } }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Play with a Rex Pets mascot: feed it, pet it, poke it, make it dance. The little character that lives on a Twitch stream.">
+<meta property="og:title" content="Rex Pets playground"><meta property="og:image" content="https://rexbotapp.com/rex-full.webp">
+<link rel="icon" href="/rex-mark.png"><link rel="stylesheet" href="/fonts/fonts.css">
+<script type="importmap">
+  { "imports": { "three": "/pets/assets/vendor/three.module.min.js",
+                 "three/addons/": "/pets/assets/vendor/jsm/" } }
+</script>
+</head>
+<body class="play">
+
+<div id="play-top"><a href="/">&larr; Rex</a><b>Rex Pets</b><span class="sub">playground</span>
+  <input id="play-name" maxlength="20" placeholder="Name your pet" aria-label="Pet name"></div>
+<div id="play-hint">Click the cow to pet it. Leave it alone and it gets bored, lies down and naps.</div>
+<div id="play-bar">
+  <div class="grp"><span>Chat</span><button class="main" data-chat="feed">!feed</button><button data-chat="pet">!pet</button>
+    <button data-chat="poke">!poke</button></div>
+  <div class="grp"><span>Do</span><button data-act="walk">Walk</button><button data-act="run">Run</button><button data-act="jump">Jump</button>
+    <button data-act="dance">Dance</button><button data-act="celebrate">Celebrate</button><button data-act="rage">Rage</button>
+    <button data-act="sad">Sad</button></div>
+  <div class="grp"><span>Rest</span><button data-act="lie">Lie down</button><button data-act="sleep">Sleep</button><button data-act="wake">Wake</button></div>
+  <div class="grp"><span>Alerts</span><button data-chat="sub">Sub alert</button><button data-chat="raid">Raid</button></div>
+  <div class="grp"><span>Effects</span><button data-state="sugar">Sugar rush</button><button data-state="giant">Giant</button>
+    <button data-state="tiny">Tiny</button><button data-state="rainbow">Rainbow</button><button data-state="frozen">Frozen</button>
+    <button data-state="dizzy">Dizzy</button></div>
+  <div class="grp"><span>Mood</span><select id="mood" aria-label="Mood"><option value="">neutral</option><option>happy</option>
+    <option>grumpy</option><option>sad</option></select></div>
+</div>
+
+
+<script id="cfg" type="application/json">{"assets": "/pets/assets", "bench": false, "model": "highland-cow-2d/source-puppet-map.json", "play": true}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { SecondaryMotion } from '/pets/assets/secondary.js';
+import { loadPuppet } from '/pets/assets/puppet2d.js';
+
+const { bench: BENCH, play: PLAY, model: MODEL, assets: ASSETS } = JSON.parse(document.getElementById('cfg').textContent);
+const qs = new URLSearchParams(location.search);
+const cfg = {
+  size: +qs.get('size') || (PLAY ? Math.min(3.2, 2.2 * innerWidth / innerHeight) : 2.2),   // character height in tenths of the canvas height
+  floor: +(qs.get('floor') ?? (PLAY ? 0.3 : 0.05)),   // floor line, fraction of canvas height from the bottom
+  band: [0.05, 0.95],                     // where it wanders, fraction of canvas width
+  fps: +qs.get('fps') || 30,
+  tilt: 12 * Math.PI / 180,               // 2.5D: camera looks down a little
+  wanderOff: 0.5,                         // idle-AI weight of walking off screen (rare)
+  boredSit: BENCH || PLAY ? 45 : 240,     // seconds without interaction
+  boredSleep: BENCH || PLAY ? 90 : 600,
+  name: qs.get('name') || 'Rex',
+};
+
+const REQUIRED = ['idle', 'walk', 'eat', 'rage'];
+const LAUNCH = ['run', 'sleep_in', 'sleep', 'sit_in', 'sit', 'lie_in', 'lie', 'celebrate', 'love', 'sad', 'jump', 'dance'];
+const REGIONS = ['body', 'belly', 'accent', 'eyes'];
+const MOOD_FACE = { happy: 'smile', grumpy: 'angry', sad: 'sad' };
+const LOOPS = { sit: 8000, lie: 10000, sleep: 15000, dance: 6000, sad: 5000 };
+// Timed states are data: each one only changes these numbers.
+const STATES = {
+  sugar:   { speed: 1.8, anim: 1.5, mood: 'happy' },
+  frozen:  { speed: 0, anim: 0, tint: 0x5fb8ff },
+  giant:   { scale: 2 },
+  tiny:    { scale: 0.5 },
+  rainbow: { rainbow: true },
+  sick:    { speed: 0.6, tint: 0x4fae3a, mood: 'sad' },
+  dizzy:   { wobble: true, speed: 0.7 },
+  hyped:   { anim: 1.2, mood: 'happy' },
+};
+// The three.js example robot stands in until real art lands; real models are named per PETS_PLAN.md.
+const PLACEHOLDER_CLIPS = { Idle: 'idle', Walking: 'walk', Running: 'run', Punch: 'rage', Dance: 'dance',
+  Jump: 'jump', ThumbsUp: 'celebrate', Yes: 'love', Wave: 'idle_wave', No: 'idle_no@grumpy',
+  Sitting: 'sit_in', Standing: 'sit_out', Death: 'sleep_in', WalkJump: 'idle_hop@happy' };
+
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = list => list[Math.floor(Math.random() * list.length)];
+const now = () => performance.now();
+class Cancel extends Error {}
+
+// ---- scene --------------------------------------------------------------
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(1);
+document.body.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xffffff, 0x50586a, 1.8));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+sun.position.set(3, 8, 6);
+scene.add(sun);
+const camera = new THREE.OrthographicCamera();
+const VIEW_H = 10;
+let viewW = 10;
+
+function layout() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h);
+  viewW = VIEW_H * w / h;
+  Object.assign(camera, { left: -viewW / 2, right: viewW / 2, top: VIEW_H / 2, bottom: -VIEW_H / 2, near: 0.1, far: 100 });
+  // aim so the floor (y=0) lands cfg.floor up from the bottom despite the tilt
+  const ty = (0.5 - cfg.floor) * VIEW_H / Math.cos(cfg.tilt);
+  camera.position.set(0, ty + Math.sin(cfg.tilt) * 40, Math.cos(cfg.tilt) * 40);
+  camera.lookAt(0, ty, 0);
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', layout);
+layout();
+
+function blobShadow() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d'), grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(0,0,0,.45)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2;
+  m.position.y = 0.01;
+  return m;
+}
+
+function screenPos(v) {
+  const p = v.clone().project(camera);
+  return [(p.x + 1) / 2 * innerWidth, (1 - p.y) / 2 * innerHeight];
+}
+
+function emote(pet, text) {
+  const el = document.createElement('div');
+  el.className = 'fx';
+  el.textContent = text;
+  const [x, y] = screenPos(pet.overhead());
+  el.style.left = x + rand(-14, 14) + 'px';
+  el.style.top = y - 22 + 'px';
+  document.body.append(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+const props = [];  // falling food etc.
+function dropFood(x) {
+  const m = new THREE.Mesh(new THREE.IcosahedronGeometry(cfg.size * 0.09, 0),
+    new THREE.MeshStandardMaterial({ color: 0xff9a3c, flatShading: true }));
+  m.position.set(x, VIEW_H, 0.4);
+  m.userData.vy = 0;
+  scene.add(m);
+  props.push(m);
+  return m;
+}
+function removeProp(m) { scene.remove(m); props.splice(props.indexOf(m), 1); }
+
+// ---- pet ----------------------------------------------------------------
+class Pet {
+  constructor(gltf, { aliases = {}, faces = {}, motion = null } = {}) {
+    this.root = new THREE.Group();
+    this.model = gltf.scene;
+    this.root.add(this.model);
+    scene.add(this.root);
+    this.shadow = blobShadow();
+    scene.add(this.shadow);
+
+    const box = new THREE.Box3().setFromObject(this.model);
+    this.modelHeight = Math.max(box.max.y - box.min.y, 1e-3);
+    this.model.position.y = -box.min.y;            // feet on the floor
+
+    this.mixer = new THREE.AnimationMixer(this.model);
+    this.clips = {};
+    this.faceTracks = 0;   // the engine owns the face; keyed shape keys in body clips would fight it
+    for (const c of gltf.animations) {
+      const n = c.tracks.length;
+      c.tracks = c.tracks.filter(t => !t.name.endsWith('.morphTargetInfluences'));
+      this.faceTracks += n - c.tracks.length;
+      const name = aliases[c.name] || c.name.split('|').pop().toLowerCase();
+      this.clips[name] = this.mixer.clipAction(c);
+    }
+
+    this.extras = {};
+    this.mats = new Set();
+    this.morphs = [];
+    this.sockets = {};
+    this.tris = 0;
+    this.bones = 0;
+    this.model.traverse(o => {
+      for (const k of ['body', 'walk_speed', 'run_speed', 'height'])
+        if (o.userData[k] != null && this.extras[k] == null) this.extras[k] = o.userData[k];
+      const n = o.name.toLowerCase();
+      if (n.startsWith('socket_')) this.sockets[n.slice(7).replace(/\d+$/, '')] = o;
+      if (o.isSkinnedMesh) this.bones = Math.max(this.bones, o.skeleton.bones.length);
+      if (o.isMesh) {
+        o.frustumCulled = false;                    // skinned bounds lag behind poses
+        this.tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
+        [].concat(o.material).forEach(m => this.mats.add(m));
+        if (o.morphTargetDictionary) {
+          o.userData.keys = Object.fromEntries(Object.entries(o.morphTargetDictionary).map(([k, i]) => [k.toLowerCase(), i]));
+          this.morphs.push(o);
+        }
+      }
+    });
+    this.regions = {};
+    this.faceMat = null;
+    for (const m of this.mats) {
+      const n = m.name.toLowerCase();
+      const r = REGIONS.find(r => n.startsWith(r));
+      if (r) (this.regions[r] ||= []).push(m);
+      if (n.startsWith('face')) this.faceMat = m;
+      if (m.emissive) m.userData.emissive0 = m.emissive.clone();
+    }
+    this.faces = faces;
+    if (this.faceMat && faces.idle) this.faceMat.userData.map0 = this.faceMat.map;
+    this.motion = motion && new SecondaryMotion(this.model, motion);   // tails / fur locks
+    this.motionOn = true;
+
+    // 2D puppet: flips instead of turning, face is pieces (lids, brows, mouth swaps)
+    this.flat = !!gltf.flat;
+    this.flip = -1;
+    if (this.flat) {
+      const get = n => this.model.getObjectByName(n);
+      this.face2d = { lids: ['lid_L', 'lid_R'].map(get).filter(Boolean), brows: [get('brow_L'), get('brow_R')],
+        mouths: Object.fromEntries(['closed', 'open', 'smile', 'frown'].map(k => [k, get('mouth_' + k)]).filter(([, o]) => o)),
+        shut: 0, brow: 0 };
+    }
+
+    this.body = this.extras.body === 'quad' ? 'quad' : 'biped';
+    this.turnRate = this.body === 'quad' ? 4 : 9;
+    this.facing = 1;
+    this.yaw = 0;
+    this.pose = null;          // 'sit' | 'sleep' while settled in a looping pose
+    this.away = false;
+    this.mood = '';
+    this.states = new Map();   // name -> expires (ms, Infinity for bench toggles)
+    this.lastPoke = now();
+    this.pokes = [];
+    this.waiters = new Set();
+    this.task = null;
+    this.move = null;
+    this.nextBlink = now() + 2000;
+    this.blinkUntil = 0;
+    this.scaleNow = 1;
+    this.root.position.x = this.randomX();
+    this.tag = Object.assign(document.createElement('div'), { className: 'tag', textContent: cfg.name });
+    document.body.append(this.tag);
+    this.loopAnim('idle');
+  }
+
+  dispose() {
+    if (this.task) this.task.cancelled = true;
+    this.wake();
+    scene.remove(this.root, this.shadow);
+    this.tag.remove();
+    this.motion?.dispose();
+  }
+
+  // ---- animation ----
+  has(n) { return !!this.clips[n]; }
+  _switch(a, fade) {
+    if (this.current && this.current !== a) this.current.fadeOut(fade);
+    a.reset().fadeIn(fade).play();
+    this.current = a;
+  }
+  loopAnim(n) {
+    const a = this.clips[n] || this.clips[{ walk: 'run', run: 'walk' }[n]] || this.clips.idle;
+    if (!a || this.current === a) return;
+    a.setLoop(THREE.LoopRepeat, Infinity);
+    a.timeScale = 1;
+    this._switch(a, 0.2);
+  }
+  once(n, reverse = false) {
+    const a = this.clips[n];
+    if (!a) return Promise.resolve(false);
+    a.setLoop(THREE.LoopOnce, 1);
+    a.clampWhenFinished = true;
+    this._switch(a, 0.15);
+    a.timeScale = reverse ? -1 : 1;
+    if (reverse) a.time = a.getClip().duration;
+    return new Promise(res => {
+      const fin = ok => { this.mixer.removeEventListener('finished', done); this.waiters.delete(fin); res(ok); };
+      const done = e => e.action === a && fin(true);
+      this.mixer.addEventListener('finished', done);
+      this.waiters.add(fin);
+    });
+  }
+  wait(ms) {
+    return new Promise(res => {
+      const fin = () => { clearTimeout(timer); this.waiters.delete(fin); res(); };
+      const timer = setTimeout(fin, ms);
+      this.waiters.add(fin);
+    });
+  }
+  moveTo(x, mode = 'walk') {
+    return new Promise(res => {
+      const fin = () => { this.waiters.delete(fin); this.move = null; this.loopAnim('idle'); res(); };
+      this.move = { x, mode, fin };
+      this.waiters.add(fin);
+    });
+  }
+  wake() { [...this.waiters].forEach(f => f(false)); }
+
+  // ---- tasks: a higher priority cancels a lower one (3 command, 2 reaction, 0 idle AI) ----
+  run(prio, fn) {
+    if (this.task && prio < this.task.prio) return false;
+    if (this.task) this.task.cancelled = true;
+    const t = this.task = { prio, cancelled: false };
+    t.do = async p => { const v = await p; if (t.cancelled) throw new Cancel(); return v; };
+    this.wake();
+    (async () => {
+      try { await fn(t); }
+      catch (e) { if (!(e instanceof Cancel)) console.error(e); }
+      finally { if (this.task === t) this.task = null; }
+    })();
+    return true;
+  }
+
+  async settle(t, pose) {
+    if (this.pose === pose) return;
+    // a model with lie_in authors sleep_in from lying, so it goes to sleep through lie
+    if (pose === 'sleep' && this.pose !== 'lie' && this.has('lie_in')) await this.settle(t, 'lie');
+    if (pose === 'sleep' && this.pose === 'lie') this.pose = null;  // sleep_in starts from lying (PETS_BODY_PLANS.md)
+    else await this.getUp(t);
+    if (this.has(pose + '_in')) await t.do(this.once(pose + '_in'));
+    if (this.has(pose)) this.loopAnim(pose);    // no loop clip: hold the last frame of _in
+    else if (!this.has(pose + '_in')) this.loopAnim('idle');
+    this.pose = pose;
+  }
+  async getUp(t) {
+    const p = this.pose;
+    if (!p) return;
+    this.pose = null;
+    if (this.has(p + '_out')) await t.do(this.once(p + '_out'));
+    else if (this.has(p + '_in')) await t.do(this.once(p + '_in', true));
+    else return;
+    if (p === 'sleep' && !this.has('sleep_out') && this.has('lie_in')) {   // reversed sleep_in ends lying
+      this.pose = 'lie';
+      await this.getUp(t);
+    }
+  }
+  async play(t, n) {
+    if (LOOPS[n] && (this.has(n) || this.has(n + '_in'))) {
+      await this.settle(t, n);
+      await t.do(this.wait(LOOPS[n]));
+      return;
+    }
+    if (!(await t.do(this.once(n)))) await t.do(this.wait(500));   // missing clip: brief idle
+  }
+
+  edge() { return viewW / 2 + cfg.size; }
+  randomX() {
+    const f = cfg.band[0] + Math.random() * (cfg.band[1] - cfg.band[0]);
+    return (f - 0.5) * viewW;
+  }
+  overhead() {
+    const v = new THREE.Vector3();
+    if (this.sockets.overhead) return this.sockets.overhead.getWorldPosition(v);
+    return v.copy(this.root.position).setY(cfg.size * this.scaleNow * 1.08);
+  }
+
+  async idle(t) {
+    const bored = (now() - this.lastPoke) / 1000;
+    if (bored > cfg.boredSleep) {
+      await this.settle(t, 'sleep');
+      emote(this, '💤');
+      return t.do(this.wait(rand(4000, 7000)));
+    }
+    // boredom ladder: idle -> sit -> lie -> sleep, skipping steps the species doesn't have
+    for (const [after, pose] of [[(cfg.boredSit + cfg.boredSleep) / 2, 'lie'], [cfg.boredSit, 'sit']]) {
+      if (bored > after && (this.has(pose) || this.has(pose + '_in'))) {
+        await this.settle(t, pose);
+        return t.do(this.wait(rand(4000, 8000)));
+      }
+    }
+    await this.getUp(t);
+    this.loopAnim('idle');
+    await t.do(this.wait(rand(2000, 6000)));
+    const variants = Object.keys(this.clips).filter(n => {
+      const [base, mood] = n.split('@');
+      return base.startsWith('idle_') && (!mood || mood === this.effects().mood);
+    });
+    const options = [[variants.length ? 4 : 0, 'variant'], [4, 'walk'], [0.6, 'run'], [cfg.wanderOff, 'away'], [2, 'stay']];
+    let r = Math.random() * options.reduce((s, [w]) => s + w, 0);
+    const choice = options.find(([w]) => (r -= w) < 0)[1];
+    if (choice === 'variant') await t.do(this.once(pick(variants)));
+    if (choice === 'walk') await t.do(this.moveTo(this.randomX()));
+    if (choice === 'run') await t.do(this.moveTo(this.randomX(), 'run'));
+    if (choice === 'away') await this.wanderOff(t);
+  }
+
+  async wanderOff(t) {
+    const side = Math.random() < 0.5 ? -1 : 1;
+    await t.do(this.moveTo(side * this.edge()));
+    this.away = true;
+    this.root.visible = false;
+    await t.do(this.wait(BENCH ? rand(4000, 8000) : rand(10000, 60000)));
+    await this.comeBack(t, Math.random() < 0.35 ? -side : side);
+  }
+  async comeBack(t, side) {
+    if (!this.away) return;
+    side ??= Math.sign(this.root.position.x) || 1;
+    this.root.position.x = side * this.edge();
+    this.root.visible = true;
+    this.away = false;
+    if (this.has('peek')) {
+      await t.do(this.moveTo(side * (viewW / 2 - cfg.size * 0.3)));
+      await t.do(this.once('peek'));
+    }
+    await t.do(this.moveTo(this.randomX(), t.prio > 0 ? 'run' : 'walk'));
+  }
+
+  // What chat, rewards and alerts call (from pet_events in phase 2).
+  command(name, prio = 3) {
+    this.lastPoke = now();
+    return this.run(prio, async t => {
+      await this.comeBack(t);
+      if (name === 'wake') return this.getUp(t);
+      if (name === 'sleep') { this.lastPoke = -Infinity; return this.settle(t, 'sleep'); }
+      if (name !== 'sit') await this.getUp(t);
+      if (name === 'walk' || name === 'run') return t.do(this.moveTo(this.randomX(), name));
+      if (name === 'wander') return this.wanderOff(t);
+      if (name === 'eat') {
+        const x = THREE.MathUtils.clamp(this.root.position.x + rand(-3, 3), (cfg.band[0] - 0.5) * viewW, (cfg.band[1] - 0.5) * viewW);
+        const food = dropFood(x);
+        try {
+          const side = x >= this.root.position.x ? -1 : 1;   // stop just short of it, facing it
+          await t.do(this.moveTo(x + side * cfg.size * 0.25));
+          this.facing = -side;
+          await this.play(t, 'eat');
+          emote(this, '😋');
+        } finally { removeProp(food); }
+        return;
+      }
+      if (name === 'rage') emote(this, '💢');
+      if (name === 'love') { emote(this, '❤️'); setTimeout(() => emote(this, '❤️'), 250); }
+      if (name === 'celebrate') emote(this, '🎉');
+      await this.play(t, name);
+    });
+  }
+  poke() {
+    const t = now();
+    this.pokes = this.pokes.filter(p => t - p < 10000).concat(t);
+    if (this.pokes.length >= 4) {
+      this.pokes = [];
+      this.setState('dizzy', 15);
+      return this.command('rage');
+    }
+    emote(this, '❗');
+    this.command(this.has('idle_no@grumpy') ? 'idle_no@grumpy' : 'jump');
+  }
+  setState(name, seconds) {
+    if (seconds) this.states.set(name, now() + seconds * 1000);
+    else this.states.delete(name);
+  }
+  effects() {
+    const e = { scale: 1, speed: 1, anim: 1, tint: null, rainbow: false, wobble: false, mood: this.mood };
+    for (const [name, until] of this.states) {
+      if (until < now()) { this.states.delete(name); continue; }
+      const s = STATES[name];
+      e.scale *= s.scale ?? 1; e.speed *= s.speed ?? 1; e.anim *= s.anim ?? 1;
+      if (s.tint) e.tint = s.tint;
+      if (s.rainbow) e.rainbow = true;
+      if (s.wobble) e.wobble = true;
+      if (s.mood) e.mood = s.mood;
+    }
+    return e;
+  }
+
+  // ---- per frame ----
+  update(dt) {
+    if (!this.task) this.run(0, t => this.idle(t));
+    const e = this.effects();
+    this.mixer.timeScale = e.anim;
+    this.motion?.beforeAnimation();
+    this.mixer.update(dt);
+
+    this.scaleNow += (e.scale - this.scaleNow) * Math.min(1, dt * 6);
+    this.root.scale.setScalar(cfg.size / this.modelHeight * this.scaleNow);
+
+    if (this.move) {
+      const run = this.move.mode === 'run';
+      const base = run ? (this.extras.run_speed ?? this.extras.walk_speed * 2.5) : this.extras.walk_speed;
+      // speeds in the file are model units/s; default to roughly a stride per second
+      const speed = (base ? base / this.modelHeight * cfg.size : (run ? 1.6 : 0.6) * cfg.size) * this.scaleNow * e.speed;
+      this.loopAnim(run && this.has('run') ? 'run' : 'walk');
+      const dx = this.move.x - this.root.position.x, step = speed * dt;
+      if (dx) this.facing = Math.sign(dx);
+      if (Math.abs(dx) <= step) { this.root.position.x = this.move.x; this.move.fin(); }
+      else this.root.position.x += Math.sign(dx) * step;
+    }
+
+    // face the way it walks; 3/4 toward the camera when standing so the face reads on stream
+    if (this.flat) {   // art faces left; a quick squash-flip turns it around
+      this.flip += THREE.MathUtils.clamp(-this.facing - this.flip, -8 * dt, 8 * dt);
+      this.model.scale.x = Math.sign(this.flip || 1) * Math.max(0.05, Math.abs(this.flip));
+    } else {
+      const want = this.facing * (this.move ? Math.PI / 2 : Math.PI / 4);
+      this.yaw += THREE.MathUtils.clamp(want - this.yaw, -this.turnRate * dt, this.turnRate * dt);
+      this.root.rotation.y = this.yaw;
+    }
+    this.root.rotation.z = e.wobble ? Math.sin(now() / 120) * 0.12 : 0;
+
+    for (const m of this.mats) {
+      if (this.flat) {   // unlit pieces: tint by multiplying the colour
+        if (e.rainbow) m.color.setHSL(now() / 1500 % 1, 0.8, 0.75);
+        else if (e.tint) m.color.setHex(e.tint).lerp(new THREE.Color(1, 1, 1), 0.45);
+        else m.color.setRGB(1, 1, 1);
+        continue;
+      }
+      if (!m.emissive) continue;
+      if (e.rainbow) m.emissive.setHSL(now() / 1500 % 1, 0.9, 0.1);
+      else if (e.tint) m.emissive.setHex(e.tint).multiplyScalar(0.3);
+      else m.emissive.copy(m.userData.emissive0);
+    }
+
+    // face: random blink, mood expression
+    if (now() > this.nextBlink) { this.blinkUntil = now() + 130; this.nextBlink = now() + rand(2000, 6000); }
+    const blinking = now() < this.blinkUntil || this.pose === 'sleep' || (this.current && this.current === this.clips.sleep_in);
+    const expr = MOOD_FACE[e.mood];
+    for (const mesh of this.morphs) {
+      for (const [k, i] of Object.entries(mesh.userData.keys)) {
+        const target = (k === 'blink' && blinking) || k === expr ? 1 : 0;
+        mesh.morphTargetInfluences[i] += (target - mesh.morphTargetInfluences[i]) * Math.min(1, dt * (k === 'blink' ? 40 : 6));
+      }
+    }
+    if (this.face2d) {
+      const f = this.face2d, k = Math.min(1, dt * 30);
+      f.shut += ((blinking ? 1 : 0) - f.shut) * k;          // lids slide down from their top edge
+      for (const lid of f.lids) { lid.visible = f.shut > 0.03; lid.scale.y = Math.max(0.001, f.shut); }
+      // brows: + tilts the inner ends down (angry), - up (sad)
+      const brow = { grumpy: 14, sad: -10 }[e.mood] ?? 0;
+      f.brow += (brow - f.brow) * Math.min(1, dt * 6);
+      const [bl, br] = f.brows;
+      if (bl) bl.rotation.z = THREE.MathUtils.degToRad(-f.brow);
+      if (br) br.rotation.z = THREE.MathUtils.degToRad(f.brow);
+      const clip = this.current && Object.keys(this.clips).find(n => this.clips[n] === this.current);
+      const mouth = clip === 'rage' || (clip === 'eat' && Math.sin(now() / 90) > 0) ? 'open'
+        : e.mood === 'happy' || clip === 'love' || clip === 'celebrate' ? 'smile'
+        : e.mood === 'sad' || e.mood === 'grumpy' || clip?.startsWith('sad') ? 'frown' : 'closed';
+      for (const [k2, o] of Object.entries(f.mouths)) o.visible = k2 === (f.mouths[mouth] ? mouth : 'closed');
+    }
+    if (this.faceMat && this.faces.idle) {
+      const tex = this.faces[blinking ? 'blink' : expr] || this.faces.idle;
+      if (this.faceMat.map !== tex) { this.faceMat.map = tex; this.faceMat.needsUpdate = true; }
+    }
+
+    this.shadow.visible = this.root.visible;
+    this.shadow.position.x = this.root.position.x;
+    this.shadow.scale.setScalar(cfg.size * 0.7 * this.scaleNow * (this.body === 'quad' ? 1.4 : 1));
+    this.tag.style.display = this.root.visible ? '' : 'none';
+    const [x, y] = screenPos(this.overhead());
+    this.tag.style.transform = `translate(${x}px, ${y - 6}px) translate(-50%, -100%)`;
+
+    // last: secondary motion reads this frame's final animated pose and root transform
+    if (this.motion) {
+      if (!this.root.visible || !this.motionOn) this.motion.reset();
+      else {
+        this.root.updateMatrixWorld(true);
+        this.motion.update(dt, Object.values(this.clips), this.root.scale.x);
+        this.motion.drawDebug(this.root.scale.x);
+      }
+    }
+  }
+}
+
+// ---- loop ---------------------------------------------------------------
+let pet = null;
+let last = now(), acc = 0;
+function frame(t) {
+  requestAnimationFrame(frame);
+  acc += t - last;
+  last = t;
+  if (acc < 1000 / cfg.fps - 2) return;
+  const dt = Math.min(acc / 1000, 0.1);
+  acc = 0;
+  if (pet) pet.update(dt);
+  for (const m of props) {
+    if (m.position.y <= 0.15) continue;
+    m.userData.vy -= 30 * dt;
+    m.position.y = Math.max(0.15, m.position.y + m.userData.vy * dt);
+    m.rotation.y += dt * 3;
+  }
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+// bench: step the sim by hand (background tabs get ~1 rAF/s)
+if (BENCH) window.benchStep = async (s, dt = 1 / 30) => {
+  for (let i = 0; i < s / dt; i++) { pet?.update(dt); await new Promise(r => setTimeout(r)); }
+  renderer.render(scene, camera);
+};
+
+async function loadPet(url, { manager, faceFiles, aliases, motion } = {}) {
+  if (/\.json$/i.test(url)) {   // 2D puppet map (ASSET_BRIEF_2D.md)
+    const puppet = await loadPuppet(url);
+    if (pet) pet.dispose();
+    pet = window.pet = new Pet(puppet, { motion: null });
+    if (BENCH) inspect(pet);
+    return;
+  }
+  const gltf = await new GLTFLoader(manager).loadAsync(url);
+  // optional <asset>.secondary-motion.json next to the model; without it, plain animation
+  if (motion === undefined && !manager)
+    motion = await fetch(url.replace(/\.gl(b|tf)$/i, '.secondary-motion.json')).then(r => r.ok ? r.json() : null).catch(() => null);
+  const faces = {};
+  const texLoader = new THREE.TextureLoader();
+  const loadFace = async (expr, src) => {
+    try {
+      const tex = await texLoader.loadAsync(src);
+      tex.flipY = false;                       // glTF UV convention
+      tex.colorSpace = THREE.SRGBColorSpace;
+      faces[expr] = tex;
+    } catch { /* that expression isn't drawn yet */ }
+  };
+  if (faceFiles) await Promise.all(Object.entries(faceFiles).map(([e, src]) => loadFace(e, src)));
+  else if (gltf.scene.getObjectByProperty('isMesh', true) && JSON.stringify(gltf.parser.json.materials || []).includes('"face'))
+    await Promise.all(['idle', 'blink', 'smile', 'angry', 'sad', 'talk'].map(e => loadFace(e, url.replace(/[^/]*$/, `face_${e}.png`))));
+  if (pet) pet.dispose();
+  pet = new Pet(gltf, { aliases, faces, motion });
+  window.pet = pet;
+  if (BENCH) inspect(pet);
+}
+
+// ---- bench --------------------------------------------------------------
+function inspect(p) {
+  const tick = n => p.has(n) ? `<span class="ok">✓ ${n}</span>` : `<span class="bad">✗ ${n}</span>`;
+  const extra = Object.keys(p.clips).filter(n => !REQUIRED.includes(n) && !LAUNCH.includes(n));
+  const morphKeys = [...new Set(p.morphs.flatMap(m => Object.keys(m.userData.keys)))];
+  // a key that exported with no vertex movement does nothing on stream
+  const moves = k => p.morphs.some(m => {
+    const a = m.geometry.morphAttributes.position?.[m.userData.keys[k]];
+    if (!a) return false;
+    for (let j = 0; j < a.count; j++) if (Math.abs(a.getX(j)) + Math.abs(a.getY(j)) + Math.abs(a.getZ(j)) > 1e-5) return true;
+    return false;
+  });
+  const keyChip = k => moves(k) ? k : `<span class="bad">${k} (empty)</span>`;
+  const face = p.face2d ? `2D pieces: ${p.face2d.lids.length} lids, ${p.face2d.brows.filter(Boolean).length} brows, mouths ${Object.keys(p.face2d.mouths).join(', ')}`
+    : morphKeys.length ? `shape keys: ${morphKeys.map(keyChip).join(', ')}` + (morphKeys.includes('blink') ? '' : ' <span class="bad">(no blink)</span>')
+    : p.faceMat ? `face material, images: ${Object.keys(p.faces).join(', ') || '<span class="bad">none dropped</span>'}`
+    : '<span class="bad">none (needs face images or a blink shape key)</span>';
+  const warn = (v, max) => v > max ? `<span class="bad">${v}</span>` : v;
+  document.getElementById('report').innerHTML = `
+    <div class="chips">${REQUIRED.map(tick).join(' ')}</div>
+    <div class="chips dim">launch: ${LAUNCH.map(tick).join(' ')}</div>
+    ${extra.length ? `<div class="chips">also: ${extra.map(n => `<span>${n}</span>`).join('')}</div>` : ''}
+    <div>Face: ${face}${p.faceTracks ? ` <span class="bad">(face keyed in clips: ${p.faceTracks} tracks ignored)</span>` : ''}</div>
+    <div>Regions: ${REGIONS.map(r => p.regions[r] ? `<span class="ok">${r}</span>` : `<span class="dim">${r}</span>`).join(' ')}</div>
+    <div>Sockets: ${Object.keys(p.sockets).join(', ') || '<span class="dim">none</span>'}</div>
+    <div>Body: ${p.extras.body ?? '<span class="dim">biped (default)</span>'} · walk ${p.extras.walk_speed ?? '<span class="dim">default</span>'} · run ${p.extras.run_speed ?? '<span class="dim">default</span>'}</div>
+    <div>Triangles ${warn(Math.round(p.tris), 3000)} · bones ${warn(p.bones, 50)}</div>
+    <div>Secondary motion: ${!p.motion ? '<span class="dim">none (no .secondary-motion.json)</span>'
+      : p.motion.chains.map(c => `<span class="ok">${c.id}</span> (${c.joints.length} joint${c.joints.length > 1 ? 's' : ''})`).join(', ')
+        + p.motion.problems.map(x => `<br><span class="bad">${x}</span>`).join('')}</div>`;
+  document.getElementById('colors').innerHTML = Object.entries(p.regions).map(([r, ms]) =>
+    `<div class="row"><label>${r}</label><input type="color" data-region="${r}" value="#${ms[0].color.getHexString()}"></div>`).join('');
+  document.querySelectorAll('[data-region]').forEach(el =>
+    el.oninput = () => p.regions[el.dataset.region].forEach(m => m.color.set(el.value)));
+  const actions = ['walk', 'run', 'eat', 'rage', 'jump', 'sit', 'lie', 'sleep', 'wake', 'dance', 'celebrate', 'love', 'sad', 'wander',
+    ...Object.keys(p.clips).filter(n => n.startsWith('idle_') || n === 'peek')];
+  document.getElementById('actions').innerHTML = actions.map(a => `<button data-act="${a}">${a}</button>`).join('');
+  markSockets(document.getElementById('sockets').checked);
+}
+
+function markSockets(on) {
+  if (!pet) return;
+  for (const s of Object.values(pet.sockets)) {
+    s.userData.marker ||= s.add(new THREE.AxesHelper(1)) && s.children.at(-1);
+    s.userData.marker.visible = on;
+    s.userData.marker.scale.setScalar(0.3 * pet.modelHeight / s.getWorldScale(new THREE.Vector3()).x * pet.root.scale.x);
+    s.userData.marker.material.depthTest = false;
+  }
+}
+
+if (BENCH) {
+  const $ = id => document.getElementById(id);
+  $('actions').onclick = e => e.target.dataset.act && pet?.command(e.target.dataset.act);
+  document.querySelector('[data-chat]').parentElement.onclick = e => {
+    const c = e.target.dataset.chat;
+    if (!pet || !c) return;
+    if (c === 'feed') pet.command('eat');
+    if (c === 'pet') pet.command('love');
+    if (c === 'poke') pet.poke();
+    if (c === 'sub') { pet.setState('rainbow', 60); pet.command('celebrate', 2); }
+    if (c === 'raid') { pet.setState('hyped', 30); pet.command('dance', 2); }
+  };
+  $('states').innerHTML = Object.keys(STATES).map(s => `<button data-state="${s}">${s}</button>`).join('');
+  $('states').onclick = e => {
+    const s = e.target.dataset.state;
+    if (!pet || !s) return;
+    const on = !pet.states.has(s);
+    pet.setState(s, on ? Infinity : 0);
+    e.target.style.borderColor = on ? '#7fd6e5' : '';
+  };
+  $('mood').onchange = e => { if (pet) pet.mood = e.target.value; };
+  $('size').value = cfg.size;
+  $('size').oninput = e => { cfg.size = +e.target.value; markSockets($('sockets').checked); };
+  $('floor').value = cfg.floor;
+  $('floor').oninput = e => { cfg.floor = +e.target.value; layout(); };
+  $('fps').onchange = e => cfg.fps = +e.target.value;
+  $('flat').onchange = e => pet?.mats.forEach(m => { m.flatShading = e.target.checked; m.needsUpdate = true; });
+  $('sockets').onchange = e => markSockets(e.target.checked);
+  $('physics').onchange = e => { if (pet) pet.motionOn = e.target.checked; };
+  $('physicsDebug').onchange = e => pet?.motion?.debug(scene, e.target.checked);
+  $('bg').onchange = e => document.body.className = 'bench ' + e.target.value;
+
+  const open = files => {
+    files = [...files];
+    const main = files.find(f => /\.(glb|gltf)$/i.test(f.name));
+    if (!main) return;
+    const urls = new Map(files.map(f => [f.name, URL.createObjectURL(f)]));
+    const manager = new THREE.LoadingManager();
+    manager.setURLModifier(u => urls.get(decodeURIComponent(u.split('/').pop())) ?? u);
+    const faceFiles = Object.fromEntries(files.map(f => [f.name.match(/^face_(\w+)\.(png|jpe?g)$/i)?.[1]?.toLowerCase(), urls.get(f.name)])
+      .filter(([e]) => e));
+    $('report').textContent = `Loading ${main.name}...`;
+    const sidecar = files.find(f => /\.secondary-motion\.json$/i.test(f.name));
+    (sidecar ? sidecar.text().then(JSON.parse) : Promise.resolve(null))
+      .then(motion => loadPet(urls.get(main.name), { manager, faceFiles, motion }))
+      .catch(err => $('report').innerHTML = `<span class="bad">${err.message}</span>`);
+  };
+  $('files').onchange = e => open(e.target.files);
+  const drop = $('drop');
+  addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  addEventListener('dragleave', () => drop.classList.remove('over'));
+  addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); open(e.dataTransfer.files); });
+}
+
+if (PLAY) {
+  const $ = id => document.getElementById(id);
+  // the cow stands just above the control bar, which wraps taller on phones
+  const fit = () => {
+    const bar = $('play-bar').getBoundingClientRect().height;
+    cfg.floor = Math.max(0.3, (bar + 44) / innerHeight);
+    cfg.band = innerWidth < 700 ? [0.2, 0.8] : [0.08, 0.92];
+    document.body.style.setProperty('--floor', cfg.floor * 100 + '%');
+    layout();
+  };
+  addEventListener('resize', fit);
+  fit();
+  const chat = c => {
+    if (c === 'feed') pet.command('eat');
+    if (c === 'pet') pet.command('love');
+    if (c === 'poke') pet.poke();
+    if (c === 'sub') { pet.setState('rainbow', 12); pet.command('celebrate', 2); }
+    if (c === 'raid') { pet.setState('hyped', 12); pet.command('dance', 2); }
+  };
+  $('play-bar').onclick = e => {
+    const b = e.target.closest('button');
+    if (!b || !pet) return;
+    if (b.dataset.chat) chat(b.dataset.chat);
+    if (b.dataset.act) pet.command(b.dataset.act);
+    if (b.dataset.state) {
+      const on = !pet.states.has(b.dataset.state);
+      pet.setState(b.dataset.state, on ? Infinity : 0);
+      b.classList.toggle('on', on);
+    }
+  };
+  $('mood').onchange = e => { if (pet) pet.mood = e.target.value; };
+  $('play-name').oninput = e => { cfg.name = e.target.value.trim() || 'Rex'; if (pet) pet.tag.textContent = cfg.name; };
+  // clicking the pet pets it
+  renderer.domElement.addEventListener('pointerdown', e => {
+    if (!pet?.root.visible) return;
+    const [x, y] = screenPos(pet.root.position), h = innerHeight * cfg.size / 10 * pet.scaleNow;
+    if (Math.abs(e.clientX - x) < h * 0.6 && e.clientY < y && e.clientY > y - h) chat('pet');
+  });
+}
+
+const model = qs.get('model') || MODEL;
+loadPet(model ? `${ASSETS}/${model}` : `${ASSETS}/placeholder/robot.glb`, { aliases: model ? {} : PLACEHOLDER_CLIPS })
+  .catch(err => console.error('pet failed to load', err));
+</script>
+</body>
+</html>

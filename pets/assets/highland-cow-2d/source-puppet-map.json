@@ -1,0 +1,958 @@
+{
+  "source": "Approved Cow Animation.webp, frame 0",
+  "canvas": [
+    800,
+    560
+  ],
+  "pieces": {
+    "torso": {
+      "pivot": [
+        467,
+        350
+      ],
+      "parent": null,
+      "hidden": false,
+      "bbox": [
+        225,
+        171,
+        690,
+        527
+      ]
+    },
+    "leg_front_far_upper": {
+      "pivot": [
+        402,
+        405
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        367,
+        366,
+        443,
+        451
+      ]
+    },
+    "leg_front_far_lower": {
+      "pivot": [
+        409,
+        456
+      ],
+      "parent": "leg_front_far_upper",
+      "hidden": false,
+      "bbox": [
+        354,
+        426,
+        456,
+        516
+      ]
+    },
+    "leg_back_far_upper": {
+      "pivot": [
+        461,
+        406
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        443,
+        384,
+        484,
+        445
+      ]
+    },
+    "leg_back_far_lower": {
+      "pivot": [
+        465,
+        445
+      ],
+      "parent": "leg_back_far_upper",
+      "hidden": false,
+      "bbox": [
+        439,
+        415,
+        492,
+        494
+      ]
+    },
+    "leg_front_near_upper": {
+      "pivot": [
+        310,
+        402
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        269,
+        360,
+        350,
+        446
+      ]
+    },
+    "leg_front_near_lower": {
+      "pivot": [
+        310,
+        447
+      ],
+      "parent": "leg_front_near_upper",
+      "hidden": false,
+      "bbox": [
+        254,
+        417,
+        353,
+        506
+      ]
+    },
+    "leg_back_near_upper": {
+      "pivot": [
+        561,
+        398
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        521,
+        357,
+        601,
+        447
+      ]
+    },
+    "leg_back_near_lower": {
+      "pivot": [
+        560,
+        446
+      ],
+      "parent": "leg_back_near_upper",
+      "hidden": false,
+      "bbox": [
+        511,
+        416,
+        609,
+        504
+      ]
+    },
+    "tail_01": {
+      "pivot": [
+        615,
+        303
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        602,
+        287,
+        659,
+        360
+      ]
+    },
+    "tail_02": {
+      "pivot": [
+        642,
+        343
+      ],
+      "parent": "tail_01",
+      "hidden": false,
+      "bbox": [
+        627,
+        326,
+        672,
+        376
+      ]
+    },
+    "tail_03": {
+      "pivot": [
+        646,
+        358
+      ],
+      "parent": "tail_02",
+      "hidden": false,
+      "bbox": [
+        627,
+        341,
+        681,
+        391
+      ]
+    },
+    "tail_tuft": {
+      "pivot": [
+        649,
+        373
+      ],
+      "parent": "tail_03",
+      "hidden": false,
+      "bbox": [
+        627,
+        354,
+        734,
+        432
+      ]
+    },
+    "fringe_back": {
+      "pivot": [
+        422,
+        242
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        379,
+        222,
+        492,
+        389
+      ]
+    },
+    "chest_fur": {
+      "pivot": [
+        359,
+        325
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        28,
+        270,
+        414,
+        509
+      ]
+    },
+    "head": {
+      "pivot": [
+        398,
+        298
+      ],
+      "parent": "torso",
+      "hidden": false,
+      "bbox": [
+        202,
+        85,
+        521,
+        337
+      ]
+    },
+    "horn_far": {
+      "pivot": [
+        433,
+        148
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        416,
+        38,
+        546,
+        175
+      ]
+    },
+    "horn_near": {
+      "pivot": [
+        232,
+        149
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        113,
+        33,
+        270,
+        169
+      ]
+    },
+    "ear_near": {
+      "pivot": [
+        232,
+        185
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        107,
+        155,
+        249,
+        235
+      ]
+    },
+    "ear_far": {
+      "pivot": [
+        438,
+        194
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        412,
+        173,
+        531,
+        243
+      ]
+    },
+    "muzzle": {
+      "pivot": [
+        278,
+        238
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        157,
+        234,
+        357,
+        336
+      ]
+    },
+    "eye_L": {
+      "pivot": [
+        268,
+        211
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        250,
+        188,
+        286,
+        235
+      ]
+    },
+    "eye_R": {
+      "pivot": [
+        353,
+        215
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        333,
+        188,
+        376,
+        242
+      ]
+    },
+    "eye_L_shine": {
+      "pivot": [
+        273,
+        205
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        265,
+        198,
+        282,
+        212
+      ]
+    },
+    "eye_R_shine": {
+      "pivot": [
+        357,
+        207
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        348,
+        200,
+        368,
+        217
+      ]
+    },
+    "brow_L": {
+      "pivot": [
+        269,
+        186
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        255,
+        180,
+        285,
+        196
+      ]
+    },
+    "brow_R": {
+      "pivot": [
+        355,
+        187
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        337,
+        178,
+        375,
+        198
+      ]
+    },
+    "mouth_closed": {
+      "pivot": [
+        286,
+        311
+      ],
+      "parent": "muzzle",
+      "hidden": false,
+      "bbox": [
+        254,
+        306,
+        322,
+        317
+      ]
+    },
+    "fringe_front": {
+      "pivot": [
+        330,
+        106
+      ],
+      "parent": "head",
+      "hidden": false,
+      "bbox": [
+        205,
+        24,
+        452,
+        231
+      ]
+    },
+    "lid_L": {
+      "pivot": [
+        268,
+        187
+      ],
+      "parent": "head",
+      "hidden": true,
+      "bbox": [
+        244,
+        184,
+        294,
+        241
+      ]
+    },
+    "lid_R": {
+      "pivot": [
+        353,
+        189
+      ],
+      "parent": "head",
+      "hidden": true,
+      "bbox": [
+        329,
+        186,
+        379,
+        243
+      ]
+    },
+    "mouth_open": {
+      "pivot": [
+        286,
+        311
+      ],
+      "parent": "muzzle",
+      "hidden": true,
+      "bbox": [
+        269,
+        307,
+        306,
+        330
+      ]
+    },
+    "mouth_smile": {
+      "pivot": [
+        286,
+        311
+      ],
+      "parent": "muzzle",
+      "hidden": true,
+      "bbox": [
+        269,
+        305,
+        306,
+        320
+      ]
+    },
+    "mouth_frown": {
+      "pivot": [
+        286,
+        311
+      ],
+      "parent": "muzzle",
+      "hidden": true,
+      "bbox": [
+        269,
+        307,
+        306,
+        320
+      ]
+    }
+  },
+  "order_back_to_front": [
+    "leg_front_far_lower",
+    "leg_front_far_upper",
+    "leg_back_far_lower",
+    "leg_back_far_upper",
+    "leg_front_near_lower",
+    "leg_front_near_upper",
+    "leg_back_near_lower",
+    "leg_back_near_upper",
+    "tail_tuft",
+    "tail_03",
+    "tail_02",
+    "tail_01",
+    "torso",
+    "fringe_back",
+    "chest_fur",
+    "head",
+    "horn_far",
+    "horn_near",
+    "ear_near",
+    "ear_far",
+    "muzzle",
+    "eye_L",
+    "eye_R",
+    "eye_L_shine",
+    "eye_R_shine",
+    "brow_L",
+    "brow_R",
+    "mouth_closed",
+    "fringe_front",
+    "lid_L",
+    "lid_R",
+    "mouth_open",
+    "mouth_smile",
+    "mouth_frown"
+  ],
+  "regions": {
+    "leg_front_far_lower": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_front_far_upper": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_back_far_lower": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_back_far_upper": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_front_near_lower": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_front_near_upper": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_back_near_lower": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "leg_back_near_upper": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "tail_tuft": [
+      "body",
+      "detail"
+    ],
+    "tail_03": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "tail_02": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "tail_01": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "torso": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "fringe_back": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "chest_fur": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "head": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "horn_far": [
+      "detail"
+    ],
+    "horn_near": [
+      "detail"
+    ],
+    "ear_near": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "ear_far": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "muzzle": [
+      "belly",
+      "detail"
+    ],
+    "eye_L": [
+      "eyes"
+    ],
+    "eye_R": [
+      "eyes"
+    ],
+    "eye_L_shine": [
+      "detail"
+    ],
+    "eye_R_shine": [
+      "detail"
+    ],
+    "brow_L": [
+      "eyes"
+    ],
+    "brow_R": [
+      "eyes"
+    ],
+    "mouth_closed": [
+      "detail"
+    ],
+    "fringe_front": [
+      "body",
+      "accent",
+      "detail"
+    ],
+    "lid_L": [
+      "accent",
+      "detail"
+    ],
+    "lid_R": [
+      "accent",
+      "detail"
+    ],
+    "mouth_open": [
+      "detail"
+    ],
+    "mouth_smile": [
+      "detail"
+    ],
+    "mouth_frown": [
+      "detail"
+    ]
+  },
+  "sockets": {
+    "socket_head": [
+      333,
+      106
+    ],
+    "socket_face": [
+      305,
+      234
+    ],
+    "socket_neck": [
+      380,
+      329
+    ],
+    "socket_back": [
+      499,
+      245
+    ],
+    "socket_mouth": [
+      284,
+      318
+    ],
+    "socket_overhead": [
+      335,
+      15
+    ]
+  },
+  "overlap_painted_pixels": {
+    "torso": 39813,
+    "head": 25984,
+    "chest_fur": 4201,
+    "fringe_back": 3935,
+    "leg_front_far_lower": 1174,
+    "leg_front_far_upper": 4758,
+    "leg_back_far_lower": 1204,
+    "leg_back_far_upper": 5022,
+    "leg_front_near_lower": 1240,
+    "leg_front_near_upper": 4232,
+    "leg_back_near_lower": 1429,
+    "leg_back_near_upper": 4242,
+    "tail_01": 731,
+    "tail_02": 404,
+    "tail_03": 149,
+    "tail_tuft": 415,
+    "horn_near": 884,
+    "horn_far": 569,
+    "ear_near": 1184,
+    "ear_far": 909,
+    "fringe_front": 0,
+    "muzzle": 305,
+    "eye_L": 241,
+    "eye_R": 271,
+    "eye_L_shine": 0,
+    "eye_R_shine": 0,
+    "brow_L": 101,
+    "brow_R": 0,
+    "mouth_closed": 0
+  },
+  "notes": "Source artwork preserved. Per-piece black outlines reassigned; covered interior alpha normalized; hidden geometry added. Exact neutral RGBA differs as documented in neutral-comparison.json.",
+  "revision": "Round 2 \u2014 tail and upper-leg polish, stable renderer contract",
+  "round2_changes": {
+    "leg_front_far_upper": {
+      "changed_pixels": 4844,
+      "kind": "clean rounded outlined concealed upper-leg root"
+    },
+    "leg_back_far_upper": {
+      "changed_pixels": 5022,
+      "kind": "clean rounded outlined concealed upper-leg root"
+    },
+    "leg_front_near_upper": {
+      "changed_pixels": 4439,
+      "kind": "clean rounded outlined concealed upper-leg root"
+    },
+    "leg_back_near_upper": {
+      "changed_pixels": 4406,
+      "kind": "clean rounded outlined concealed upper-leg root"
+    },
+    "leg_front_far_lower": {
+      "changed_pixels": 1425,
+      "kind": "clean rounded concealed knee/hock root; visible hoof preserved"
+    },
+    "leg_back_far_lower": {
+      "changed_pixels": 1455,
+      "kind": "clean rounded concealed knee/hock root; visible hoof preserved"
+    },
+    "leg_front_near_lower": {
+      "changed_pixels": 1491,
+      "kind": "clean rounded concealed knee/hock root; visible hoof preserved"
+    },
+    "leg_back_near_lower": {
+      "changed_pixels": 1680,
+      "kind": "clean rounded concealed knee/hock root; visible hoof preserved"
+    },
+    "torso": {
+      "changed_pixels": 501,
+      "kind": "return rump outline mistakenly attached to tail"
+    },
+    "tail_01": {
+      "changed_pixels": 1833,
+      "kind": "continuous round-ended tail geometry and clean original neutral silhouette"
+    },
+    "tail_02": {
+      "changed_pixels": 1985,
+      "kind": "continuous round-ended tail geometry and clean original neutral silhouette"
+    },
+    "tail_03": {
+      "changed_pixels": 1416,
+      "kind": "continuous round-ended tail geometry and clean original neutral silhouette"
+    },
+    "tail_tuft": {
+      "changed_pixels": 1284,
+      "kind": "continuous round-ended tail geometry and clean original neutral silhouette"
+    }
+  },
+  "repair": {
+    "by": "rextwitchbot-pets art/highland-cow-2d/repair.py",
+    "from": "Codex round 2",
+    "pieces": {
+      "leg_front_far_lower": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 471,
+        "seam_px": 0
+      },
+      "leg_front_far_upper": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 1047,
+        "seam_px": 0
+      },
+      "leg_back_far_lower": {
+        "trimmed": 0,
+        "slivers_removed": 26,
+        "hidden_outline_px": 604,
+        "seam_px": 0
+      },
+      "leg_back_far_upper": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 661,
+        "seam_px": 0
+      },
+      "leg_front_near_lower": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 515,
+        "seam_px": 0
+      },
+      "leg_front_near_upper": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 1041,
+        "seam_px": 0
+      },
+      "leg_back_near_lower": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 535,
+        "seam_px": 0
+      },
+      "leg_back_near_upper": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 954,
+        "seam_px": 0
+      },
+      "tail_tuft": {
+        "trimmed": 0,
+        "slivers_removed": 10,
+        "hidden_outline_px": 232,
+        "seam_px": 0
+      },
+      "tail_03": {
+        "trimmed": 0,
+        "slivers_removed": 11,
+        "hidden_outline_px": 386,
+        "seam_px": 0
+      },
+      "tail_02": {
+        "trimmed": 0,
+        "slivers_removed": 11,
+        "hidden_outline_px": 332,
+        "seam_px": 0
+      },
+      "tail_01": {
+        "trimmed": 0,
+        "slivers_removed": 10,
+        "hidden_outline_px": 284,
+        "seam_px": 0
+      },
+      "torso": {
+        "trimmed": 0,
+        "slivers_removed": 24,
+        "hidden_outline_px": 3125,
+        "seam_px": 0
+      },
+      "fringe_back": {
+        "trimmed": 0,
+        "slivers_removed": 20,
+        "hidden_outline_px": 1155,
+        "seam_px": 0
+      },
+      "chest_fur": {
+        "trimmed": 0,
+        "slivers_removed": 19,
+        "hidden_outline_px": 1368,
+        "seam_px": 0
+      },
+      "head": {
+        "trimmed": 0,
+        "slivers_removed": 225,
+        "hidden_outline_px": 3645,
+        "seam_px": 0
+      },
+      "horn_far": {
+        "trimmed": 0,
+        "slivers_removed": 210,
+        "hidden_outline_px": 319,
+        "seam_px": 0
+      },
+      "horn_near": {
+        "trimmed": 0,
+        "slivers_removed": 38,
+        "hidden_outline_px": 556,
+        "seam_px": 0
+      },
+      "ear_near": {
+        "trimmed": 0,
+        "slivers_removed": 3,
+        "hidden_outline_px": 570,
+        "seam_px": 0
+      },
+      "ear_far": {
+        "trimmed": 0,
+        "slivers_removed": 28,
+        "hidden_outline_px": 520,
+        "seam_px": 0
+      },
+      "muzzle": {
+        "trimmed": 0,
+        "slivers_removed": 81,
+        "hidden_outline_px": 224,
+        "seam_px": 0
+      },
+      "eye_L": {
+        "trimmed": 0,
+        "slivers_removed": 14,
+        "hidden_outline_px": 227,
+        "seam_px": 0
+      },
+      "eye_R": {
+        "trimmed": 0,
+        "slivers_removed": 23,
+        "hidden_outline_px": 248,
+        "seam_px": 0
+      },
+      "eye_L_shine": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 0,
+        "seam_px": 0
+      },
+      "eye_R_shine": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 0,
+        "seam_px": 0
+      },
+      "brow_L": {
+        "trimmed": 0,
+        "slivers_removed": 54,
+        "hidden_outline_px": 47,
+        "seam_px": 0
+      },
+      "brow_R": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 0,
+        "seam_px": 0
+      },
+      "mouth_closed": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 0,
+        "seam_px": 0
+      },
+      "fringe_front": {
+        "trimmed": 0,
+        "slivers_removed": 0,
+        "hidden_outline_px": 0,
+        "seam_px": 0
+      }
+    }
+  }
+}
