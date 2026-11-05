@@ -3,7 +3,7 @@ Download page for Rex Now Playing Widget by everex
 
 ## Search discovery
 
-`sitemap.xml` lists the eight public pages using absolute `https://rexbotapp.com` URLs.
+`sitemap.xml` lists the ten public pages using absolute `https://rexbotapp.com` URLs.
 When adding or removing public pages, update that list. Keep authenticated routes,
 OAuth callbacks, private overlay links and API endpoints out of it.
 

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Twitch Chatbot with Song Requests | RexBot</title>
+<meta name="description" content="A free Twitch chatbot with custom commands, timers, Spotify song requests, alerts and more. Import from Nightbot, StreamElements or Streamlabs. By a streamer, for streamers.">
+<link rel="canonical" href="https://rexbotapp.com/twitch-chatbot.html">
+<meta property="og:title" content="Free Twitch Chatbot with Song Requests | RexBot">
+<meta property="og:description" content="A free Twitch chatbot with custom commands, timers, Spotify song requests, alerts and more. Import from Nightbot, StreamElements or Streamlabs. By a streamer, for streamers.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rexbotapp.com/twitch-chatbot.html">
+<meta property="og:image" content="https://rexbotapp.com/rex-mark.png">
+<link rel="icon" href="/rex-mark.png">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+  :root {
+    --accent: #00C6FF; --accent-dim: rgba(0,198,255,0.15); --bg: #000000; --card: #171717; --card-border: #243F4C;
+    --text: #F2F2F2; --muted: #B8B8B8; --faint: #949494;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
+  }
+  .noise {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .glow {
+    position: fixed; z-index: 0; pointer-events: none; border-radius: 50%; filter: blur(90px); opacity: 0.5;
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+  .glow.a { width: 480px; height: 480px; background: #00C6FF; top: -180px; left: -140px; }
+  .glow.b { width: 420px; height: 420px; background: #22A2CF; opacity: 0.2; top: 120px; right: -160px; animation-delay: -8s; }
+  .glow.c { width: 380px; height: 380px; background: #00C6FF; opacity: 0.14; bottom: -200px; left: 30%; animation-delay: -14s; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, -24px) scale(1.08); }
+  }
+  main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 40px 24px 90px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 20px; }
+  nav .brand { display: flex; align-items: center; gap: 13px; }
+  nav .brand img { width: 42px; height: 42px; }
+  nav .brand span { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; }
+  nav a.back {
+    display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; text-decoration: none;
+    border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 8px; transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  nav a.back:hover { color: var(--text); border-color: var(--muted); }
+
+  .hero { text-align: center; margin: 56px 0 0; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--accent);
+    background: var(--accent-dim); border: 1px solid rgba(0,198,255,0.35); padding: 5px 12px; border-radius: 999px;
+    letter-spacing: 0.02em; margin-bottom: 20px;
+  }
+  h1.headline {
+    font-family: 'Inter', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.15; margin: 0 auto 16px;
+    letter-spacing: -0.02em; max-width: 620px;
+  }
+  @media (max-width: 500px) { h1.headline { font-size: 32px; } }
+  h1.headline em {
+    font-style: normal; color: var(--accent);
+  }
+  .hero-sub { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto 32px; }
+
+  .rex-ui .invite-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: #111111; font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 16px; padding: 15px 28px; border-radius: 10px; text-decoration: none;
+    box-shadow: none; transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .invite-btn:hover { transform: translateY(-1px); box-shadow: none; }
+  .invite-btn svg { width: 20px; height: 20px; flex: none; }
+  .invite-meta { margin-top: 14px; color: var(--faint); font-size: 12.5px; }
+
+  .commands { margin-top: 90px; }
+  .section-head { text-align: center; margin-bottom: 32px; }
+  .section-head h2 { font-family: 'Inter', sans-serif; font-size: 24px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .section-head p { color: var(--muted); font-size: 14.5px; margin: 0; }
+  .cmd-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .cmd-list { grid-template-columns: 1fr; } }
+  .cmd {
+    display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .cmd code {
+    font-family: 'SF Mono', Consolas, monospace; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--accent-dim); padding: 4px 9px; border-radius: 6px; white-space: nowrap;
+  }
+  .cmd span { color: var(--muted); font-size: 13.5px; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 70px; }
+  @media (max-width: 720px) { .features { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px;
+  }
+  .feature .icon {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--accent-dim); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+  }
+  .feature h3 { font-family: 'Inter', sans-serif; font-size: 13.5px; margin: 0 0 5px; }
+  .feature p { color: var(--muted); font-size: 12.5px; margin: 0; line-height: 1.5; }
+
+  footer {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    margin-top: 90px; opacity: 0.6; font-size: 12px; color: var(--muted);
+  }
+  footer img { height: 13px; }
+  footer a { color: var(--muted); }
+
+  /* Redesign: left-aligned hero like the other pages; three feature cards across. */
+  .rex-public .hero h1.headline, .rex-public .hero .hero-sub { margin-left: 0; margin-right: 0; }
+  .rex-ui.rex-public .features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 700px) { .rex-ui.rex-public .features { grid-template-columns: 1fr; } }
+</style>
+<style>
+  nav .links { display: flex; gap: 8px; flex-wrap: wrap; }
+  nav .links a { color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--card-border);
+    padding: 7px 13px; border-radius: 8px; transition: border-color .15s ease, color .15s ease; }
+  nav .links a:hover { color: var(--text); border-color: var(--muted); }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .rex-public .cta-row { justify-content: flex-start; }
+  .ghost-btn { display: inline-flex; align-items: center; color: var(--text); font-weight: 600; font-size: 15px;
+    padding: 14px 22px; border-radius: 10px; text-decoration: none; border: 1px solid var(--card-border); }
+  .ghost-btn:hover { border-color: var(--muted); }
+  .features.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rex-ui.rex-public .features.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 700px) { .features.two, .rex-ui.rex-public .features.two { grid-template-columns: 1fr; } }
+  .note { margin-top: 28px; color: var(--faint); font-size: 12.5px; }
+  .more-links { margin-top: 70px; text-align: center; color: var(--muted); font-size: 14px; }
+  .more-links a { color: var(--accent); text-decoration: none; margin: 0 8px; }
+  .more-links a:hover { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="/rex-ui.css">
+<script src="/partner-referral.js" defer></script>
+<script src="/site-analytics.js" defer></script>
+</head>
+<body class="rex-ui rex-public">
+<div class="noise"></div>
+<div class="glow c"></div>
+
+<main>
+  <nav>
+    <a class="brand" href="/" aria-label="RexBot home" style="text-decoration:none;color:inherit">
+      <img src="/rex-mark.png" alt="">
+      <span class="rex-wordmark"><span class="rex">REX</span>BOT</span>
+    </a>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/help.html">Help</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="eyebrow">● Free · Twitch chatbot</div>
+    <h1 class="headline">The free Twitch chatbot that does <em>more than commands</em>.</h1>
+    <p class="hero-sub">Custom commands, timers, shoutouts and Spotify song requests, set up from one dashboard. Built by a small streamer, free for yours.</p>
+    <div class="cta-row">
+      <a class="invite-btn" href="/twitch/login">Get started free</a>
+      <a class="ghost-btn" href="/help.html">How setup works</a>
+    </div>
+    <div class="invite-meta">Log in with Twitch. Free, and it's staying free.</div>
+  </section>
+
+  <section class="features two">
+    <div class="feature">
+      <h3>Commands that feel like you</h3>
+      <p>Custom replies with permissions and per-command cooldowns, plus !so shoutouts and !clip from chat.</p>
+    </div>
+    <div class="feature">
+      <h3>Timers without the pile-up</h3>
+      <p>Schedule reminders and space them apart so chat doesn't get flooded.</p>
+    </div>
+    <div class="feature">
+      <h3>Song requests from chat</h3>
+      <p>Viewers use !sr to add songs straight to your Spotify queue, with a live queue, !upnext, vote-skip, request cooldowns and moderator controls.</p>
+    </div>
+    <div class="feature">
+      <h3>Thank-yous that happen on their own</h3>
+      <p>Chat thank-yous for follows, subs, raids and Bits.</p>
+    </div>
+    <div class="feature">
+      <h3>Switching is quick</h3>
+      <p>Import your commands from Streamlabs, Nightbot or StreamElements instead of rebuilding them.</p>
+    </div>
+    <div class="feature">
+      <h3>Free, no catches</h3>
+      <p>No premium tier and no paywalled commands.</p>
+    </div>
+  </section>
+
+  <p class="note">Song requests need Spotify Premium, and you connect your own Spotify account one time in settings. Moderation features only work if RexBot is a mod in your channel.</p>
+
+  <p class="more-links">Also in RexBot: <a href="/music-bot.html">Discord music bot</a> · <a href="/obs-overlays.html">OBS overlays and alerts</a></p>
+
+  <footer>
+    <img src="/everex-mark.png" alt=""> by <a href="https://everexmedia.ca" target="_blank" rel="noopener">everex</a>
+    · <a href="https://ko-fi.com/everex" target="_blank" rel="noopener">Ko-fi</a>
+  </footer>
+</main>
+<script src="/status-notice.js" defer></script>
+</body>
+</html>
